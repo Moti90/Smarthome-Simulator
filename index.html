@@ -1,0 +1,1822 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8" />
+  <title>IBISIMULATOR (WebView2)</title>
+  <meta http-equiv="x-ua-compatible" content="IE=edge" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <style>
+    /* Stabil CSS-beregning */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html,body{
+      font-family:Segoe UI,system-ui,-apple-system,Roboto,Ubuntu,Cantarell,Helvetica,Arial,sans-serif;
+      margin:0;background:#0b0f14;color:#e5e9f0
+    }
+
+    header{padding:12px 16px;background:#111720;border-bottom:1px solid #1f2933;display:flex;align-items:center;gap:12px;position:relative}
+    .brand{ position:absolute; left:0; right:0; text-align:center; pointer-events:none; }
+    .brand .goldtext{ color:#D4AF37; font-weight:700; text-shadow:0 1px 0 #000, 0 0 6px rgba(212,175,55,.5); letter-spacing:0.5px; }
+    .top-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+
+    /* Faner (SPA) */
+    .tabs{display:flex;gap:8px;margin:8px 16px 0 16px}
+    .tabs button{background:#1a2430;border:1px solid #2a3442;color:#e5e9f0;border-radius:8px;padding:6px 10px;cursor:pointer}
+    .tabs button.active{background:#2d3b4f}
+    .views{padding:8px 16px 16px 16px}
+    .view{display:none}
+    .view.active{display:block}
+
+    /* 3-kolonne layout inde i Simulator */
+    .wrap{display:grid;grid-template-columns:320px 1fr 420px;gap:16px}
+    .card{background:#111720;border:1px solid #1f2933;border-radius:10px;overflow:visible}
+    .card h2{font-size:14px;margin:0;padding:10px 12px;border-bottom:1px solid #1f2933;background:#0f141c}
+    .card .body{padding:10px 12px}
+
+    label{display:block;font-size:12px;margin-top:6px;margin-bottom:4px;color:#cbd5e1}
+    input[type="text"], input[type="number"], select, input[type="time"]{width:100%;padding:8px;border-radius:8px;border:1px solid #2a3442;background:#0b1118;color:#e5e9f0;position:relative;z-index:2}
+    input[type="file"]{width:100%;padding:6px;border-radius:8px;border:1px solid #2a3442;background:#0b1118;color:#e5e9f0}
+    input[type="checkbox"]{transform:scale(1.2)}
+    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .row > *{flex:1}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    button{background:#2d3b4f;color:#e5e9f0;border:1px solid #3b495e;border-radius:8px;padding:8px 10px;cursor:pointer}
+    button:hover{background:#38506c}
+    .danger{background:#5b2d2d;border-color:#7a3a3a}
+    .success{background:#2d5b3a;border-color:#3a7a4c}
+    .info{background:#2d4e5b;border-color:#3a6b7a}
+    .muted{opacity:.8}
+    .tag{padding:2px 6px;border-radius:6px;background:#1e2936;border:1px solid #2a3442;font-size:11px}
+    .rule{border:1px dashed #334155;border-radius:8px;padding:8px;margin-bottom:8px}
+    .log{height:240px;overflow:auto;background:#0b1118;border:1px solid #1f2933;border-radius:8px;padding:8px;font-family:Consolas,ui-monospace,Menlo,monospace;font-size:12px;white-space:normal}
+    .footer{opacity:.7;padding:8px 16px}
+    .small{font-size:12px}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid #2a3442;border-radius:999px;background:#0b1118}
+    .sp{height:8px}
+    .divider{height:1px;background:#1f2933;margin:8px 0}
+    .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+    .kpi .box{background:#0b1118;border:1px solid #1f2933;border-radius:8px;padding:8px;text-align:center}
+    textarea{width:100%;height:260px;background:#0b1118;color:#e5e9f0;border:1px solid #1f2933;border-radius:8px;padding:8px;font-family:Consolas,ui-monospace}
+
+    .menu{ position:absolute; right:12px; top:50%; transform:translateY(-50%); z-index:3000; }
+    .menu > button{min-width:110px}
+    .menu-list{position:absolute;right:0;top:110%;background:#0f141c;border:1px solid #2a3442;border-radius:8px;min-width:220px;display:none;z-index:4000;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+    .menu-list button{display:block;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid #1f2933;padding:10px}
+    .menu-list button:last-child{border-bottom:0}
+    .menu.open .menu-list{display:block}
+
+    .has-tip{position:relative}
+    .has-tip:hover::after{
+      content:attr(data-tip); position:absolute; left:auto; right:0; top:-8px; transform:translateY(-100%);
+      background:#101821; border:1px solid #2a3442; padding:6px 8px; border-radius:8px;
+      color:#e5e9f0; font-size:11px; white-space:pre-wrap; max-width:320px; box-shadow:0 6px 16px rgba(0,0,0,.35);
+      pointer-events:none; z-index:1500;
+    }
+    .log .match{ color:#00d26a; font-weight:600; }
+
+    /* Z-Wave rækker – nu med wrap og metachips */
+    .zw-row{
+      display:flex; align-items:center; gap:8px;
+      flex-wrap:wrap; width:100%;
+      margin:6px 0;
+    }
+    .zw-row .zw-type{ flex:1 1 180px; min-width:160px; }
+    .zw-row .zw-val{  flex:0 0 120px; }
+
+    .zw-row button{ flex:0 0 auto; }
+    .zw-meta{ margin-left:auto; display:flex; gap:8px; }
+    .zw-badge{font-size:11px;padding:2px 6px;border:1px solid #2a3442;border-radius:999px;background:#0b1118;opacity:.8}
+    .zw-global, .zw-maps{
+      font-family:Consolas,ui-monospace,Menlo,monospace;font-size:11px;
+      background:#0b1118;border:1px solid #2a3442;border-radius:6px;padding:2px 6px
+    }
+    .zw-maps::before{ content:"↦ "; }
+  
+/* === WIRESHEET MVP === */
+.ws-canvas{
+  position:relative; height:560px; background:
+    linear-gradient(180deg,#0b1118,#0a0f15 60%);
+  border:1px solid #1f2933; border-radius:12px; overflow:hidden;
+}
+.ws-wires{ position:absolute; inset:0; pointer-events:none }
+.ws-nodes{ position:absolute; inset:0; }
+
+.ws-node{
+  position:absolute; min-width:200px; max-width:260px;
+  background:#0e1520; border:1px solid #1f2933; border-radius:12px;
+  box-shadow:0 8px 24px rgba(0,0,0,.25);
+  user-select:none;
+}
+.ws-node.dragging{ opacity:.9; outline:1px dashed #3a4b63 }
+.ws-head{
+  display:flex; align-items:center; gap:8px; justify-content:space-between;
+  padding:8px 10px; background:#0f141c; border-bottom:1px solid #16202c; border-radius:12px 12px 0 0;
+  font-size:12px;
+}
+.ws-head .type{opacity:.85}
+.ws-body{ padding:8px 10px; }
+.ws-body .row{ margin-bottom:6px }
+.ws-body select, .ws-body input[type="text"]{
+  width:100%; padding:8px; border-radius:8px; border:1px solid #2a3442;
+  background:#0b1118; color:#e5e9f0; font-size:12px;
+}
+
+.port{
+  width:12px; height:12px; border-radius:50%;
+  border:2px solid #2a3442; background:#0b1118;
+}
+.port.out{ box-shadow:0 0 0 2px rgba(88,131,196,.25); }
+.port.in{ box-shadow:0 0 0 2px rgba(88,196,131,.25); }
+.port-row{
+  display:flex; align-items:center; gap:6px; margin:6px 0;
+}
+.port-label{ font-size:11px; opacity:.85 }
+.ws-foot{ padding:6px 10px; border-top:1px solid #16202c; display:flex; gap:6px; justify-content:flex-end }
+
+/* Node color accents */
+.ws-node.trig .ws-head{ color:#bfe8ff }
+.ws-node.cond .ws-head{ color:#c8e6ff }
+.ws-node.act  .ws-head{ color:#ffe7b3 }
+.ws-node.rule .ws-head{ color:#b3ffd3 }
+.ws-btn{ background:#1a2430; border:1px solid #2a3442; color:#e5e9f0; border-radius:8px; padding:4px 8px; cursor:pointer; font-size:11px }
+.ws-btn:hover{ background:#223247 }
+
+.ws-badge{ font-size:10px; padding:2px 6px; border-radius:999px; border:1px solid #334155; background:#101821; }
+.ws-warn{ color:#ffd38a; font-size:11px; }
+.ws-ok{ color:#9ee6b8; font-size:11px; }
+.ws-preview{ font-family:Consolas,ui-monospace; font-size:11px; opacity:.9; padding:6px 8px; background:#0b1118; border:1px solid #1f2933; border-radius:8px; margin-top:6px }
+
+  
+.ws-id{font-weight:600; opacity:.9; margin-right:auto}
+.ws-links{font-size:11px; opacity:.8; padding:4px 6px; border-top:1px dashed #223; margin-top:4px}
+
+  
+/* === Type colors === */
+.ws-node.trig { border-color:#2563eb; }
+.ws-node.trig .ws-head { background:linear-gradient(90deg,#1e3a8a,#1e40af); color:#dbeafe; }
+.ws-node.trig::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:#2563eb; border-radius:12px 0 0 12px; }
+
+.ws-node.cond { border-color:#7c3aed; }
+.ws-node.cond .ws-head { background:linear-gradient(90deg,#581c87,#6d28d9); color:#ede9fe; }
+.ws-node.cond::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:#7c3aed; border-radius:12px 0 0 12px; }
+
+.ws-node.act  { border-color:#f59e0b; }
+.ws-node.act  .ws-head { background:linear-gradient(90deg,#78350f,#b45309); color:#fef3c7; }
+.ws-node.act::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:#f59e0b; border-radius:12px 0 0 12px; }
+
+.ws-node.rule { border-color:#10b981; }
+.ws-node.rule .ws-head { background:linear-gradient(90deg,#064e3b,#047857); color:#d1fae5; }
+.ws-node.rule::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:#10b981; border-radius:12px 0 0 12px; }
+
+  
+/* Palette buttons farver */
+#wsAddTrig { background:#1e40af; border-color:#2563eb; color:#dbeafe; }
+#wsAddTrig:hover { filter:brightness(1.05); }
+#wsAddCond { background:#6d28d9; border-color:#7c3aed; color:#ede9fe; }
+#wsAddCond:hover { filter:brightness(1.05); }
+#wsAddAct  { background:#b45309; border-color:#f59e0b; color:#fef3c7; }
+#wsAddAct:hover { filter:brightness(1.05); }
+#wsAddRule { background:#047857; border-color:#10b981; color:#d1fae5; }
+#wsAddRule:hover { filter:brightness(1.05); }
+
+  
+/* === Login click-through fix === */
+#loginView { position: relative; }
+#loginView::before,
+#loginView::after {
+  pointer-events: none !important;  /* overlays må ikke blokere klik */
+  z-index: 0;
+}
+/* Sørg for at selve login-panelet er øverst */
+#loginView .login-card,
+#loginView .card {
+  position: relative;
+  z-index: 5 !important;
+}
+
+
+/* === Login background image + translucent card === */
+#loginView{
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+#loginView::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: url("login-bg.jpg") center/cover no-repeat;
+  z-index:0;
+  pointer-events:none; /* må ikke blokere klik */
+}
+#loginView .card,
+#loginView .login-card{
+  position: relative;
+  z-index: 1;
+  background: rgba(16,22,30,0.86); /* lidt gennemsigtig */
+  backdrop-filter: blur(6px) saturate(110%);
+  -webkit-backdrop-filter: blur(6px) saturate(110%);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+}
+
+
+/* === City palette (matches login bg) === */
+:root{
+  --city-bg-0:#0a1120;     /* deepest navy */
+  --city-bg-1:#0d1626;     /* panel navy */
+  --city-bg-2:#0f1b2e;     /* header strip */
+  --city-line:#90d8ff;     /* cyan arc glow */
+  --city-blue:#2aa2ff;     /* electric blue */
+  --city-teal:#1f7ed1;     /* teal-ish blue */
+  --city-orange:#ff8a3c;   /* windows orange */
+  --city-gold:#d4af37;     /* brand gold */
+  --city-hair:rgba(255,255,255,.08);
+  --city-hair-2:rgba(255,255,255,.12);
+}
+
+/* Simulator background depth */
+#view-sim{
+  position:relative;
+  background:
+    radial-gradient(1200px 700px at 120% -10%, rgba(42,162,255,.10) 0%, transparent 55%),
+    radial-gradient(900px 500px at -20% 0%, rgba(31,126,209,.10) 0%, transparent 60%),
+    linear-gradient(180deg, var(--city-bg-0) 0%, #070c18 100%);
+  border-radius:12px;
+  padding-top:4px;
+}
+
+/* Cards + headers */
+#view-sim .card{
+  background:linear-gradient(180deg, var(--city-bg-1), #0b1423);
+  border:1px solid var(--city-hair);
+  box-shadow:0 8px 26px rgba(0,0,0,.45);
+}
+#view-sim .card h2{
+  background:linear-gradient(180deg, var(--city-bg-2), #0b1420);
+  border-bottom:1px solid var(--city-hair);
+}
+
+/* Section accents */
+#view-sim .card[data-section="sensors"]{ border-top:3px solid var(--city-blue); }
+#view-sim .card[data-section="rules"]  { border-top:3px solid var(--city-orange); }
+#view-sim .card[data-section="log"]    { border-top:3px solid var(--city-line); }
+#view-sim .card[data-section] h2{
+  position:relative;
+}
+#view-sim .card[data-section] h2::after{
+  content:"";
+  position:absolute; inset:-1px 0 auto 0; height:2px;
+  background: linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.18), rgba(255,255,255,.0));
+  opacity:.35;
+}
+
+/* Buttons tuned to palette */
+#view-sim button{ background:#16263a; border-color:#27435f; }
+#view-sim button:hover{ filter:brightness(1.08); }
+#view-sim .success{ background:linear-gradient(180deg,#1e6e3f,#185836); border-color:#2a9156; }
+#view-sim .danger{  background:linear-gradient(180deg,#6b2b2b,#532020); border-color:#934040; }
+#view-sim .info{    background:linear-gradient(180deg,#1f4a66,#183a50); border-color:#2c6a91; }
+
+/* KPI tags pop in city colors */
+#view-sim .tag{ background:#102131; border-color:#203449; }
+#view-sim #lampState.tag{ color:#ffd9b6; border-color:rgba(255,138,60,.4); background:rgba(255,138,60,.10); }
+#view-sim #dimmerState.tag{ color:#cfeaff; border-color:rgba(42,162,255,.35); background:rgba(42,162,255,.10); }
+#view-sim #fanState.tag{ color:#cfe7ff; border-color:rgba(31,126,209,.35); background:rgba(31,126,209,.10); }
+
+/* Rule rows with subtle striping */
+#view-sim .rule:nth-child(odd){ background:linear-gradient(180deg,#0e1624,#0b1320); }
+#view-sim .rule:nth-child(even){ background:linear-gradient(180deg,#0c1422,#09101b); }
+
+
+/* === City palette BOOST (more pop) === */
+:root{
+  --city-bg-0:#081226;     /* deeper navy */
+  --city-bg-1:#0b1a33;     /* card */
+  --city-bg-2:#0d223f;     /* header */
+  --city-line:#9de0ff;     /* cyan glow */
+  --city-blue:#2ab0ff;     /* electric blue+ */
+  --city-teal:#1f8fe0;     
+  --city-orange:#ff944d;   /* warmer orange */
+  --city-gold:#d4af37;
+  --city-hair:rgba(255,255,255,.10);
+  --city-hair-2:rgba(255,255,255,.16);
+}
+
+/* Deeper bg with subtle grid */
+#view-sim{
+  background:
+    radial-gradient(1200px 700px at 120% -10%, rgba(42,176,255,.12) 0%, transparent 55%),
+    radial-gradient(900px 500px at -20% 0%, rgba(31,143,224,.12) 0%, transparent 60%),
+    linear-gradient(180deg, var(--city-bg-0) 0%, #060c18 100%);
+}
+#view-sim::before{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    radial-gradient(circle at 25% 15%, rgba(255,255,255,.04), transparent 40%);
+  opacity:.7;
+}
+#view-sim > * { position:relative; z-index:1; }
+
+/* Cards pop more */
+#view-sim .card{
+  background:linear-gradient(180deg, var(--city-bg-1), #0a1529);
+  border:1px solid var(--city-hair);
+  box-shadow:0 10px 28px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.03);
+}
+#view-sim .card h2{
+  background:
+    linear-gradient(180deg, var(--city-bg-2), #0a1a34);
+  border-bottom:1px solid var(--city-hair);
+  letter-spacing:.2px;
+}
+
+/* Accents with header glow bars */
+#view-sim .card[data-section="sensors"]{ border-top:3px solid var(--city-blue); }
+#view-sim .card[data-section="rules"]  { border-top:3px solid var(--city-orange); }
+#view-sim .card[data-section="log"]    { border-top:3px solid var(--city-line); }
+
+#view-sim .card[data-section] h2::after{
+  content:""; position:absolute; left:10px; right:10px; bottom:-1px; height:2px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent);
+  opacity:.5;
+}
+#view-sim .card[data-section="sensors"] h2{ box-shadow:inset 0 -1px 0 rgba(42,176,255,.35); }
+#view-sim .card[data-section="rules"]   h2{ box-shadow:inset 0 -1px 0 rgba(255,148,77,.35); }
+#view-sim .card[data-section="log"]     h2{ box-shadow:inset 0 -1px 0 rgba(157,224,255,.35); }
+
+/* Buttons brighter & responsive */
+#view-sim button{
+  background:linear-gradient(180deg,#162b44,#13243a);
+  border:1px solid #2a4563;
+  box-shadow:0 6px 16px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.05);
+}
+#view-sim button:hover{ filter:brightness(1.12); transform:translateY(-1px); }
+#view-sim button:active{ transform:translateY(0); }
+
+#view-sim .success{ background:linear-gradient(180deg,#1f7f46,#17633a); border-color:#2fa266; }
+#view-sim .danger { background:linear-gradient(180deg,#7a3232,#5b2424); border-color:#a24a4a; }
+#view-sim .info   { background:linear-gradient(180deg,#20527a,#1a4261); border-color:#2d6fa0; }
+
+/* Inputs focus with cyan line accent */
+#view-sim input[type="text"], 
+#view-sim input[type="number"], 
+#view-sim select, 
+#view-sim input[type="time"], 
+#view-sim textarea{
+  background:linear-gradient(180deg,#0a1426,#091121);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+}
+#view-sim input:focus, 
+#view-sim select:focus, 
+#view-sim textarea:focus{
+  outline:none;
+  border-color:rgba(42,176,255,.55);
+  box-shadow:0 0 0 3px rgba(42,176,255,.20), inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+/* KPI badges in palette */
+#view-sim .tag{ background:#0e2136; border-color:#203a55; }
+#view-sim #lampState.tag{ color:#ffd6b8; border-color:rgba(255,148,77,.5); background:rgba(255,148,77,.12); }
+#view-sim #dimmerState.tag{ color:#d8f0ff; border-color:rgba(42,176,255,.5); background:rgba(42,176,255,.12); }
+#view-sim #fanState.tag{ color:#d6ecff; border-color:rgba(31,143,224,.5); background:rgba(31,143,224,.12); }
+
+/* Tabs get accent when active */
+.tabs button.active{
+  background:linear-gradient(180deg,#1b2f4d,#142640);
+  border-color:var(--city-hair-2);
+  box-shadow:inset 0 -2px 6px rgba(0,0,0,.45), 0 8px 18px rgba(0,0,0,.35);
+}
+
+/* Stronger section divider look */
+#view-sim .divider{ background:rgba(255,255,255,.08); }
+
+
+/* === City Theme for Flow (Wiresheet) & Settings === */
+
+/* Extra palette for wiresheet types */
+:root{
+  --city-violet:#8a5cff;   /* for AND (Cond) */
+  --city-green:#10b981;    /* for Rule (samler) */
+}
+
+/* FLOW VIEW (Wiresheet) */
+#view-flow{
+  position:relative;
+  background:
+    radial-gradient(1000px 600px at 120% -10%, rgba(42,176,255,.10) 0%, transparent 60%),
+    radial-gradient(800px 500px at -10% 10%, rgba(31,143,224,.10) 0%, transparent 65%),
+    linear-gradient(180deg, var(--city-bg-0), #060c18);
+  border-radius:12px;
+}
+#view-flow .card{
+  background:linear-gradient(180deg, var(--city-bg-1), #0a1529);
+  border:1px solid var(--city-hair);
+  box-shadow:0 10px 28px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.03);
+}
+#view-flow .card h2{
+  background:linear-gradient(180deg, var(--city-bg-2), #0a1a34);
+  border-bottom:1px solid var(--city-hair);
+}
+
+/* Wiresheet canvas */
+.ws-canvas{
+  background:
+    radial-gradient(600px 400px at 30% -10%, rgba(42,176,255,.07) 0%, transparent 60%),
+    linear-gradient(180deg,#0a1426,#091121);
+  border:1px solid var(--city-hair);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03), 0 10px 28px rgba(0,0,0,.45);
+}
+
+/* Nodes */
+.ws-node{
+  background:linear-gradient(180deg,#0f1626,#0b1220);
+  border:1px solid var(--city-hair-2);
+  box-shadow:0 12px 28px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.04);
+}
+.ws-head{
+  background:linear-gradient(180deg,#0f1d34,#0c1629);
+  border-bottom:1px solid var(--city-hair);
+}
+
+/* Type accents */
+.ws-node.trig { border-color: var(--city-blue); }
+.ws-node.trig .ws-head { background:linear-gradient(90deg,#122c4a,#1f4270); color:#dbeafe; }
+.ws-node.trig::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background: var(--city-blue); border-radius:12px 0 0 12px; }
+
+.ws-node.cond { border-color: var(--city-violet); }
+.ws-node.cond .ws-head { background:linear-gradient(90deg,#3a1b78,#5b32b4); color:#ede9fe; }
+.ws-node.cond::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background: var(--city-violet); border-radius:12px 0 0 12px; }
+
+.ws-node.act  { border-color: var(--city-orange); }
+.ws-node.act  .ws-head { background:linear-gradient(90deg,#6b3a0a,#b45309); color:#fef3c7; }
+.ws-node.act::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background: var(--city-orange); border-radius:12px 0 0 12px; }
+
+.ws-node.rule { border-color: var(--city-green); }
+.ws-node.rule .ws-head { background:linear-gradient(90deg,#064e3b,#0b7a5f); color:#d1fae5; }
+.ws-node.rule::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background: var(--city-green); border-radius:12px 0 0 12px; }
+
+/* Ports and connections */
+.port{ border-color: rgba(255,255,255,.25); background:#0b1118; }
+.port.out{ box-shadow:0 0 0 2px rgba(42,176,255,.30), inset 0 0 0 2px rgba(255,255,255,.06); }
+.port.in{  box-shadow:0 0 0 2px rgba(16,185,129,.30), inset 0 0 0 2px rgba(255,255,255,.06); }
+.ws-wires svg path{
+  stroke: rgba(157,224,255,.85);
+  filter: drop-shadow(0 0 6px rgba(157,224,255,.5));
+}
+
+/* Node inputs */
+.ws-body select, .ws-body input[type="text"]{
+  background:linear-gradient(180deg,#0a1426,#091121);
+  border:1px solid rgba(255,255,255,.10);
+  color:#e6e9ee;
+}
+.ws-body select:focus, .ws-body input[type="text"]:focus{
+  outline:none;
+  border-color:rgba(42,176,255,.55);
+  box-shadow:0 0 0 3px rgba(42,176,255,.20), inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+/* Palette buttons at top */
+#wsAddTrig { background:linear-gradient(180deg,#123a6b,#0e2c52); border-color:#2ab0ff; color:#dbeafe; }
+#wsAddCond { background:linear-gradient(180deg,#46208a,#36196a); border-color:#8a5cff; color:#ede9fe; }
+#wsAddAct  { background:linear-gradient(180deg,#9a4b0a,#7c3b08); border-color:#ff944d; color:#fef3c7; }
+#wsAddRule { background:linear-gradient(180deg,#0d5b47,#0a4537); border-color:#10b981; color:#d1fae5; }
+#wsAddTrig:hover, #wsAddCond:hover, #wsAddAct:hover, #wsAddRule:hover { filter:brightness(1.08); }
+
+/* SETTINGS VIEW */
+#view-settings{
+  position:relative;
+  background:
+    radial-gradient(900px 500px at 110% -10%, rgba(42,176,255,.10) 0%, transparent 65%),
+    linear-gradient(180deg, var(--city-bg-0), #060c18);
+  border-radius:12px;
+}
+#view-settings .card{
+  background:linear-gradient(180deg, var(--city-bg-1), #0a1529);
+  border:1px solid var(--city-hair);
+  box-shadow:0 10px 28px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.03);
+}
+#view-settings .card h2{
+  background:linear-gradient(180deg, var(--city-bg-2), #0a1a34);
+  border-bottom:1px solid var(--city-hair);
+}
+#view-settings label{ color:#cfe2ff; }
+#view-settings input[type="text"], 
+#view-settings input[type="number"], 
+#view-settings input[type="password"], 
+#view-settings input[type="time"], 
+#view-settings select, 
+#view-settings textarea{
+  background:linear-gradient(180deg,#0a1426,#091121);
+  border:1px solid rgba(255,255,255,.10);
+  color:#e6e9ee;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+}
+#view-settings input:focus, 
+#view-settings select:focus, 
+#view-settings textarea:focus{
+  outline:none;
+  border-color:rgba(42,176,255,.55);
+  box-shadow:0 0 0 3px rgba(42,176,255,.20), inset 0 1px 0 rgba(255,255,255,.05);
+}
+#view-settings .success{ background:linear-gradient(180deg,#1f7f46,#17633a); border-color:#2fa266; }
+#view-settings .danger { background:linear-gradient(180deg,#7a3232,#5b2424); border-color:#a24a4a; }
+#view-settings .info   { background:linear-gradient(180deg,#20527a,#1a4261); border-color:#2d6fa0; }
+
+
+/* === Dark dropdowns (match city theme) === */
+select {
+  background-color: #1c2331;      /* closed select */
+  color: #e8edf5;
+  border: 1px solid #2e3b4e;
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+select:focus {
+  outline: none;
+  border-color: #2ab0ff;
+  box-shadow: 0 0 0 3px rgba(42,176,255,.2);
+}
+
+/* Options list (when open) */
+select option {
+  background-color: #0f1b2e;      /* open list rows */
+  color: #e8edf5;
+}
+select option:checked {
+  background-color: #123a6b;
+  color: #dbeafe;
+}
+select option:hover {
+  background-color: #2e3b4e;
+  color: #fff;
+}
+
+/* Support for optgroup headers */
+select optgroup {
+  background-color: #0f1b2e;
+  color: #9fb3c8;
+}
+
+/* Disabled option look */
+select option:disabled {
+  color: #6c7b8a;
+  background-color: #0f1b2e;
+}
+
+</style>
+
+  <!-- WebView2-bro -->
+  <script>
+  (function(){
+    let seq = 0;
+    const pending = new Map();
+    function hasWV2(){ return !!(window.chrome && window.chrome.webview); }
+    if (hasWV2()){
+      window.chrome.webview.addEventListener('message', (e) => {
+        const msg = e.data || {};
+        if (msg.replyTo && pending.has(msg.replyTo)) {
+          const resolve = pending.get(msg.replyTo);
+          pending.delete(msg.replyTo);
+          resolve(msg.payload ?? msg);
+        }
+      });
+    }
+    window.api = {
+      async saveText(defaultName, text){
+        if (hasWV2()){
+          return await new Promise((resolve) => {
+            const id = 'm' + (++seq);
+            pending.set(id, (resp) => resolve(resp && resp.path ? resp.path : null));
+            window.chrome.webview.postMessage({ id, cmd: 'saveText', defaultName, text });
+          });
+        }
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([text], {type:'text/plain;charset=utf-8'}));
+        a.download = defaultName; a.click();
+        return defaultName;
+      },
+      async openText(){
+        if (hasWV2()){
+          return await new Promise((resolve) => {
+            const id = 'm' + (++seq);
+            pending.set(id, (resp) => resolve(resp && resp.ok ? { path: resp.path, text: resp.text } : null));
+            window.chrome.webview.postMessage({ id, cmd: 'openText' });
+          });
+        }
+        return null;
+      }
+    };
+  })();
+  </script>
+</head>
+<body>
+  <!-- Login overlay -->
+  <div id="loginView" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
+    <div class="card" style="min-width:320px; max-width:360px;">
+      <h2>Login</h2>
+      <div class="body">
+        <label>Brugernavn</label>
+        <input id="loginUser" placeholder="Brugernavn" autocomplete="username">
+        <label>Adgangskode</label>
+        <input id="loginPass" type="password" placeholder="Adgangskode" autocomplete="current-password">
+        <div class="row" style="margin-top:8px">
+          <button id="btnLogin" class="success">Login</button>
+        </div>
+        <p id="loginError" style="color:#ff9aa2;"></p>
+        <p class="small muted">Standard: <code>admin</code> / <code>1234</code>. Kan ændres under <em>Indstillinger</em>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="mainApp" style="display:none;">
+
+  <header>
+    <div class="brand"><h1 class="goldtext">IBISIMULATOR BY RJ</h1></div>
+    <div class="top-right">
+      <div class="menu">
+        <button id="btnMenu" aria-haspopup="true" aria-expanded="false" title="LUA-værktøjer">LUA ▾</button>
+        <div class="menu-list" id="menuList" role="menu">
+          <button id="btnGenLua" role="menuitem">Generér LUA</button>
+          <button id="btnCopyLua" role="menuitem">Kopiér LUA</button>
+          <button id="btnSaveLua" role="menuitem">Gem LUA som .lua</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Faner -->
+  <div class="tabs">
+    <button id="tabSim"  class="active">Simulator</button>
+    <button id="tabFlow">Flow (beta)</button>
+    <button id="tabSettings">Indstillinger</button>
+  </div>
+
+  <div class="views">
+    <!-- ===== View: Simulator ===== -->
+    <section id="view-sim" class="view active">
+      <div class="wrap">
+        <!-- 1) Sensorer -->
+        <div class="card" data-section="sensors">
+          <h2>1) Virtuelle sensorer & tilstande</h2>
+          <div class="body">
+            <div class="grid2">
+              <div>
+                <label class="has-tip" data-tip="PIR (bevægelsessensor). Breached = bevægelse; Safe = ingen bevægelse.">PIR (bevægelse)</label>
+                <div class="row">
+                  <button id="pirOn">Sæt: Breached</button>
+                  <button id="pirOff" class="danger">Sæt: Safe</button>
+                </div>
+                <div class="sp"></div>
+
+                <label class="has-tip" data-tip="Dørkontakt (åben/lukket).">Dørkontakt</label>
+                <div class="row">
+                  <button id="doorOpen">Sæt: Opened</button>
+                  <button id="doorClose" class="danger">Sæt: Closed</button>
+                </div>
+              </div>
+
+              <div>
+                <label class="has-tip" data-tip="Virtuelt klokkeslæt til 'Time = hh:mm' og 'Tid mellem'.">Klokkeslæt</label>
+                <input type="time" id="clock" value="21:30">
+
+                <label class="has-tip" data-tip="Ugedag (Mon..Sun) – bruges i 'Ugedag i'.">Ugedag</label>
+                <select id="weekday">
+                  <option>Mon</option><option>Tue</option><option>Wed</option>
+                  <option>Thu</option><option>Fri</option><option>Sat</option><option>Sun</option>
+                </select>
+
+                <label class="has-tip" data-tip="Alarmtilstande. 'Armed' kan testes i AND-betingelse. 'Home mode' er ekstra flag.">Alarmtilstande</label>
+                <div class="row">
+                  <label class="pill"><input type="checkbox" id="alarmArmed"> Armed</label>
+                  <label class="pill has-tip" data-tip="Home mode: din egen 'hjemme'-tilstand."><input type="checkbox" id="alarmHome"> Home mode</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+            <label class="has-tip" data-tip="Egne globale variabler (fx mode=night). Brug i AND: 'Global name=value'.">Globale variabler</label>
+            <div class="row">
+              <input type="text" id="globalName" placeholder="fx mode">
+              <input type="text" id="globalValue" placeholder="fx night">
+            </div>
+            <div class="row">
+              <button id="setGlobal" class="info">Sæt (buffer)</button>
+              <button id="clearGlobals" class="danger">Clear alle</button>
+            </div>
+
+            <!-- Z-Wave fleksible sensorer -->
+            <div class="divider"></div>
+            <label class="has-tip" data-tip="Z-Wave-inspirerede sensorer. Vælg type og sæt værdi. Lys/Vind/Fugt mappes direkte til felter. Øvrige bliver globals: sensor.&lt;navn&gt;. Hold mus over 'Binær/Numerisk' for hjælp.">
+              Z-Wave sensorer (fleksible)
+            </label>
+            <div id="zwRows"></div>
+            <div class="row">
+              <button type="button" id="zwAdd">Tilføj sensor</button>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="kpi">
+              <div class="box"><div class="small">Lampe</div><div id="lampState" class="tag">OFF</div></div>
+              <div class="box"><div class="small">Dæmper</div><div id="dimmerState" class="tag">0%</div></div>
+              <div class="box"><div class="small">Ventilator</div><div id="fanState" class="tag">OFF</div></div>
+            </div>
+
+            <div class="sp"></div>
+            <div class="row">
+              <button id="turnLampOn">Tænd lampe</button>
+              <button id="turnLampOff">Sluk lampe</button>
+
+              <div style="flex:1" class="has-tip" data-tip="Vælg dæmperniveau 0–100% og tryk 'Sæt'.">
+                <label for="dimSel" class="small muted">Dæmper (0–100%)</label>
+                <div class="row">
+                  <select id="dimSel">
+                    <option value="0">0%</option><option value="10">10%</option><option value="20">20%</option>
+                    <option value="30" selected>30%</option><option value="40">40%</option><option value="50">50%</option>
+                    <option value="60">60%</option><option value="70">70%</option><option value="80">80%</option>
+                    <option value="90">90%</option><option value="100">100%</option>
+                  </select>
+                  <button id="dimSet">Sæt</button>
+                </div>
+              </div>
+
+              <button id="fanOn">Fan On</button>
+              <button id="fanOff">Fan Off</button>
+            </div>
+
+            <div class="divider"></div>
+            <div class="row">
+              <button id="applyPending" class="success" title="Anvend bufferede ændringer og kør regler">Aktivér ændringer</button>
+              <span class="small muted">Nyeste log nederst • Intet trigges før “Aktivér”.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2) Regler -->
+        <div class="card" data-section="rules">
+          <h2>2) Regler (blok-scener)</h2>
+          <div class="body">
+            <div class="row">
+              <select id="triggerType" title="Vælg trigger (IF)">
+                <option value="always">IF (ved aktivering/kørsel)</option>
+                <option value="motionBreached">IF PIR bliver Breached</option>
+                <option value="motionSafe">IF PIR bliver Safe</option>
+                <option value="doorOpened">IF Dørkontakt ændres til Opened</option>
+                <option value="timeEquals">IF Klokkeslæt = (hh:mm)</option>
+                <option value="humidityAbove">IF Fugtighed ≥ (værdi)</option>
+                <option value="globalEqTrig">IF Global name=value</option>
+                <option value="sensorEqTrig">IF Sensor (global) = (navn=værdi)</option>
+                <option value="sensorGtTrig">IF Sensor (global) > (navn=tal)</option>
+                <option value="sensorLtTrig">IF Sensor (global) < (navn=tal)</option>
+                <option value="sensorGeTrig">IF Sensor (global) ≥ (navn=tal)</option>
+                <option value="sensorLeTrig">IF Sensor (global) ≤ (navn=tal)</option>
+              </select>
+              <input type="text" id="triggerValue" placeholder="fx sensor.contact=Opened / sensor.temp=21" title="Til global/sensor: navn=værdi (fx sensor.temp=21)">
+            </div>
+
+            <div class="row">
+              <select id="cond1" title="AND (valgfri)">
+                <option value="">AND (valgfri)</option>
+                <option value="luxBelow">Lys (lux) <</option>
+                <option value="luxAbove">Lys (lux) ></option>
+                <option value="humAbove">Fugtighed ≥</option>
+                <option value="humBelow">Fugtighed ≤</option>
+                <option value="windBelow">Vind <</option>
+                <option value="weekdayIn">Ugedag i (Mon,Fri,…)</option>
+                <option value="alarmArmed">Alarm = Armed</option>
+                <option value="globalEq">Global name=value</option>
+                <option value="sensorEq">Sensor (global) ==</option>
+                <option value="sensorNe">Sensor (global) ≠</option>
+                <option value="sensorGt">Sensor (global) ></option>
+                <option value="sensorLt">Sensor (global) <</option>
+                <option value="sensorGe">Sensor (global) ≥</option>
+                <option value="sensorLe">Sensor (global) ≤</option>
+                <option value="sensorContains">Sensor (global) contains</option>
+                <option value="timeBetween">Tid mellem (HH:MM-HH:MM)</option>
+              </select>
+              <input type="text" id="cond1Value" placeholder="fx sensor.temp=21 / sensor.smoke=Detected" title="Til sensor/globale: navn=værdi">
+            </div>
+
+            <div class="row">
+              <select id="cond2" title="AND (valgfri)">
+                <option value="">AND (valgfri)</option>
+                <option value="luxBelow">Lys (lux) <</option>
+                <option value="luxAbove">Lys (lux) ></option>
+                <option value="humAbove">Fugtighed ≥</option>
+                <option value="humBelow">Fugtighed ≤</option>
+                <option value="windBelow">Vind <</option>
+                <option value="weekdayIn">Ugedag i (Mon,Fri,…)</option>
+                <option value="alarmArmed">Alarm = Armed</option>
+                <option value="globalEq">Global name=value</option>
+                <option value="sensorEq">Sensor (global) ==</option>
+                <option value="sensorNe">Sensor (global) ≠</option>
+                <option value="sensorGt">Sensor (global) ></option>
+                <option value="sensorLt">Sensor (global) <</option>
+                <option value="sensorGe">Sensor (global) ≥</option>
+                <option value="sensorLe">Sensor (global) ≤</option>
+                <option value="sensorContains">Sensor (global) contains</option>
+                <option value="timeBetween">Tid mellem (HH:MM-HH:MM)</option>
+              </select>
+              <input type="text" id="cond2Value" placeholder="fx sensor.mode=night" title="Til sensor/globale: navn=værdi">
+            </div>
+
+            <div class="row">
+              <select id="action1" title="Vælg handling (THEN)">
+                <option value="lightOn">THEN Lys → Tænd</option>
+                <option value="lightOff">THEN Lys → Sluk</option>
+                <option value="dim30">THEN Dæmper → 30%</option>
+                <option value="dim100">THEN Dæmper → 100%</option>
+                <option value="fanOn">THEN Ventilator → On</option>
+                <option value="fanOff">THEN Ventilator → Off</option>
+                <option value="push">THEN Send Push (log)</option>
+                <option value="setGlobal">THEN Set Global name=value</option>
+                <option value="delayLightOff">THEN Delay (sek) → Lys Off</option>
+              </select>
+              <input type="text" id="action1Value" placeholder="for push/global/delay">
+            </div>
+
+            <div class="row">
+              <input type="text" id="ruleName" placeholder="Navn på regel (valgfri)" title="Navngiv din regel – vises i listen og i LUA-kommentar">
+            </div>
+
+            <div class="row">
+              <button id="addRule" class="success">Tilføj regel</button>
+              <button id="clearRules" class="danger">Slet alle</button>
+              <button id="saveRules">Gem</button>
+              <button id="loadRules">Hent</button>
+              <button id="exportRules" title="Gem regler som .json">Eksport</button>
+              <input type="file" id="importFile" accept=".json,application/json" style="flex:2">
+              <button id="importRules">Import</button>
+            </div>
+            <div id="rules"></div>
+          </div>
+        </div>
+
+        <!-- 3) Log + LUA -->
+        <div class="card" data-section="log">
+          <h2>3) Log & LUA</h2>
+          <div class="body">
+            <div class="row">
+              <button id="runAll" class="info" title="Kør alle regler mod aktuelle tilstande (RUN)">Kør regler (RUN)</button>
+              <button id="runTimeTick" title="Evaluer alle 'Time = hh:mm' regler">Kør “Time Tick” nu</button>
+              <button id="clearLog" class="danger" title="Tøm logvinduet">Slet log</button>
+            </div>
+            <div class="sp"></div>
+            <div id="log" class="log" title="Nyeste nederst."></div>
+            <div class="divider"></div>
+            <label>LUA-output:</label>
+            <textarea id="luaOut" spellcheck="false" placeholder="Åbn menuen 'LUA ▾' og vælg 'Generér LUA'."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="footer small">v1.7.3 (WebView2 • SPA med faner)</div>
+    </section>
+
+    <!-- ===== View: Flow (beta) ===== -->
+<section id="view-flow" class="view">
+  <div class="card">
+    <h2>Flow (beta) — Wiresheet MVP</h2>
+    <div class="body">
+      <div class="row" style="margin-bottom:8px;flex-wrap:wrap;gap:8px">
+        <button id="wsAddTrig">+ Trigger</button>
+        <button id="wsAddCond">+ AND</button>
+        <button id="wsAddAct">+ Action</button>
+        <button id="wsAddRule" class="info">+ Rule (samler)</button>
+        <span class="small muted" style="margin-left:auto">Tip: Træk noder rundt, klik en <span class="tag">● out</span> og derefter en <span class="tag">in ●</span> på Rule for at forbinde.</span>
+      </div>
+      <div class="row" style="margin-bottom:8px;flex-wrap:wrap;gap:8px">
+        <button id="wsBuild" class="success">Build → Tilføj regler</button>
+        <button id="wsClear" class="danger">Ryd wiresheet</button>
+        <button id="wsSave">Gem (local)</button>
+        <button id="wsLoad">Hent (local)</button>
+      </div>
+
+      <div id="wsCanvas" class="ws-canvas">
+        <svg id="wsWires" class="ws-wires"></svg>
+        <div id="wsNodes" class="ws-nodes"></div>
+      </div>
+    </div>
+  </div>
+</section>
+  
+    <!-- ===== View: Indstillinger ===== -->
+    <section id="view-settings" class="view">
+      <div class="card">
+        <h2>Indstillinger</h2>
+        <div class="body">
+          <div class="row" style="gap:8px;flex-wrap:wrap">
+            <input id="setUser" placeholder="Nyt brugernavn">
+            <input id="setPass" type="password" placeholder="Ny adgangskode">
+            <button id="btnSaveCreds">Gem</button>
+            <span class="small muted">Standard er <code>admin</code> / <code>1234</code>, indtil du gemmer nye.</span>
+          </div>
+          <div class="divider"></div>
+          <div class="row">
+            <button id="btnLogout" class="danger">Log ud</button>
+            <span class="small muted">Log ud skjuler appen og viser login-skærmen igen.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+  </div>
+
+<script>
+(function(){
+  var $ = function(sel){ return document.querySelector(sel); };
+  var logEl = $('#log'), luaOut = $('#luaOut');
+
+  /* Faner */
+  function setTab(which){
+    $('#tabSim').classList.toggle('active', which==='sim');
+    $('#tabFlow').classList.toggle('active', which==='flow');
+    $('#tabSettings').classList.toggle('active', which==='settings');
+    $('#view-sim').classList.toggle('active', which==='sim');
+    $('#view-flow').classList.toggle('active', which==='flow');
+    $('#view-settings').classList.toggle('active', which==='settings');
+  }
+  $('#tabSim').onclick = ()=>setTab('sim');
+  $('#tabFlow').onclick = ()=>setTab('flow');
+  $('#tabSettings').onclick = ()=>setTab('settings');
+
+  /* Topbar menu */
+  var menu = document.querySelector('.menu');
+  $('#btnMenu').onclick = function(){ menu.classList.toggle('open'); this.setAttribute('aria-expanded', menu.classList.contains('open') ? 'true' : 'false'); };
+  document.addEventListener('click', function(e){ if(!menu.contains(e.target)) { menu.classList.remove('open'); $('#btnMenu').setAttribute('aria-expanded','false'); } });
+
+  /* State */
+  var state   = { motion:false, door:false, lux:100, wind:2, humidity:45, time:'21:30', weekday:'Mon', alarmArmed:false, alarmHome:false, globals:{}, light:false, dimmer:0, fan:false, rules:[] };
+  var pending = JSON.parse(JSON.stringify(state));
+  window.pending = pending; window.state = state;
+
+  function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function log(msg, cls){ var ts=new Date().toLocaleTimeString(), k=cls?(' class="'+cls+'"'):'';
+    logEl.insertAdjacentHTML('beforeend','<span'+k+'>['+ts+'] '+escHtml(msg)+'</span><br>');
+    if(logEl.innerHTML.split('<br>').length>650){ logEl.innerHTML=logEl.innerHTML.split('<br>').slice(-600).join('<br>'); }
+    logEl.scrollTop=logEl.scrollHeight;
+  }
+  window.log = log; function clearLog(){ logEl.innerHTML=''; }
+
+  function updateKPI(){ $('#lampState').innerText = state.light ? 'ON' : 'OFF'; $('#dimmerState').innerText = state.dimmer + '%'; $('#fanState').innerText   = state.fan ? 'ON' : 'OFF'; }
+  function setLight(on){ state.light=!!on; updateKPI(); log('Light → ' + (on?'ON':'OFF')); }
+  function setDimmer(v){ v=Math.max(0,Math.min(100,parseInt(v)||0)); state.dimmer=v; state.light=v>0; updateKPI(); log('Dimmer → '+v+'%'); }
+  function setFan(on){ state.fan=!!on; updateKPI(); log('Fan → ' + (on?'ON':'OFF')); }
+
+  /* Buffer */
+  $('#pirOn').onclick=function(){ pending.motion=true; log('BUFFER: PIR = Breached'); };
+  $('#pirOff').onclick=function(){ pending.motion=false; log('BUFFER: PIR = Safe'); };
+  $('#doorOpen').onclick=function(){ pending.door=true;  if(!pending.globals) pending.globals={}; pending.globals['sensor.contact']='Opened'; log('BUFFER: Dørkontakt = Opened • Global sensor.contact=Opened'); };
+  $('#doorClose').onclick=function(){ pending.door=false; if(!pending.globals) pending.globals={}; pending.globals['sensor.contact']='Closed'; log('BUFFER: Dørkontakt = Closed • Global sensor.contact=Closed'); };
+  $('#clock').onchange=function(){ pending.time=this.value; log('BUFFER: Klokkeslæt = '+pending.time); };
+  $('#weekday').onchange=function(){ pending.weekday=this.value; log('BUFFER: Ugedag = '+pending.weekday); };
+  $('#alarmArmed').onclick=function(){ pending.alarmArmed=this.checked; log('BUFFER: Alarm.Armed = '+this.checked); };
+  $('#alarmHome').onclick=function(){ pending.alarmHome=this.checked; log('BUFFER: Alarm.Home = '+this.checked); };
+  $('#setGlobal').onclick=function(){ var k=$('#globalName').value.trim(), v=$('#globalValue').value.trim(); if(!k){ alert('Angiv globalt navn.'); return; } if(!pending.globals) pending.globals={}; pending.globals[k]=v; log('BUFFER: Global '+k+'='+v); };
+  $('#clearGlobals').onclick=function(){ pending.globals={}; log('BUFFER: Alle globale variabler nulstilles ved aktivering.'); };
+
+  /* Direkte aktører */
+  $('#turnLampOn').onclick=function(){ setLight(true); };
+  $('#turnLampOff').onclick=function(){ setLight(false); };
+  $('#dimSet').onclick=function(){ setDimmer(parseInt($('#dimSel').value,10)); };
+  $('#fanOn').onclick=function(){ setFan(true); };
+  $('#fanOff').onclick=function(){ setFan(false); };
+
+  /* Helpers */
+  function parseNameValue(s){ s=String(s||''); var i=s.indexOf('='); if(i<0){ var p=s.split(':'); return {name:(p[0]||'').trim(), value:(p.slice(1).join(':')||'').trim()}; } return {name:s.slice(0,i).trim(), value:s.slice(i+1).trim()}; }
+  function gget(name){ return (state.globals && state.globals[name]) || ''; }
+  function toNum(x){ var n=parseFloat(x); return isNaN(n)?0:n; }
+
+  function setCondHints(selEl, valEl){
+    var v = selEl.value, map = {
+      '':'værdi','luxBelow':'tal (fx 50)','luxAbove':'tal (fx 200)','humAbove':'procent (fx 65)','humBelow':'procent (fx 35)',
+      'windBelow':'m/s (fx 5)','weekdayIn':'liste (fx Mon,Fri)','alarmArmed':'(ingen værdi)','globalEq':'navn=værdi (fx mode=night)',
+      'sensorEq':'navn=værdi (fx sensor.smoke=Detected)','sensorNe':'navn=værdi','sensorGt':'navn=tal','sensorLt':'navn=tal',
+      'sensorGe':'navn=tal','sensorLe':'navn=tal','sensorContains':'navn=delstreng','timeBetween':'HH:MM-HH:MM (fx 22:00-06:00)'
+    };
+    valEl.placeholder = map[v] || 'værdi'; valEl.title = 'Indtast: ' + (map[v] || 'værdi'); if(v==='alarmArmed'){ valEl.value=''; }
+  }
+  $('#cond1').onchange=function(){ setCondHints(this,$('#cond1Value')); }; $('#cond2').onchange=function(){ setCondHints(this,$('#cond2Value')); };
+  setCondHints($('#cond1'),$('#cond1Value')); setCondHints($('#cond2'),$('#cond2Value'));
+
+  function setTrigHint(){ var t=$('#triggerType').value, inp=$('#triggerValue'), map={
+    'always':'(ingen værdi)','timeEquals':'hh:mm (fx 07:30)','humidityAbove':'værdi (fx 65)',
+    'globalEqTrig':'navn=værdi (fx sensor.mode=night)','sensorEqTrig':'navn=værdi (fx sensor.contact=Opened)',
+    'sensorGtTrig':'navn=tal (fx sensor.temp=21)','sensorLtTrig':'navn=tal (fx sensor.temp=21)','sensorGeTrig':'navn=tal','sensorLeTrig':'navn=tal'
+  }; inp.placeholder=map[t]||'(kun hvis relevant)'; }
+  $('#triggerType').onchange=setTrigHint; setTrigHint();
+
+  /* Regler UI */
+  function ruleRow(r,i){
+    var name = r.ruleName ? '“'+r.ruleName+'”' : ('#'+(i+1));
+    var div=document.createElement('div'); div.className='rule';
+    div.innerHTML='<div class="small muted">'+name+'</div>'+
+      '<div><span class="tag">'+r.trigger+(r.triggerValue?(' '+r.triggerValue):'')+'</span></div>'+
+      '<div style="margin-top:4px;"><span class="tag">'+(r.cond1? r.cond1 : '')+' '+(r.cond1Value||'')+'</span> '+
+      '<span class="tag">'+(r.cond2? r.cond2 : '')+' '+(r.cond2Value||'')+'</span></div>'+
+      '<div style="margin-top:6px;"><span class="tag">'+r.action1+(r.action1Value?(' '+r.action1Value):'')+'</span></div>'+
+      '<div class="row" style="margin-top:6px;"><button data-i="'+i+'" class="delRule danger">Slet</button></div>';
+    return div;
+  }
+  function refreshRules(){ var box=$('#rules'); box.innerHTML=''; for(var i=0;i<state.rules.length;i++) box.appendChild(ruleRow(state.rules[i],i));
+    box.querySelectorAll('.delRule').forEach(function(b){ b.onclick=function(){ var idx=parseInt(this.getAttribute('data-i')); state.rules.splice(idx,1); refreshRules(); log('Regel slettet.'); }; });
+  }
+  window.refreshRules = refreshRules;
+
+  $('#addRule').onclick=function(){ var r={trigger:$('#triggerType').value, triggerValue:$('#triggerValue').value.trim(),
+    cond1:$('#cond1').value, cond1Value:$('#cond1Value').value.trim(), cond2:$('#cond2').value, cond2Value:$('#cond2Value').value.trim(),
+    action1:$('#action1').value, action1Value:$('#action1Value').value.trim(), ruleName:$('#ruleName').value.trim()};
+    state.rules.push(r); refreshRules(); log('Regel tilføjet'+(r.ruleName?': '+r.ruleName:'')); $('#ruleName').value=''; };
+  $('#clearRules').onclick=function(){ state.rules=[]; refreshRules(); log('Alle regler slettet.'); };
+
+  /* Storage + import/eksport (WebView2) */
+  $('#saveRules').onclick=function(){ try{ localStorage.setItem('hc3_rules', JSON.stringify(state.rules)); log('Regler gemt i localStorage.'); }catch(e){ alert('Kunne ikke gemme: '+e.message); } };
+  $('#loadRules').onclick=function(){ try{ var raw=localStorage.getItem('hc3_rules'); if(raw){ state.rules=JSON.parse(raw)||[]; refreshRules(); log('Regler hentet.'); } else alert('Ingen gemte regler.'); }catch(e){ alert('Kunne ikke læse regler: '+e.message); } };
+
+  $('#exportRules').onclick = async function(){
+    try{
+      var data = JSON.stringify({version:'1.7.3', rules: state.rules}, null, 2);
+      var savedPath = await window.api.saveText('hc3_rules.json', data);
+      if(savedPath){ log('Regler eksporteret til ' + savedPath); alert('Eksporteret til ' + savedPath); }
+    }catch(e){ alert('Eksport fejlede: ' + e.message); }
+  };
+
+  $('#importRules').onclick = async function(){
+    try{
+      var inp = $('#importFile');
+      var f   = inp && inp.files && inp.files[0];
+      if (f){
+        var r = new FileReader();
+        r.onload = function(e){
+          try{
+            var txt   = e.target.result || '';
+            var obj   = JSON.parse(txt || '{}');
+            var rules = obj.rules || obj || [];
+            if(!(rules && rules.length >= 0)) throw new Error('JSON indeholder ikke regler');
+            state.rules = rules; refreshRules(); log('Regler importeret fra valgt fil (FileReader).');
+          }catch(err){ alert('Import fejlede: ' + err.message); }
+        };
+        r.readAsText(f);
+        return;
+      }
+      var res = await window.api.openText();
+      if(res && res.text){
+        var obj   = JSON.parse(res.text || '{}');
+        var rules = obj.rules || obj || [];
+        if(!(rules && rules.length >= 0)) throw new Error('JSON indeholder ikke regler');
+        state.rules = rules; refreshRules(); log('Regler importeret fra ' + (res.path||'(ukendt)'));
+      } else {
+        alert('Vælg en .json-fil (via knappen eller feltet).');
+      }
+    }catch(e){ alert('Import fejlede: ' + e.message); }
+  };
+
+  /* Tidshjælpere */
+  function toMin(hhmm){ var sp=(hhmm||'00:00').split(':'), h=parseInt(sp[0]||'0',10), m=parseInt(sp[1]||'0',10); return h*60+m; }
+  function timeBetweenVirtual(currentHHMM, range){ var now=toMin(currentHHMM||'00:00'); var parts=(range||'').split('-'); if(parts.length!==2) return false;
+    var a=toMin(parts[0].trim()), b=toMin(parts[1].trim()); return (a<=b)?(now>=a&&now<=b):(now>=a||now<=b); }
+
+  /* AND-betingelser */
+  function condOk(kind,val){
+    if(!kind) return true; var v=(val||'').trim();
+    switch(kind){
+      case 'luxBelow': return state.lux < parseFloat(v||'0');
+      case 'luxAbove': return state.lux > parseFloat(v||'0');
+      case 'humAbove': return state.humidity >= parseFloat(v||'0');
+      case 'humBelow': return state.humidity <= parseFloat(v||'0');
+      case 'windBelow': return state.wind < parseFloat(v||'0');
+      case 'weekdayIn': return v.split(',').map(function(s){return s.trim();}).includes(state.weekday);
+      case 'alarmArmed': return state.alarmArmed===true;
+      case 'globalEq': { var sp=v.split('='), k=(sp[0]||'').trim(), expect=(sp[1]||'').trim(); return (state.globals[k]||'')===expect; }
+      case 'sensorEq': { var p=parseNameValue(v); return gget(p.name)===p.value; }
+      case 'sensorNe': { var p2=parseNameValue(v); return gget(p2.name)!==p2.value; }
+      case 'sensorGt': { var p3=parseNameValue(v); return toNum(gget(p3.name)) >  toNum(p3.value); }
+      case 'sensorLt': { var p4=parseNameValue(v); return toNum(gget(p4.name)) <  toNum(p4.value); }
+      case 'sensorGe': { var p5=parseNameValue(v); return toNum(gget(p5.name)) >= toNum(p5.value); }
+      case 'sensorLe': { var p6=parseNameValue(v); return toNum(gget(p6.name)) <= toNum(p6.value); }
+      case 'sensorContains': { var p7=parseNameValue(v); return String(gget(p7.name)).indexOf(p7.value)!==-1; }
+      case 'timeBetween': return timeBetweenVirtual(state.time, v);
+      default: return true;
+    }
+  }
+  function bothCondsOk(r){ return condOk(r.cond1, r.cond1Value) && condOk(r.cond2, r.cond2Value); }
+
+  /* Triggers */
+  function matchTrigger(rule, firedTrigger){
+    if(rule.trigger!==firedTrigger) return false;
+    switch(firedTrigger){
+      case 'always': return true;
+      case 'motionBreached': return state.motion===true;
+      case 'motionSafe': return state.motion===false;
+      case 'doorOpened': return state.door===true;
+      case 'timeEquals': return !!rule.triggerValue && rule.triggerValue===state.time;
+      case 'humidityAbove': return state.humidity >= parseFloat((rule.triggerValue||'0').trim());
+      case 'globalEqTrig': { var p=parseNameValue(rule.triggerValue||''); if(!p.name) return false; return gget(p.name)===p.value; }
+      case 'sensorEqTrig':  { var p2=parseNameValue(rule.triggerValue||''); if(!p2.name) return false; return gget(p2.name)===p2.value; }
+      case 'sensorGtTrig':  { var p3=parseNameValue(rule.triggerValue||''); if(!p3.name) return false; return toNum(gget(p3.name)) >  toNum(p3.value); }
+      case 'sensorLtTrig':  { var p4=parseNameValue(rule.triggerValue||''); if(!p4.name) return false; return toNum(gget(p4.name)) <  toNum(p4.value); }
+      case 'sensorGeTrig':  { var p5=parseNameValue(rule.triggerValue||''); if(!p5.name) return false; return toNum(gget(p5.name)) >= toNum(p5.value); }
+      case 'sensorLeTrig':  { var p6=parseNameValue(rule.triggerValue||''); if(!p6.name) return false; return toNum(gget(p6.name)) <= toNum(p6.value); }
+      default: return false;
+    }
+  }
+
+  function doAction(kind,param){
+    switch(kind){
+      case 'lightOn': setLight(true); break;
+      case 'lightOff': setLight(false); break;
+      case 'dim30': setDimmer(30); break;
+      case 'dim100': setDimmer(100); break;
+      case 'fanOn': setFan(true); break;
+      case 'fanOff': setFan(false); break;
+      case 'push': log('PUSH: '+(param||'(tom besked)')); break;
+      case 'setGlobal': { var sp=(param||'').split('='), k=(sp[0]||'').trim(), v=(sp[1]||'').trim(); if(!k){ log('SetGlobal fejl: mangler name=value'); break; } state.globals[k]=v; log('Global '+k+'='+v); break; }
+      case 'delayLightOff': { var sec=Math.max(0, parseInt(param||'0',10)); window.setTimeout(function(){ setLight(false); }, sec*1000); log('Delay '+sec+'s → Light Off planlagt'); break; }
+    }
+  }
+
+  function evaluate(firedTrigger){
+    for(var i=0;i<state.rules.length;i++){
+      var r=state.rules[i];
+      if(matchTrigger(r,firedTrigger) && bothCondsOk(r)){
+        doAction(r.action1, r.action1Value);
+        var name = r.ruleName ? '“'+r.ruleName+'”' : ('#'+(i+1));
+        log('MATCH: Regel '+name+' → action "'+r.action1+'"', 'match');
+      }
+    }
+  }
+
+  function runAll(){
+    for(var i=0;i<state.rules.length;i++){
+      var r=state.rules[i], ok=false;
+      switch(r.trigger){
+        case 'always': ok=true; break;
+        case 'motionBreached': ok=(state.motion===true); break;
+        case 'motionSafe': ok=(state.motion===false); break;
+        case 'doorOpened': ok=(state.door===true); break;
+        case 'timeEquals': ok=(!!r.triggerValue && r.triggerValue===state.time); break;
+        case 'humidityAbove': ok=(state.humidity >= parseFloat((r.triggerValue||'0').trim())); break;
+        case 'globalEqTrig': { var p=parseNameValue(r.triggerValue||''); ok=!!p.name && (gget(p.name)===p.value); break; }
+        case 'sensorEqTrig':  { var p2=parseNameValue(r.triggerValue||''); ok=!!p2.name && (gget(p2.name)===p2.value); break; }
+        case 'sensorGtTrig':  { var p3=parseNameValue(r.triggerValue||''); ok=!!p3.name && (toNum(gget(p3.name)) >  toNum(p3.value)); break; }
+        case 'sensorLtTrig':  { var p4=parseNameValue(r.triggerValue||''); ok=!!p4.name && (toNum(gget(p4.name)) <  toNum(p4.value)); break; }
+        case 'sensorGeTrig':  { var p5=parseNameValue(r.triggerValue||''); ok=!!p5.name && (toNum(gget(p5.name)) >= toNum(p5.value)); break; }
+        case 'sensorLeTrig':  { var p6=parseNameValue(r.triggerValue||''); ok=!!p6.name && (toNum(gget(p6.name)) <= toNum(p6.value)); break; }
+      }
+      if(ok && bothCondsOk(r)){
+        doAction(r.action1, r.action1Value);
+        var name = r.ruleName ? '“'+r.ruleName+'”' : ('#'+(i+1));
+        log('MATCH: Regel '+name+' → action "'+r.action1+'"', 'match');
+      }
+    }
+    log('RUN: alle regler evalueret mod aktuelle tilstande.');
+  }
+
+  function applyPending(){
+    function ch(k,pretty,fmt){ var ov=state[k], nv=pending[k]; if(JSON.stringify(ov)!==JSON.stringify(nv)){ state[k]=nv; log('AKTIVERET: '+pretty+' = '+(fmt?fmt(nv):nv)); } }
+    ch('motion','PIR',function(v){return v?'Breached':'Safe';});
+    ch('door','Dørkontakt',function(v){return v?'Opened':'Closed';});
+    ch('lux','Lys(lux)'); ch('wind','Vind',function(v){return v+' m/s';}); ch('humidity','Fugtighed',function(v){return v+'%';});
+    ch('time','Klokkeslæt'); ch('weekday','Ugedag'); ch('alarmArmed','Alarm.Armed'); ch('alarmHome','Alarm.Home');
+    var pg=pending.globals||{}; for(var k in pg){ if(pg.hasOwnProperty(k)){ if((state.globals[k]||'')!==pg[k]){ state.globals[k]=pg[k]; log('AKTIVERET: Global '+k+'='+pg[k]); } } }
+    updateKPI(); runAll();
+  }
+
+  /* Knapper */
+  $('#applyPending').onclick=function(){ applyPending(); };
+  $('#runAll').onclick=function(){ runAll(); };
+  $('#runTimeTick').onclick=function(){ evaluate('timeEquals'); log('TIME TICK: '+state.time); };
+  $('#clearLog').onclick=function(){ clearLog(); };
+
+  /* Z-Wave sensor defs + tooltips */
+  var SENSOR_DEFS = {
+    'PIR (bevægelse)':     {kind:'binary', key:'pir',        on:'Breached', off:'Safe'},
+    'Dør-/vindueskontakt': {kind:'binary', key:'contact',    on:'Opened',   off:'Closed'},
+    'Lys (lux)':           {kind:'number', key:'lux',        unit:'lux',  step:1,   min:0,   max:5000, mapsTo:'lux'},
+    'Vind (m/s)':          {kind:'number', key:'wind',       unit:'m/s',  step:0.1, min:0,   max:60,   mapsTo:'wind'},
+    'Fugtighed (%)':       {kind:'number', key:'humidity',   unit:'%',    step:1,   min:0,   max:100,  mapsTo:'humidity'},
+    'Temperatur (°C)':     {kind:'number', key:'temp',       unit:'°C',   step:0.1, min:-30, max:60},
+    'Røgalarm':            {kind:'binary', key:'smoke',      on:'Detected', off:'Clear'},
+    'Vandlækage':          {kind:'binary', key:'leak',       on:'Wet',     off:'Dry'},
+    'CO₂ (ppm)':           {kind:'number', key:'co2',        unit:'ppm',  step:50,  min:300, max:5000},
+    'Tilstedeværelse':     {kind:'binary', key:'presence',   on:'Occupied', off:'Vacant'}
+  };
+  function makeSensorTip(name){
+    var def=SENSOR_DEFS[name]; if(!def) return 'Sensor (global)\nSkriv i Regler: navn=værdi';
+    if(def.mapsTo){ if(def.mapsTo==='lux') return ['Lys (lux) – IKKE via Sensor (global)','Brug i Regler:','• AND: "Lys (lux) <" / ">"','Eksempel: AND Lys (lux) < 50'].join('\n');
+      if(def.mapsTo==='wind') return ['Vind (m/s) – IKKE via Sensor (global)','Brug i Regler:','• AND: "Vind <"','Eksempel: AND Vind < 5'].join('\n');
+      if(def.mapsTo==='humidity') return ['Fugtighed (%) – IKKE via Sensor (global)','Brug i Regler:','• IF Fugtighed ≥ (værdi)','• AND Fugtighed ≤ / ≥','Eksempel: IF Fugtighed ≥ 65'].join('\n'); }
+    var key='sensor.'+def.key;
+    if(def.kind==='binary') return [name,'Global: '+key,'Værdier: '+def.on+' / '+def.off,'IF: Sensor (global) =','  '+key+'='+def.on,'AND: ==, ≠, contains','  fx '+key+'='+def.off].join('\n');
+    var unit=def.unit?(' '+def.unit):''; return [name,'Global: '+key,'Værdi: tal'+unit,'IF: Sensor (global) >, <, ≥, ≤, =','  fx '+key+'=21','AND: >, <, ≥, ≤, ==, ≠'].join('\n');
+  }
+
+  function zwMakeRow(container){
+    var row=document.createElement('div'); row.className='zw-row';
+
+    var typeSel=document.createElement('select'); typeSel.className='zw-type';
+    for(var name in SENSOR_DEFS){ var op=document.createElement('option'); op.value=name; op.text=name; typeSel.appendChild(op); }
+
+    var valWrap=document.createElement('div');
+    valWrap.style.display='flex'; valWrap.style.alignItems='center'; valWrap.style.gap='8px'; valWrap.style.flex='0 0 auto';
+    var valCtl=null;
+
+    var setBtn=document.createElement('button'); setBtn.textContent='Sæt (buffer)';
+    var delBtn=document.createElement('button'); delBtn.textContent='Fjern'; delBtn.className='danger';
+
+    var badge=document.createElement('span');   badge.className='zw-badge has-tip';
+    var nameChip=document.createElement('span'); nameChip.className='zw-global';
+    var mapsChip=document.createElement('span'); mapsChip.className='zw-maps';
+
+    function updateMeta(){
+      var def=SENSOR_DEFS[typeSel.value]; if(!def) return;
+      badge.textContent=(def.kind==='binary')?'Binær':'Numerisk';
+      var tip=makeSensorTip(typeSel.value); badge.setAttribute('data-tip',tip); badge.title=tip.replace(/\n/g,' • ');
+      nameChip.textContent = 'sensor.'+def.key;
+      mapsChip.textContent = def.mapsTo ? def.mapsTo : '';
+      mapsChip.style.display = def.mapsTo ? 'inline-flex' : 'none';
+    }
+
+    function renderValueCtl(){
+      valWrap.innerHTML=''; valCtl=null; var def=SENSOR_DEFS[typeSel.value]; if(!def) return;
+      if(def.kind==='binary'){
+        var onOff=document.createElement('select'); onOff.className='zw-val';
+        var o1=document.createElement('option'); o1.value=def.on;  o1.text=def.on;
+        var o2=document.createElement('option'); o2.value=def.off; o2.text=def.off;
+        onOff.appendChild(o1); onOff.appendChild(o2);
+        valCtl=onOff; valWrap.appendChild(onOff);
+      } else {
+        var inp=document.createElement('input'); inp.className='zw-val'; inp.type='number';
+        if(def.step!=null) inp.step=def.step; if(def.min!=null) inp.min=def.min; if(def.max!=null) inp.max=def.max;
+        inp.value=def.min!=null?def.min:0; valCtl=inp; valWrap.appendChild(inp);
+        if(def.unit){ var unit=document.createElement('span'); unit.className='zw-badge'; unit.textContent=def.unit; valWrap.appendChild(unit); }
+      }
+      updateMeta();
+    }
+
+    typeSel.onchange=function(){ renderValueCtl(); };
+    renderValueCtl();
+
+    setBtn.onclick=function(){
+      var def=SENSOR_DEFS[typeSel.value]; if(!def) return; var key=def.key;
+      if(def.mapsTo){
+        var num=parseFloat(valCtl.value); if(isNaN(num)) num=0;
+        pending[def.mapsTo]=num;
+        log('BUFFER: '+typeSel.value+' → '+num+(def.unit?(' '+def.unit):''));
+      } else if(def.kind==='binary'){
+        var v=String(valCtl.value||def.off);
+        if(!pending.globals) pending.globals={}; pending.globals['sensor.'+key]=v;
+        log('BUFFER: Global sensor.'+key+'='+v);
+      } else {
+        var numv=String(valCtl.value);
+        if(!pending.globals) pending.globals={}; pending.globals['sensor.'+key]=numv;
+        log('BUFFER: Global sensor.'+key+'='+numv);
+      }
+    };
+
+    delBtn.onclick=function(){ container.removeChild(row); };
+
+    /* Append-orden: kontroller -> knapper -> metachips (til højre) */
+    var metaWrap=document.createElement('div'); metaWrap.className='zw-meta';
+    metaWrap.appendChild(nameChip); metaWrap.appendChild(mapsChip); metaWrap.appendChild(badge);
+
+    row.appendChild(typeSel);
+    row.appendChild(valWrap);
+    row.appendChild(setBtn);
+    row.appendChild(delBtn);
+    row.appendChild(metaWrap);
+
+    container.appendChild(row);
+  }
+  window.zwMakeRow=zwMakeRow;
+
+  /* LUA generator */
+  function esc(s){ return (s||'').replace(/\\/g,'\\\\').replace(/"/g,'\\"'); }
+  function luaForTrigger(r){ function pnv(){ return parseNameValue(r.triggerValue||''); }
+    switch(r.trigger){
+      case 'always': return 'true';
+      case 'motionBreached': return 'fibaro.getValue(MOTION_ID, "value") == "true"';
+      case 'motionSafe':     return 'fibaro.getValue(MOTION_ID, "value") == "false"';
+      case 'doorOpened':     return 'fibaro.getValue(DOOR_ID, "value") == "true"';
+      case 'timeEquals':     return 'os.date("%H:%M") == "'+esc(r.triggerValue||"07:30")+'"';
+      case 'humidityAbove':  return '(tonumber(fibaro.getValue(HUM_ID, "value")) or 0) >= '+(parseFloat(r.triggerValue||'0')||0);
+      case 'globalEqTrig': { var p=pnv(); return 'fibaro.getGlobalVariable("'+esc(p.name||'')+'") == "'+esc(p.value||'')+'"'; }
+      case 'sensorEqTrig':  { var p2=pnv(); return 'fibaro.getGlobalVariable("'+esc(p2.name||'')+'") == "'+esc(p2.value||'')+'"'; }
+      case 'sensorGtTrig':  { var p3=pnv(); return '(tonumber(fibaro.getGlobalVariable("'+esc(p3.name||'')+'")) or 0) > '+(parseFloat(p3.value||'0')||0); }
+      case 'sensorLtTrig':  { var p4=pnv(); return '(tonumber(fibaro.getGlobalVariable("'+esc(p4.name||'')+'")) or 0) < '+(parseFloat(p4.value||'0')||0); }
+      case 'sensorGeTrig':  { var p5=pnv(); return '(tonumber(fibaro.getGlobalVariable("'+esc(p5.name||'')+'")) or 0) >= '+(parseFloat(p5.value||'0')||0); }
+      case 'sensorLeTrig':  { var p6=pnv(); return '(tonumber(fibaro.getGlobalVariable("'+esc(p6.name||'')+'")) or 0) <= '+(parseFloat(p6.value||'0')||0); }
+      default: return 'true';
+    } }
+  function luaForCond(kind, val){ var v=(val||'').trim(); function p(){ return parseNameValue(v); }
+    switch(kind){
+      case 'luxBelow':  return '(tonumber(fibaro.getValue(LUX_ID, "value")) or 0) < '+(parseFloat(v||'0')||0);
+      case 'luxAbove':  return '(tonumber(fibaro.getValue(LUX_ID, "value")) or 0) > '+(parseFloat(v||'0')||0);
+      case 'humAbove':  return '(tonumber(fibaro.getValue(HUM_ID, "value")) or 0) >= '+(parseFloat(v||'0')||0);
+      case 'humBelow':  return '(tonumber(fibaro.getValue(HUM_ID, "value")) or 0) <= '+(parseFloat(v||'0')||0);
+      case 'windBelow': return '(tonumber(fibaro.getValue(WIND_ID, "value")) or 0) < '+(parseFloat(v||'0')||0);
+      case 'weekdayIn': { var parts=v.split(','), set='{'+parts.map(function(pw){ pw=pw.replace(/"/g,'\\"'); return '["'+pw+'"]=true'; }).join(', ')+'}'; return '(function() local D='+set+'; return D[os.date("%a")] == true end)()'; }
+      case 'alarmArmed': return 'fibaro.getGlobalVariable("Alarm") == "Armed"';
+      case 'globalEq': { var sp=v.split('='), k=(sp[0]||'mode'), expect=(sp[1]||'night'); return 'fibaro.getGlobalVariable("'+esc(k)+'") == "'+esc(expect)+'"'; }
+      case 'sensorEq': { var pp=p(); return 'fibaro.getGlobalVariable("'+esc(pp.name||'')+'") == "'+esc(pp.value||'')+'"'; }
+      case 'sensorNe': { var pp2=p(); return 'fibaro.getGlobalVariable("'+esc(pp2.name||'')+'") ~= "'+esc(pp2.value||'')+'"'; }
+      case 'sensorGt': { var pp3=p(); return '(tonumber(fibaro.getGlobalVariable("'+esc(pp3.name||'')+'")) or 0) > '+(parseFloat(pp3.value||'0')||0); }
+      case 'sensorLt': { var pp4=p(); return '(tonumber(fibaro.getGlobalVariable("'+esc(pp4.name||'')+'")) or 0) < '+(parseFloat(pp4.value||'0')||0); }
+      case 'sensorGe': { var pp5=p(); return '(tonumber(fibaro.getGlobalVariable("'+esc(pp5.name||'')+'")) or 0) >= '+(parseFloat(pp5.value||'0')||0); }
+      case 'sensorLe': { var pp6=p(); return '(tonumber(fibaro.getGlobalVariable("'+esc(pp6.name||'')+'")) or 0) <= '+(parseFloat(pp6.value||'0')||0); }
+      case 'sensorContains': { var pp7=p(); return '(tostring(fibaro.getGlobalVariable("'+esc(pp7.name||'')+'")) or ""):find("'+esc(pp7.value||'')+'",1,true) ~= nil'; }
+      case 'timeBetween': return '(function() local expr="'+v.replace(/"/g,'\\"')+'"; local function toMin(s) local h,m=s:match("^(%d%d):(%d%d)$"); h=tonumber(h) or 0; m=tonumber(m) or 0; return h*60+m end local now = toMin(os.date("%H:%M")); local a,b=expr:match("^(%d%d:%d%d)%-(%d%d:%d%d)$"); if not a or not b then return false end local A,B=toMin(a),toMin(b); if A<=B then return now>=A and now<=B else return now>=A or now<=B end end)()';
+      default: return 'true';
+    } }
+  function luaForAction(kind, val){
+    switch(kind){
+      case 'lightOn':  return 'fibaro.call(LIGHT_ID, "turnOn")';
+      case 'lightOff': return 'fibaro.call(LIGHT_ID, "turnOff")';
+      case 'dim30':    return 'fibaro.call(DIMMER_ID, "setValue", 30)';
+      case 'dim100':   return 'fibaro.call(DIMMER_ID, "setValue", 100)';
+      case 'fanOn':    return 'fibaro.call(FAN_ID, "turnOn")';
+      case 'fanOff':   return 'fibaro.call(FAN_ID, "turnOff")';
+      case 'push':     return '-- Skift til fibaro.alert hvis ønsket\nfibaro.debug("PUSH", "'+String(val||"(tom besked)").replace(/\\/g,'\\\\').replace(/"/g,'\\"')+'")';
+      case 'setGlobal':{ var sp=(val||'mode=night').split('='), k=(sp[0]||'mode'), vv=(sp[1]||'night'); return 'fibaro.setGlobalVariable("'+k.replace(/\\/g,'\\\\').replace(/"/g,'\\"')+'", "'+String(vv).replace(/\\/g,'\\\\').replace(/"/g,'\\"')+'")'; }
+      case 'delayLightOff': { var sec=Math.max(0, parseInt(val||'0',10)); return 'fibaro.setTimeout('+(sec*1000)+', function() fibaro.call(LIGHT_ID, "turnOff") end)'; }
+      default: return '-- (ukendt action)';
+    }
+  }
+  function buildLua(){
+    var rules=state.rules||[], body=[];
+    for(var i=0;i<rules.length;i++){
+      var r=rules[i], parts=[];
+      parts.push('-- Regel #'+(i+1)+(r.ruleName?(' "'+r.ruleName.replace(/"/g,'\\\"')+'"'):''));
+      parts.push('do'); parts.push('  local ok = ('+luaForTrigger(r)+')');
+      if(r.cond1){ parts.push('  ok = ok and ('+luaForCond(r.cond1, r.cond1Value)+')'); }
+      if(r.cond2){ parts.push('  ok = ok and ('+luaForCond(r.cond2, r.cond2Value)+')'); }
+      parts.push('  if ok then'); parts.push('    '+luaForAction(r.action1, r.action1Value)); parts.push('  end'); parts.push('end');
+      body.push(parts.join('\n'));
+    }
+    var actionsLua=[
+      '-- Scene genereret (v1.7.3)',
+      '-- RET ENHEDS-ID’er HERUNDER:',
+      'local LIGHT_ID, DIMMER_ID, FAN_ID = 123, 123, 456',
+      'local MOTION_ID, DOOR_ID = 111, 112',
+      'local LUX_ID, HUM_ID, WIND_ID = 113, 114, 115',
+      '',
+      '-- === Regler ===',
+      body.join('\\n\\n'),
+      ''
+    ].join('\n');
+
+    function condForTrigger(r){
+      switch(r.trigger){
+        case 'motionBreached': return '{ type="device", id=MOTION_ID, property="value", operator="==", value=true,  isTrigger=true }';
+        case 'motionSafe':     return '{ type="device", id=MOTION_ID, property="value", operator="==", value=false, isTrigger=true }';
+        case 'doorOpened':     return '{ type="device", id=DOOR_ID,   property="value", operator="==", value=true,  isTrigger=true }';
+        case 'timeEquals':     return '{ type="time", operator="==", value="'+(r.triggerValue||"07:30").replace(/"/g,'\\\"')+'", isTrigger=true }';
+        case 'humidityAbove':  return '{ type="device", id=HUM_ID,    property="value", operator=">=", value='+(parseFloat(r.triggerValue||"0")||0)+', isTrigger=true }';
+        default: return null;
+      }
+    }
+    var condSet={}, condList=[]; for(var j=0;j<rules.length;j++){ var c=condForTrigger(rules[j]); if(c&&!condSet[c]){condSet[c]=1; condList.push(c);} }
+    if(condList.length===0){ condList.push('{}'); }
+    var decl=['{','  conditions = {','    ' + condList.join(',\\n    '),'  },','  operator = "any"','}'].join('\n');
+    return ['-- === ERKLÆRINGER (venstre panel i HC3) ===',decl,'','-- === HANDLINGER (højre panel i HC3) ===',actionsLua].join('\\n\\n');
+  }
+  $('#btnGenLua').onclick=function(){ luaOut.value = buildLua(); log('LUA genereret.'); menu.classList.remove('open'); };
+  $('#btnCopyLua').onclick=function(){ try{ luaOut.focus(); luaOut.select(); document.execCommand('copy'); log('LUA kopieret.'); }catch(e){ alert('Kunne ikke kopiere: '+e.message);} menu.classList.remove('open'); };
+  $('#btnSaveLua').onclick=async function(){
+    try{
+      var code=luaOut.value||''; if(!code){ alert('Generér LUA først.'); return; }
+      var p = await window.api.saveText('hc3_scene.lua', code);
+      if(p){ log('LUA gemt: '+p); alert('LUA gemt: '+p); }
+    }catch(e){ alert('Kunne ikke gemme LUA: '+e.message);}
+    menu.classList.remove('open');
+  };
+
+  /* Bootstrap-eksempel */
+  if(!localStorage.getItem('hc3_rules_bootstrap_173')){
+    state.rules.push({trigger:'sensorEqTrig',triggerValue:'sensor.contact=Opened',cond1:'timeBetween',cond1Value:'22:00-06:00',cond2:'',cond2Value:'',action1:'push',action1Value:'DØR ÅBNET OM NATTEN',ruleName:'Dør nat'});
+    localStorage.setItem('hc3_rules_bootstrap_173','1');
+  }
+
+  /* Init */
+  function addZwRow(){ var box = document.getElementById('zwRows'); if (!box){ alert('zwRows mangler'); return; } zwMakeRow(box); log('Ny Z-Wave sensor-række tilføjet.'); }
+  document.getElementById('zwAdd').onclick = addZwRow;
+
+  (function(){ refreshRules(); updateKPI(); log('v1.7.3 (WebView2 • SPA) klar.'); })();
+  (function(){ var box=document.getElementById('zwRows'); if(box){ addZwRow(); addZwRow(); } })();
+
+
+  // === WIRESHEET MVP ===
+  (function(){
+    var canvas = document.getElementById('wsCanvas');
+    if(!canvas) return; // not on this page
+    var svg = document.getElementById('wsWires');
+    var nodesHost = document.getElementById('wsNodes');
+
+    var WS = {
+      seq: 1,
+      nodes: {}, // id -> {id,type,subtype,value,x,y,label}
+      edges: [],  // {from, to, toPort}
+      counters: {trig:1, cond:1, act:1, rule:1}
+    };
+    function nid(){ return 'n'+(WS.seq++); }
+
+    // --- Helpers
+    function createEl(tag, attrs, parent){
+      var el = document.createElement(tag);
+      if(attrs){ Object.keys(attrs).forEach(function(k){ if(k==='class'){ el.className=attrs[k]; } else if(k==='text'){ el.textContent=attrs[k]; } else { el.setAttribute(k, attrs[k]); } }); }
+      if(parent) parent.appendChild(el);
+      return el;
+    }
+    function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+
+    // Options
+    var TRIG_OPTS = [
+      ['always','Ved aktivering'],
+      ['motionBreached','PIR → Breached'],
+      ['motionSafe','PIR → Safe'],
+      ['doorOpened','Dør → Opened'],
+      ['timeEquals','Time = hh:mm'],
+      ['humidityAbove','Fugt ≥'],
+      ['globalEqTrig','Global name=value'],
+      ['sensorEqTrig','Sensor =='],
+      ['sensorGtTrig','Sensor >'],
+      ['sensorLtTrig','Sensor <'],
+      ['sensorGeTrig','Sensor ≥'],
+      ['sensorLeTrig','Sensor ≤']
+    ];
+    var COND_OPTS = [
+      ['','(ingen)'],
+      ['luxBelow','Lys <'],['luxAbove','Lys >'],
+      ['humAbove','Fugt ≥'],['humBelow','Fugt ≤'],
+      ['windBelow','Vind <'],['weekdayIn','Ugedag i'],
+      ['alarmArmed','Alarm = Armed'],['globalEq','Global name=value'],
+      ['sensorEq','Sensor =='],['sensorNe','Sensor ≠'],
+      ['sensorGt','Sensor >'],['sensorLt','Sensor <'],
+      ['sensorGe','Sensor ≥'],['sensorLe','Sensor ≤'],
+      ['sensorContains','Sensor contains'],['timeBetween','Tid mellem']
+    ];
+    var ACT_OPTS = [
+      ['lightOn','Lys → On'],['lightOff','Lys → Off'],
+      ['dim30','Dæmper → 30%'],['dim100','Dæmper → 100%'],
+      ['fanOn','Fan → On'],['fanOff','Fan → Off'],
+      ['push','Push (log)'],['setGlobal','Set Global'],['delayLightOff','Delay→LightOff']
+    ];
+    function phTrigger(k){
+      return {'always':'','timeEquals':'hh:mm (07:30)','humidityAbove':'tal (65)',
+        'globalEqTrig':'navn=værdi','sensorEqTrig':'sensor.xx=val',
+        'sensorGtTrig':'sensor.xx=21','sensorLtTrig':'sensor.xx=21','sensorGeTrig':'sensor.xx=21','sensorLeTrig':'sensor.xx=21'}[k]||'';
+    }
+    function phCond(k){
+      return {'luxBelow':'tal','luxAbove':'tal','humAbove':'procent','humBelow':'procent','windBelow':'tal',
+        'weekdayIn':'Mon,Fri','alarmArmed':'','globalEq':'name=value','sensorEq':'name=value','sensorNe':'name=value',
+        'sensorGt':'name=tal','sensorLt':'name=tal','sensorGe':'name=tal','sensorLe':'name=tal',
+        'sensorContains':'name=del','timeBetween':'HH:MM-HH:MM'}[k]||'';
+    }
+    function phAct(k){
+      return {'push':'besked','setGlobal':'name=value','delayLightOff':'sekunder'}[k]||'';
+    }
+
+    // --- Rendering
+    function renderAll(){
+      nodesHost.innerHTML='';
+      Object.values(WS.nodes).forEach(renderNode);
+      renderWires();
+      updateLinkLabels();
+    }
+    function renderNode(n){
+      var box = createEl('div', {class:'ws-node '+(n.type==='trig'?'trig':n.type==='cond'?'cond':n.type==='act'?'act':'rule')}, nodesHost);
+      box.style.left = (n.x||40)+'px';
+      box.style.top  = (n.y||40)+'px';
+      box.dataset.id = n.id;
+
+      var head = createEl('div',{class:'ws-head'},box);
+      var idEl = createEl('div',{class:'ws-id',text:(n.label||'')},head);
+      createEl('div',{class:'type',text:
+        n.type==='trig'?'Trigger': n.type==='cond'?'AND': n.type==='act'?'Action':'Rule'
+      },head);
+      var moveBtn = createEl('button',{class:'ws-btn',text:'Flyt'},head);
+      var delBtn  = createEl('button',{class:'ws-btn',text:'Slet'},head);
+
+      var body = createEl('div',{class:'ws-body'},box);
+      if(n.type!=='rule'){
+        var s = createEl('select',{},body);
+        var opts = n.type==='trig'?TRIG_OPTS: n.type==='cond'?COND_OPTS: ACT_OPTS;
+        opts.forEach(function(p){ var o=createEl('option',{value:p[0],text:p[1]}); s.appendChild(o); });
+        if(n.subtype){ s.value=n.subtype; }
+        s.onchange = function(){ n.subtype = this.value; v.placeholder = n.type==='trig'?phTrigger(n.subtype): n.type==='cond'?phCond(n.subtype): phAct(n.subtype); preview(); };
+
+        var v = createEl('input',{type:'text', value:(n.value||''), placeholder: n.type==='trig'?phTrigger(n.subtype): n.type==='cond'?phCond(n.subtype): phAct(n.subtype)}, body);
+        v.oninput = function(){ n.value=this.value; preview(); };
+      } else {
+        // Rule node: input ports summary + preview
+        createEl('div',{class:'port-row'}, body).innerHTML = '<span class="port in" data-slot="trigger" title="Trigger in"></span><span class="port-label">Trigger</span>';
+        createEl('div',{class:'port-row'}, body).innerHTML = '<span class="port in" data-slot="cond1" title="AND #1 in"></span><span class="port-label">AND #1</span>';
+        createEl('div',{class:'port-row'}, body).innerHTML = '<span class="port in" data-slot="cond2" title="AND #2 in"></span><span class="port-label">AND #2</span>';
+        createEl('div',{class:'port-row'}, body).innerHTML = '<span class="port in" data-slot="actions" title="Actions in (flere tilladt)"></span><span class="port-label">Actions</span>';
+        var name = createEl('input',{type:'text', placeholder:'Regelnavn (valgfri)', value:(n.value||'')}, body);
+        name.oninput = function(){ n.value = this.value; preview(); };
+        var pv = createEl('div',{class:'ws-preview'}, body); pv.dataset.previewFor=n.id;
+      }
+      var foot = createEl('div',{class:'ws-foot'},box);
+      if(n.type!=='rule'){ createEl('div',{class:'port out',title:'Output (klik for at starte forbindelse)'}, foot); }
+      var linkInfo = createEl('div',{class:'ws-links'}, box);
+      // events
+      delBtn.onclick = function(){
+        // remove node + edges
+        delete WS.nodes[n.id];
+        WS.edges = WS.edges.filter(function(e){ return e.from!==n.id && e.to!==n.id; });
+        renderAll(); updateLinkLabels();
+      };
+      // drag
+      (function(){
+        var dragging=false, sx=0, sy=0, bx=0, by=0;
+        function mdown(ev){
+          dragging=true; box.classList.add('dragging');
+          sx=ev.clientX; sy=ev.clientY;
+          bx=parseInt(box.style.left,10)||0; by=parseInt(box.style.top,10)||0;
+          document.addEventListener('mousemove', mmove);
+          document.addEventListener('mouseup', mup);
+          ev.preventDefault();
+        }
+        function mmove(ev){
+          if(!dragging) return;
+          var nx = bx + (ev.clientX - sx);
+          var ny = by + (ev.clientY - sy);
+          nx = clamp(nx, 0, canvas.clientWidth - box.offsetWidth);
+          ny = clamp(ny, 0, canvas.clientHeight - box.offsetHeight);
+          box.style.left = nx+'px';
+          box.style.top  = ny+'px';
+          n.x = nx; n.y = ny;
+          renderWires();
+        }
+        function mup(){
+          dragging=false; box.classList.remove('dragging');
+          document.removeEventListener('mousemove', mmove);
+          document.removeEventListener('mouseup', mup);
+        }
+        moveBtn.addEventListener('mousedown', mdown);
+        head.addEventListener('mousedown', function(e){ if(e.target===head) mdown(e); });
+      })();
+
+      // linking
+      if(n.type!=='rule'){
+        var out = foot.querySelector('.port.out');
+        out.addEventListener('click', function(){
+          linking.from = n.id;
+          linking.active = true;
+          window.log('Wires: vælg en Rule-in port for at forbinde.');
+        });
+      } else {
+        body.querySelectorAll('.port.in').forEach(function(pin){
+          pin.addEventListener('click', function(){
+            if(!linking.active || !linking.from) return;
+            var toPort = pin.getAttribute('data-slot')||'';
+            if(!allowEdge(linking.from, n.id, toPort)) { window.log('Ugyldig forbindelse.'); return; }
+            // enforce capacity on trigger/cond1/cond2 (1 each)
+            if(['trigger','cond1','cond2'].includes(toPort)){
+              WS.edges = WS.edges.filter(function(e){ return !(e.to===n.id && e.toPort===toPort); });
+            }
+            WS.edges.push({from: linking.from, to: n.id, toPort: toPort});
+            linking.active=false; linking.from=null;
+            renderWires(); updateLinkLabels(); preview();
+          });
+        });
+      }
+    }
+
+    function getPortCenter(nodeId, portSel){
+      var card = nodesHost.querySelector('.ws-node[data-id="'+nodeId+'"]');
+      if(!card) return {x:0,y:0};
+      var el = portSel==='out' ? card.querySelector('.port.out') : card.querySelector('.port.in[data-slot="'+portSel+'"]');
+      if(!el) return {x:0,y:0};
+      var r1 = canvas.getBoundingClientRect();
+      var r2 = el.getBoundingClientRect();
+      return { x: r2.left - r1.left + r2.width/2, y: r2.top - r1.top + r2.height/2 };
+    }
+    
+    function updateLinkLabels(){
+      // For each node, compute link text
+      Object.values(WS.nodes).forEach(function(n){
+        var card = nodesHost.querySelector('.ws-node[data-id="'+n.id+'"]');
+        if(!card) return;
+        var footInfo = card.querySelector('.ws-links');
+        if(!footInfo) return;
+        function lbl(nodeId){
+          var nn = WS.nodes[nodeId]; return nn ? (nn.label||nodeId) : nodeId;
+        }
+        if(n.type!=='rule'){
+          var outs = WS.edges.filter(function(e){ return e.from===n.id; });
+          if(outs.length===0){ footInfo.textContent = 'Ikke linket'; return; }
+          var parts = outs.map(function(e){ return '→ '+lbl(e.to)+' ('+e.toPort+')'; });
+          footInfo.textContent = parts.join('  •  ');
+        } else {
+          // incoming per port
+          var t = WS.edges.filter(function(e){ return e.to===n.id && e.toPort==='trigger'; }).map(function(e){return lbl(e.from);}).join(',');
+          var c1= WS.edges.filter(function(e){ return e.to===n.id && e.toPort==='cond1'; }).map(function(e){return lbl(e.from);}).join(',');
+          var c2= WS.edges.filter(function(e){ return e.to===n.id && e.toPort==='cond2'; }).map(function(e){return lbl(e.from);}).join(',');
+          var a = WS.edges.filter(function(e){ return e.to===n.id && e.toPort==='actions'; }).map(function(e){return lbl(e.from);}).join(',');
+          footInfo.textContent = 'Trigger: '+(t||'—')+'   •   AND #1: '+(c1||'—')+'   •   AND #2: '+(c2||'—')+'   •   Actions: '+(a||'—');
+        }
+      });
+    }
+function renderWires(){
+      svg.innerHTML='';
+      WS.edges.forEach(function(e){
+        var a = getPortCenter(e.from, 'out');
+        var b = getPortCenter(e.to, e.toPort);
+        var path = createEl('path', { d: cubic(a.x,a.y,b.x,b.y), fill:'none', stroke:'#4f7db8', 'stroke-width':'2', 'stroke-linecap':'round' }, svg);
+      });
+    }
+    function cubic(x1,y1,x2,y2){
+      var dx = Math.max(40, Math.abs(x2-x1)/2);
+      var c1x = x1 + dx, c1y = y1;
+      var c2x = x2 - dx, c2y = y2;
+      return 'M '+x1+' '+y1+' C '+c1x+' '+c1y+', '+c2x+' '+c2y+', '+x2+' '+y2;
+    }
+
+    var linking = {active:false, from:null};
+
+    function allowEdge(fromId, toId, toPort){
+      if(fromId===toId) return false;
+      var src = WS.nodes[fromId], dst = WS.nodes[toId];
+      if(!src || !dst) return false;
+      if(dst.type!=='rule') return false; // only into rule nodes
+      if(src.type==='trig' && toPort!=='trigger') return false;
+      if(src.type==='cond' && !['cond1','cond2'].includes(toPort)) return false;
+      if(src.type==='act'  && toPort!=='actions') return false;
+      return true;
+    }
+
+    // --- Add nodes
+    function addNode(kind, x, y){
+      var n = { id:nid(), type:kind, subtype: (kind==='trig'?'always':''), value:'', x:x||40, y:y||40 };
+      // assign short label
+      var pref = kind==='trig'?'T': kind==='cond'?'C': kind==='act'?'A':'R';
+      n.label = pref + (WS.counters[kind]++);
+      WS.nodes[n.id]=n;
+      renderAll(); updateLinkLabels();
+      return n;
+    }
+
+    // Tool buttons
+    var bTrig = document.getElementById('wsAddTrig');
+    var bCond = document.getElementById('wsAddCond');
+    var bAct  = document.getElementById('wsAddAct');
+    var bRule = document.getElementById('wsAddRule');
+    var bBuild= document.getElementById('wsBuild');
+    var bClear= document.getElementById('wsClear');
+    var bSave = document.getElementById('wsSave');
+    var bLoad = document.getElementById('wsLoad');
+
+    if(bTrig) bTrig.onclick = function(){ addNode('trig', 40, 60); };
+    if(bCond) bCond.onclick = function(){ addNode('cond', 40, 180); };
+    if(bAct)  bAct.onclick  = function(){ addNode('act',  40, 300); };
+    if(bRule) bRule.onclick = function(){ addNode('rule', 520, 160); };
+
+    if(bClear) bClear.onclick = function(){
+      if(!confirm('Ryd alle noder og forbindelser?')) return;
+      WS.nodes={}; WS.edges=[]; renderAll(); updateLinkLabels(); window.log('Wiresheet ryddet.');
+    };
+
+    if(bSave) bSave.onclick = function(){
+      try{
+        var obj = {version:'1.0', nodes:WS.nodes, edges:WS.edges, seq:WS.seq};
+        localStorage.setItem('hc3_wiresheet_v1', JSON.stringify(obj));
+        window.log('Wiresheet gemt lokalt.');
+      }catch(e){ alert('Kunne ikke gemme: '+e.message); }
+    };
+    if(bLoad) bLoad.onclick = function(){
+      try{
+        var raw = localStorage.getItem('hc3_wiresheet_v1');
+        if(!raw){ alert('Ingen wiresheet i localStorage.'); return; }
+        var obj = JSON.parse(raw||'{}');
+        WS.nodes = obj.nodes||{}; WS.edges = obj.edges||[]; WS.seq = obj.seq||1;
+        renderAll(); updateLinkLabels(); preview();
+        window.log('Wiresheet hentet.');
+      }catch(e){ alert('Kunne ikke læse: '+e.message); }
+    };
+
+    // --- Compile to rules
+    function nodeById(id){ return WS.nodes[id]; }
+    function incoming(toId, port){ return WS.edges.filter(function(e){ return e.to===toId && (!port || e.toPort===port); }); }
+
+    function compileRule(ruleNode){
+      // collect trigger
+      var trigE = incoming(ruleNode.id,'trigger')[0];
+      if(!trigE) return {ok:false, warn:'Mangler trigger'};
+      var trigN = nodeById(trigE.from);
+      var cond1E = incoming(ruleNode.id,'cond1')[0];
+      var cond2E = incoming(ruleNode.id,'cond2')[0];
+      var c1 = cond1E? nodeById(cond1E.from): null;
+      var c2 = cond2E? nodeById(cond2E.from): null;
+      var actsE = incoming(ruleNode.id,'actions');
+      if(actsE.length===0) return {ok:false, warn:'Mangler mindst én action'};
+      var acts = actsE.map(function(e){ return nodeById(e.from); });
+
+      var base = {
+        trigger: trigN.subtype||'always',
+        triggerValue: (trigN.value||'').trim(),
+        cond1: c1? (c1.subtype||'') : '',
+        cond1Value: c1? (c1.value||'') : '',
+        cond2: c2? (c2.subtype||'') : '',
+        cond2Value: c2? (c2.value||'') : '',
+        ruleName: (ruleNode.value||'').trim()
+      };
+      var outRules = acts.map(function(a){
+        return Object.assign({}, base, { action1: a.subtype||'lightOn', action1Value: (a.value||'') });
+      });
+      return {ok:true, rules: outRules};
+    }
+
+    if(bBuild) bBuild.onclick = function(){
+      var allRules = [];
+      Object.values(WS.nodes).filter(function(n){ return n.type==='rule'; }).forEach(function(rn){
+        var res = compileRule(rn);
+        if(!res.ok){ window.log('Rule#'+rn.id+': '+res.warn); return; }
+        res.rules.forEach(function(rr){ window.state.rules.push(rr); });
+        allRules = allRules.concat(res.rules);
+      });
+      if(allRules.length>0){
+        window.refreshRules();
+        window.log('Wiresheet → '+allRules.length+' regel/r lagt til.');
+      } else {
+        alert('Ingen gyldige Rule-noder at bygge.');
+      }
+    };
+
+    // --- Preview strings under each Rule node
+    function preview(){
+      Object.values(WS.nodes).filter(function(n){ return n.type==='rule'; }).forEach(function(rn){
+        var pv = nodesHost.querySelector('.ws-node[data-id="'+rn.id+'"] .ws-preview');
+        if(!pv) return;
+        var res = compileRule(rn);
+        if(!res.ok){ pv.innerHTML = '<span class="ws-warn">⚠ '+res.warn+'</span>'; return; }
+        var lines = res.rules.map(function(rr){
+          function label(opts,k){ var m=opts.find(function(x){return x[0]===k;}); return m?m[1]:k; }
+          var t = label(TRIG_OPTS, rr.trigger) + (rr.triggerValue?(' '+rr.triggerValue):'');
+          var c1 = rr.cond1? ' AND '+label(COND_OPTS, rr.cond1)+(rr.cond1Value?(' '+rr.cond1Value):'') : '';
+          var c2 = rr.cond2? ' AND '+label(COND_OPTS, rr.cond2)+(rr.cond2Value?(' '+rr.cond2Value):'') : '';
+          var a  = label(ACT_OPTS, rr.action1) + (rr.action1Value?(' '+rr.action1Value):'');
+          return 'IF '+t+c1+c2+' THEN '+a + (rr.ruleName?('  • '+rr.ruleName):'');
+        });
+        pv.textContent = lines.join('\\n');
+      });
+    }
+
+    // initial
+    renderAll(); updateLinkLabels();
+    // quick palette
+    addNode('trig', 60, 60);
+    addNode('cond', 60, 180);
+    addNode('act',  60, 300);
+    addNode('rule', 520, 160);
+  })();
+})();
+
+  // === Login & credentials (localStorage) ===
+  function getStoredCreds(){
+    return { user: localStorage.getItem('simUser') || 'admin', pass: localStorage.getItem('simPass') || '1234' };
+  }
+  function tryLogin(u,p){ const c=getStoredCreds(); return (u===c.user && p===c.pass); }
+  function doLogin(){
+    const u=document.getElementById('loginUser').value.trim();
+    const p=document.getElementById('loginPass').value.trim();
+    if(tryLogin(u,p)){
+      document.getElementById('loginView').style.display='none';
+      document.getElementById('mainApp').style.display='block';
+      if (typeof setTab==='function') setTab('sim');
+    } else {
+      document.getElementById('loginError').innerText='Forkert login!';
+    }
+  }
+  function updateCreds(){
+    const u=document.getElementById('setUser').value.trim();
+    const p=document.getElementById('setPass').value.trim();
+    if(u && p){
+      localStorage.setItem('simUser', u);
+      localStorage.setItem('simPass', p);
+      alert('Login-info gemt. Næste login bruger '+u+'/'+p);
+      document.getElementById('setUser').value='';
+      document.getElementById('setPass').value='';
+    } else { alert('Udfyld både brugernavn og adgangskode.'); }
+  }
+  function doLogout(){
+    document.getElementById('mainApp').style.display='none';
+    document.getElementById('loginView').style.display='flex';
+    document.getElementById('loginUser').focus();
+  }
+  (function(){
+    const btnLogin=document.getElementById('btnLogin'); if(btnLogin) btnLogin.onclick=doLogin;
+    const lp=document.getElementById('loginPass'); if(lp) lp.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+    const btnSave=document.getElementById('btnSaveCreds'); if(btnSave) btnSave.onclick=updateCreds;
+    const btnLogout=document.getElementById('btnLogout'); if(btnLogout) btnLogout.onclick=doLogout;
+  })();
+
+</script>
+  </div>
+</body>
+</html>
