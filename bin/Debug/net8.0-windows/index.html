@@ -967,12 +967,11 @@ button:active::before {
   height: 300px;
   transition-duration: 0s;
 }
-/* stray invalid CSS removed:
   border:1px solid rgba(110,150,190,.45) !important;
   color:var(--hc-text) !important;
   border-radius:9px !important;
   box-shadow:0 8px 20px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05) !important;
-*/
+}
 button:hover{ filter:brightness(1.15) !important; transform:translateY(-1px) !important; }
 button:active{ transform:translateY(0) !important; }
 .success{ background:linear-gradient(180deg,#0e6b5e,#0b5448) !important; border-color:rgba(0,194,168,.55) !important; color: #ffffff !important; }
@@ -1102,7 +1101,7 @@ input:focus, select:focus, textarea:focus{
 .lua-dd{ position:relative; }
 .lua-dd > button{ background:#1a2430; border:1px solid #2a3442; color:#e5e9f0; border-radius:8px; padding:8px 10px; cursor:pointer; }
 .lua-dd > button:hover{ filter:brightness(1.08); }
-.lua-list{ position:absolute; left:0; top:110%; display:none; min-width:220px; background:#0f141c; border:1px solid #2a3442; border-radius:10px; box-shadow:0 10px 24px rgba(0,0,0,.45); padding:6px; z-index:9999; margin-left:8px; }
+.lua-list{ position:absolute; right:0; top:110%; display:none; min-width:220px; background:#0f141c; border:1px solid #2a3442; border-radius:10px; box-shadow:0 10px 24px rgba(0,0,0,.45); padding:6px; z-index:9999; }
 .lua-list.open{ display:block; }
 .lua-list button{ display:block; width:100%; text-align:left; background:transparent; border:0; border-radius:8px; padding:10px 12px; color:#e5e9f0; }
 .lua-list button:hover{ background:rgba(255,255,255,.06); }
