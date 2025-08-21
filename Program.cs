@@ -155,12 +155,12 @@ namespace IBISimulator
                 try { _core?.Reload(); } catch { }
             };
 
-            // Indlæs app.html fra samme mappe som .exe
-            var htmlPath = Path.Combine(AppContext.BaseDirectory, "app.html");
+                    // Indlæs index.html fra samme mappe som .exe
+        var htmlPath = Path.Combine(AppContext.BaseDirectory, "index.html");
             if (!File.Exists(htmlPath))
             {
-                Logger.Log("app.html not found at: " + htmlPath);
-                MessageBox.Show("Filen 'app.html' blev ikke fundet ved siden af .exe", "Mangler fil", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Logger.Log("index.html not found at: " + htmlPath);
+            MessageBox.Show("Filen 'index.html' blev ikke fundet ved siden af .exe", "Mangler fil", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             _core.Navigate(new Uri(htmlPath).AbsoluteUri);

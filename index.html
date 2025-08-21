@@ -39,7 +39,9 @@
     input[type="checkbox"]{transform:scale(1.2)}
     .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .row > *{flex:1}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+    @media (max-width: 900px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
     button{background:#2d3b4f;color:#e5e9f0;border:1px solid #3b495e;border-radius:8px;padding:8px 10px;cursor:pointer}
     button:hover{background:#38506c}
     .danger{background:#5b2d2d;border-color:#7a3a3a}
@@ -195,31 +197,153 @@
 }
 
 
-/* === Login background image + translucent card === */
+/* === Modern Login Design === */
 #loginView{
   position: relative;
   min-height: 100vh;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f1419 0%, #1a2432 50%, #2a3442 100%);
   overflow: hidden;
 }
+
+/* Animated background elements */
 #loginView::before{
   content:"";
-  position:absolute;
-  inset:0;
-  background: url("login-bg.jpg") center/cover no-repeat;
-  z-index:0;
-  pointer-events:none; /* må ikke blokere klik */
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 70%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 70% 30%, rgba(156, 163, 175, 0.05) 0%, transparent 50%);
+  animation: backgroundFloat 20s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
 }
+
+@keyframes backgroundFloat {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+}
+
+/* Large IBI logo */
+.login-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+  z-index: 10;
+  position: relative;
+}
+
+.login-logo .logo-ibi {
+  width: 140px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  position: relative;
+  animation: logoGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes logoGlow {
+  from { filter: drop-shadow(0 10px 20px rgba(0, 194, 168, 0.3)); }
+  to { filter: drop-shadow(0 15px 30px rgba(0, 194, 168, 0.5)); }
+}
+
+/* IBI Letter styling */
+.ibi-letter {
+  display: inline-block;
+  font-family: 'Arial', sans-serif;
+  font-weight: 900;
+  font-size: 48px;
+  margin: 0 2px;
+  position: relative;
+}
+
+.ibi-letter.i1,
+.ibi-letter.i2 {
+  color: #e5e7eb;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.ibi-letter.b {
+  color: #e5e7eb;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Decorative squares */
+.ibi-letter.i1::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 12px;
+  height: 12px;
+  background: #00c2a8;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 194, 168, 0.4);
+}
+
+.ibi-letter.i2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  width: 12px;
+  height: 12px;
+  background: #00c2a8;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 194, 168, 0.4);
+}
+
+.login-logo h1 {
+  font-size: 32px;
+  font-weight: 300;
+  color: #e5e7eb;
+  margin: 0;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.login-logo .tagline {
+  font-size: 14px;
+  color: #9ca3af;
+  margin-top: 8px;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+/* Modern login card */
 #loginView .card,
 #loginView .login-card{
   position: relative;
-  z-index: 1;
-  background: rgba(16,22,30,0.86); /* lidt gennemsigtig */
-  backdrop-filter: blur(6px) saturate(110%);
-  -webkit-backdrop-filter: blur(6px) saturate(110%);
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+  z-index: 10;
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  border-radius: 20px;
+  padding: 40px;
+  min-width: 400px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+}
+
+/* Login signature */
+.login-signature {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 15;
+  font-size: 12px;
+  color: #6b7280;
+  opacity: 0.7;
+  font-weight: 300;
+  letter-spacing: 0.5px;
 }
 
 
@@ -722,33 +846,6 @@ input:focus, select:focus, textarea:focus{
 /* === Topbar centering & sizing overrides === */
 .appbar { position: relative; }
 .appbar .wrap{
-  max-width: 100% !important;    /* allow full-width so nav can sit further right */
-  padding-left: 24px !important;
-  padding-right: 32px !important;/* push nav closer to right edge */
-  position: relative;
-}
-/* Center brand (logo + text) */
-.appbar .brand{
-  position: absolute !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  gap: 12px !important;
-}
-/* Enlarge logo + name */
-.appbar .brand svg{ height: 52px !important; width: auto !important; }
-.appbar .brand .name{ font-size: 1.25rem !important; letter-spacing: .08em !important; font-weight: 900 !important; }
-
-/* Keep nav snug to the right */
-.appbar .mainnav{ margin-left: auto !important; margin-right: 0 !important; }
-
-@media (max-width: 900px){
-  .appbar .brand svg{ height: 42px !important; }
-  .appbar .brand .name{ font-size: 1.05rem !important; }
-}
-
-
-/* === Topbar centering fix === */
-.appbar .wrap{
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -756,6 +853,7 @@ input:focus, select:focus, textarea:focus{
   max-width: 100% !important;
   padding: 0 40px !important;
 }
+/* Center brand (logo + text) */
 .appbar .brand{
   position: relative !important;
   left: auto !important;
@@ -763,6 +861,11 @@ input:focus, select:focus, textarea:focus{
   margin: 0 auto !important;
   gap: 12px !important;
 }
+/* Enlarge logo + name */
+.appbar .brand svg{ height: 52px !important; width: auto !important; }
+.appbar .brand .name{ font-size: 1.25rem !important; letter-spacing: .08em !important; font-weight: 900 !important; }
+
+/* Keep nav snug to the right */
 .appbar .mainnav{
   position: absolute !important;
   right: 40px !important;
@@ -771,20 +874,516 @@ input:focus, select:focus, textarea:focus{
   margin: 0 !important;
 }
 
-
-/* LUA dropdown minimal styles */
-.lua-dd{ position: relative; }
-.lua-list{ position:absolute; right:0; top:110%; display:none; min-width:220px;
-  background:#0f141c; border:1px solid rgba(255,255,255,.14);
-  border-radius:10px; box-shadow:0 12px 28px rgba(0,0,0,.5); padding:6px; z-index:4000;
+@media (max-width: 900px){
+  .appbar .brand svg{ height: 42px !important; }
+  .appbar .brand .name{ font-size: 1.05rem !important; }
 }
-.lua-list.open{ display:block; }
-.lua-list button{ display:block; width:100%; text-align:left; background:transparent; border:0;
-  border-radius:8px; padding:10px 12px; color:#e5e9f0; }
-.lua-list button:hover{ background:rgba(255,255,255,.06); }
 
 
 .lua-bar, .lua-dd, .log { overflow: visible !important; }
+
+/* === ONBOARDING SYSTEM === */
+.onboarding-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 10000;
+  display: none;
+  backdrop-filter: blur(4px);
+}
+
+.onboarding-step {
+  position: absolute;
+  background: linear-gradient(180deg, rgba(26, 36, 48, 0.6), rgba(15, 20, 28, 0.6));
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border: 2px solid #2ab0ff;
+  border-radius: 12px;
+  padding: 16px;
+  max-width: 320px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  color: #e5e9f0;
+  z-index: 10001;
+  animation: onboardingFadeIn 0.3s ease-out;
+}
+
+@keyframes onboardingFadeIn {
+  from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.onboarding-step h3 {
+  margin: 0 0 12px 0;
+  color: #2ab0ff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.onboarding-step p {
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.onboarding-step .highlight {
+  background: rgba(42, 176, 255, 0.15);
+  border: 1px solid rgba(42, 176, 255, 0.3);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  font-family: Consolas, monospace;
+  font-size: 12px;
+  box-shadow: 0 0 20px rgba(42, 176, 255, 0.3);
+  animation: highlightPulse 2s ease-in-out infinite;
+}
+
+@keyframes highlightPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(42, 176, 255, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(42, 176, 255, 0.5); }
+}
+
+.onboarding-step .buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.onboarding-step .buttons button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.onboarding-step .buttons .skip {
+  background: #374151;
+  color: #9ca3af;
+}
+
+.onboarding-step .buttons .next {
+  background: #2ab0ff;
+  color: white;
+}
+
+.onboarding-step .buttons .finish {
+  background: #10b981;
+  color: white;
+}
+
+.onboarding-step .buttons .pause {
+  background: #f59e0b;
+  color: white;
+}
+
+.onboarding-step .progress {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.onboarding-step .progress .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #374151;
+}
+
+.onboarding-step .progress .dot.active {
+  background: #2ab0ff;
+}
+
+.onboarding-step .progress .dot.completed {
+  background: #10b981;
+}
+
+/* Welcome screen */
+.onboarding-welcome {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(180deg, #1a2430, #0f141c);
+  border: 2px solid #2ab0ff;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 500px;
+  text-align: center;
+  color: #e5e9f0;
+  z-index: 10002;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.7);
+}
+
+.onboarding-welcome h2 {
+  margin: 0 0 16px 0;
+  color: #2ab0ff;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.onboarding-welcome p {
+  margin: 0 0 24px 0;
+  line-height: 1.6;
+  font-size: 16px;
+  color: #cbd5e1;
+}
+
+.onboarding-welcome .features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+  text-align: left;
+}
+
+.onboarding-welcome .feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.onboarding-welcome .feature .icon {
+  width: 20px;
+  height: 20px;
+  background: #2ab0ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: white;
+}
+
+.onboarding-welcome .buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.onboarding-welcome .buttons button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  min-width: 120px;
+}
+
+.onboarding-welcome .buttons .skip {
+  background: #374151;
+  color: #9ca3af;
+}
+
+.onboarding-welcome .buttons .start {
+  background: #2ab0ff;
+  color: white;
+}
+
+/* Quick start tasks */
+.quick-start {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(180deg, #1a2430, #0f141c);
+  border: 2px solid #10b981;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 600px;
+  color: #e5e9f0;
+  z-index: 10003;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.7);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.quick-start h2 {
+  margin: 0 0 20px 0;
+  color: #10b981;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.quick-start .task {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.quick-start .task h3 {
+  margin: 0 0 8px 0;
+  color: #10b981;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.quick-start .task p {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.quick-start .task .steps {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.quick-start .task .steps ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.quick-start .task .steps li {
+  margin-bottom: 4px;
+}
+
+.quick-start .task .difficulty {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.quick-start .task .difficulty.easy {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.quick-start .task .difficulty.medium {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+}
+
+.quick-start .task .difficulty.hard {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.quick-start .task .task-completed {
+  float: right;
+  font-size: 20px;
+  margin-top: -4px;
+}
+
+.quick-start .buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.quick-start .buttons button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.quick-start .buttons .close {
+  background: #374151;
+  color: #9ca3af;
+}
+
+.quick-start .buttons .start-task {
+  background: #10b981;
+  color: white;
+}
+
+/* Task validation feedback */
+.task-validation {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(17, 24, 39, 0.95);
+  border-radius: 12px;
+  padding: 16px 20px;
+  max-width: 350px;
+  z-index: 9999;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  display: none;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.task-validation.active {
+  border: 2px solid #f59e0b;
+}
+
+.task-validation.success {
+  border: 2px solid #10b981;
+}
+
+.task-validation .header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.task-validation .header .icon {
+  font-size: 24px;
+}
+
+.task-validation .header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #f3f4f6;
+}
+
+.task-validation .progress {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  height: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.task-validation .progress-bar {
+  height: 100%;
+  background: #f59e0b;
+  transition: width 0.3s ease;
+}
+
+.task-validation.success .progress-bar {
+  background: #10b981;
+}
+
+.task-validation .criteria {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.task-validation .criteria ul {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.task-validation .criteria li {
+  margin-bottom: 4px;
+}
+
+.task-validation .criteria li.completed {
+  color: #10b981;
+  text-decoration: line-through;
+}
+
+.task-validation .task-steps {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.task-validation .task-steps p {
+  margin: 0 0 8px 0;
+  font-weight: bold;
+  color: #e5e7eb;
+}
+
+.task-validation .task-steps ol {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.task-validation .task-steps li {
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.task-validation .success-message {
+  text-align: center;
+  padding: 20px;
+  color: #10b981;
+}
+
+.task-validation .success-message .icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.task-validation .success-message h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+}
+
+.task-validation .success-message p {
+  margin: 0 0 16px 0;
+  color: #9ca3af;
+}
+
+.task-validation .success-message button {
+  padding: 8px 16px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.task-validation .close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.task-validation .help-toggle-btn {
+  position: absolute;
+  top: 12px;
+  right: 44px;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.task-validation .help-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.task-validation .help-toggle-btn.active {
+  color: #10b981;
+}
+
+/* === Login background image + translucent card === */
 </style>
 
   <!-- WebView2-bro -->
@@ -898,29 +1497,184 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
       <button type="button" data-target="view-sim">🏠 Simulator</button>
       <button type="button" data-target="view-flow">🧩 Wiresheet</button>
       <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
+      <button type="button" onclick="showQuickStart()" title="Kom godt i gang">🚀 Hjælp</button>
     </nav>
   </div>
 </header>
 
   <!-- Login overlay -->
   <div id="loginView" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
-    <div class="card" style="min-width:320px; max-width:360px;">
-      <h2>Login</h2>
-      <div class="body">
-        <label>Brugernavn</label>
-        <input id="loginUser" placeholder="Brugernavn" autocomplete="username">
-        <label>Adgangskode</label>
-        <input id="loginPass" type="password" placeholder="Adgangskode" autocomplete="current-password">
-        <div class="row" style="margin-top:8px">
-          <button id="btnLogin" class="success">Login</button>
-        </div>
-        <p id="loginError" style="color:#ff9aa2;"></p>
-        <p class="small muted">Standard: <code>admin</code> / <code>1234</code>. Kan ændres under <em>Indstillinger</em>.</p>
+    <!-- IBI Logo -->
+    <div class="login-logo">
+      <div class="logo-ibi">
+        <span class="ibi-letter i1">I</span>
+        <span class="ibi-letter b">B</span>
+        <span class="ibi-letter i2">I</span>
       </div>
     </div>
+
+    <!-- Modern Login Card -->
+    <div class="card login-card">
+      <div class="body">
+        <div style="margin-bottom:24px;">
+          <label style="display:block; margin-bottom:8px; color:#9ca3af; font-size:14px;">Brugernavn</label>
+          <input id="loginUser" placeholder="Brugernavn" autocomplete="username" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3);">
+        </div>
+        
+        <div style="margin-bottom:24px;">
+          <label style="display:block; margin-bottom:8px; color:#9ca3af; font-size:14px;">Adgangskode</label>
+          <input id="loginPass" type="password" placeholder="Adgangskode" autocomplete="current-password" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3);">
+        </div>
+        
+        <button id="btnLogin" class="success" style="width:100%; padding:12px; font-size:16px; border-radius:12px; margin-bottom:16px;">
+          🔓 Log ind
+        </button>
+        
+        <p id="loginError" style="color:#ef4444; text-align:center; margin-bottom:16px;"></p>
+        
+        <div style="text-align:center; padding:16px; background:rgba(31,41,55,0.3); border-radius:10px; border:1px solid rgba(75,85,99,0.2);">
+          <p style="margin:0; font-size:13px; color:#9ca3af;">Standard login:</p>
+          <p style="margin:8px 0 0 0; font-size:14px; color:#e5e7eb;"><code style="background:rgba(0,0,0,0.3); padding:2px 6px; border-radius:4px;">admin</code> / <code style="background:rgba(0,0,0,0.3); padding:2px 6px; border-radius:4px;">1234</code></p>
+      </div>
+    </div>
+    </div>
+    
+    <!-- Signature -->
+    <div class="login-signature">@ Rasmus Jakobsen</div>
   </div>
 
   <div id="mainApp" style="display:none;">
+
+  <!-- Onboarding System -->
+  <div id="onboardingOverlay" class="onboarding-overlay"></div>
+  
+  <!-- Welcome Screen -->
+  <div id="onboardingWelcome" class="onboarding-welcome" style="display:none;">
+    <h2>🎉 Velkommen til IBI Simulator!</h2>
+    <p>Lær at bygge smart home automation med denne interaktive simulator. Du kan teste regler, generere LUA-kode og se hvordan det hele fungerer sammen.</p>
+    
+    <div class="features">
+      <div class="feature">
+        <div class="icon">🏠</div>
+        <span>Simulator med sensorer & aktører</span>
+      </div>
+      <div class="feature">
+        <div class="icon">🧩</div>
+        <span>Visual Flow Editor</span>
+      </div>
+      <div class="feature">
+        <div class="icon">⚡</div>
+        <span>LUA-kode generering</span>
+      </div>
+      <div class="feature">
+        <div class="icon">📚</div>
+        <span>Opgavebank & øvelser</span>
+      </div>
+    </div>
+    
+    <div class="buttons">
+      <button class="skip" onclick="skipOnboarding()">Spring over</button>
+      <button class="start" onclick="startOnboarding()">Start rundvisning</button>
+    </div>
+  </div>
+
+  <!-- Task Validation Feedback -->
+  <div id="taskValidation" class="task-validation">
+    <button class="close-btn" onclick="closeTaskValidation()">×</button>
+    <button class="help-toggle-btn" onclick="toggleTaskHelp()" title="Vis/skjul hjælp-trin">💡</button>
+    <div id="taskProgress">
+      <div class="header">
+        <span class="icon">🎯</span>
+        <h3 id="taskName">Opgave navn</h3>
+      </div>
+      <div class="progress">
+        <div class="progress-bar" id="taskProgressBar" style="width: 0%"></div>
+      </div>
+      <div class="criteria">
+        <p>Kriterier for at løse opgaven:</p>
+        <ul id="taskCriteria">
+          <!-- Criteria will be added dynamically -->
+        </ul>
+      </div>
+      <div class="task-steps">
+        <p><strong>Trin til at løse opgaven:</strong></p>
+        <ol id="taskSteps">
+          <!-- Steps will be added dynamically -->
+        </ol>
+      </div>
+    </div>
+    <div id="taskSuccess" class="success-message" style="display:none;">
+      <div class="icon">🎉</div>
+      <h3>Opgave fuldført!</h3>
+      <p id="successText">Godt gået! Du har løst opgaven korrekt.</p>
+      <button onclick="closeTaskValidation()">Fortsæt</button>
+    </div>
+  </div>
+
+  <!-- Quick Start Tasks -->
+  <div id="quickStart" class="quick-start" style="display:none;">
+    <h2>🚀 Kom godt i gang</h2>
+    
+    <div class="task" id="task-ganglys">
+      <span class="difficulty easy">Let</span>
+      <span class="task-completed" style="display:none;">✅</span>
+      <h3>Ganglys Basic</h3>
+      <p>Lav en regel der tænder lyset når der er bevægelse.</p>
+      <div class="steps">
+        <ol>
+          <li>Gå til "Simulator" fanen</li>
+          <li>Klik "Sæt: Breached" under PIR</li>
+          <li>Klik "Aktivér ændringer"</li>
+          <li>Gå til "Regler" sektionen</li>
+          <li>Vælg "IF PIR bliver Breached" som trigger</li>
+          <li>Vælg "THEN Lys → Tænd" som action</li>
+          <li>Klik "Tilføj regel"</li>
+          <li>Klik "Kør regler (RUN)"</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div class="task" id="task-doorlight">
+      <span class="difficulty medium">Mellem</span>
+      <span class="task-completed" style="display:none;">✅</span>
+      <h3>Dørlys med tidsbegrænsning</h3>
+      <p>Lys der kun tænder om natten når døren åbnes.</p>
+      <div class="steps">
+        <ol>
+          <li>Sæt dørkontakt til "Opened"</li>
+          <li>Vælg "IF Dørkontakt ændres til Opened"</li>
+          <li>Tilføj AND: "Tid mellem" med "22:00-06:00"</li>
+          <li>Vælg "THEN Lys → Tænd" som action</li>
+          <li>Tilføj regel og test</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div class="task" id="task-bathroom">
+      <span class="difficulty hard">Svær</span>
+      <span class="task-completed" style="display:none;">✅</span>
+      <h3>Badventilator med fugtighed</h3>
+      <p>Ventilator der starter ved høj fugtighed og slukker automatisk.</p>
+      <div class="steps">
+        <ol>
+          <li>Sæt fugtighed til 75% og klik "Sæt fugtighed"</li>
+          <li>Klik "Aktivér ændringer"</li>
+          <li>Gå til "Regler" sektionen</li>
+          <li>Vælg "IF Fugtighed ≥ (værdi)" som trigger med værdi 75</li>
+          <li>Tilføj AND: "Lys (lux) <" med værdi 50</li>
+          <li>Vælg "THEN Ventilator → On" som action</li>
+          <li>Klik "Tilføj regel"</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div class="buttons">
+      <button class="close" onclick="closeQuickStart()">Luk</button>
+      <button class="start-task" onclick="startTask('ganglys')">Start Ganglys</button>
+      <button class="start-task" onclick="startTask('doorlight')">Start Dørlys</button>
+      <button class="start-task" onclick="startTask('bathroom')">Start Badventilator</button>
+    </div>
+  </div>
 
   <header>
     <div class="brand"><h1 class="goldtext"> Simulator  </h1></div>
@@ -951,8 +1705,11 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
         <div class="card" data-section="sensors">
           <h2>1) Virtuelle sensorer & tilstande</h2>
           <div class="body">
-            <div class="grid2">
+            <div class="grid3">
+              <!-- Fysiske sensorer -->
               <div>
+                <h3 style="margin-top:0; color:#10b981; font-size:14px;">🔌 Fysiske sensorer</h3>
+                
                 <label class="has-tip" data-tip="PIR (bevægelsessensor). Breached = bevægelse; Safe = ingen bevægelse.">PIR (bevægelse)</label>
                 <div class="row">
                   <button id="pirOn">Sæt: Breached</button>
@@ -965,20 +1722,36 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
                   <button id="doorOpen">Sæt: Opened</button>
                   <button id="doorClose" class="danger">Sæt: Closed</button>
                 </div>
+                <div class="sp"></div>
+
+                <label class="has-tip" data-tip="Fugtighedssensor (%). Sæt til høj værdi for at teste ventilator-regler.">Fugtighed (%)</label>
+                <div class="row">
+                  <input type="number" id="humidityValue" value="45" min="0" max="100" step="1" style="width:80px;">
+                  <button id="humiditySet">Sæt fugtighed</button>
+                </div>
               </div>
 
+              <!-- Tid & miljø -->
               <div>
+                <h3 style="margin-top:0; color:#f59e0b; font-size:14px;">⏰ Tid & miljø</h3>
+                
                 <label class="has-tip" data-tip="Virtuelt klokkeslæt til 'Time = hh:mm' og 'Tid mellem'.">Klokkeslæt</label>
                 <input type="time" id="clock" value="21:30">
+                <div class="sp"></div>
 
                 <label class="has-tip" data-tip="Ugedag (Mon..Sun) – bruges i 'Ugedag i'.">Ugedag</label>
                 <select id="weekday">
                   <option>Mon</option><option>Tue</option><option>Wed</option>
                   <option>Thu</option><option>Fri</option><option>Sat</option><option>Sun</option>
                 </select>
+              </div>
+
+              <!-- System tilstande -->
+              <div>
+                <h3 style="margin-top:0; color:#ef4444; font-size:14px;">🔒 System tilstande</h3>
 
                 <label class="has-tip" data-tip="Alarmtilstande. 'Armed' kan testes i AND-betingelse. 'Home mode' er ekstra flag.">Alarmtilstande</label>
-                <div class="row">
+                <div class="row" style="flex-direction:column; align-items:flex-start; gap:8px;">
                   <label class="pill"><input type="checkbox" id="alarmArmed"> Armed</label>
                   <label class="pill has-tip" data-tip="Home mode: din egen 'hjemme'-tilstand."><input type="checkbox" id="alarmHome"> Home mode</label>
                 </div>
@@ -1039,7 +1812,7 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
             <div class="divider"></div>
             <div class="row">
               <button id="applyPending" class="success" title="Anvend bufferede ændringer og kør regler">Aktivér ændringer</button>
-              <span class="small muted">Nyeste log nederst • Intet trigges før “Aktivér”.</span>
+              <span class="small muted">Nyeste log nederst • Intet trigges før "Aktivér".</span>
             </div>
           </div>
         </div>
@@ -1150,17 +1923,17 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
           <div class="body">
             <div class="row">
               <button id="runAll" class="info" title="Kør alle regler mod aktuelle tilstande (RUN)">Kør regler (RUN)</button>
-              <button id="runTimeTick" title="Evaluer alle 'Time = hh:mm' regler">Kør “Time Tick” nu</button>
+              <button id="runTimeTick" title="Evaluer alle 'Time = hh:mm' regler">Kør "Time Tick" nu</button>
               <button id="clearLog" class="danger" title="Tøm logvinduet">Slet log</button>
             </div>
             <div class="sp"></div>
-            <div id="log" class="log" title="Nyeste nederst."></div>
+            <div id="log" class="log" title="Nyeste nederst." style="height:240px !important; max-height:240px !important; min-height:240px !important; overflow-y:auto !important; overflow-x:hidden !important; word-wrap:break-word !important; box-sizing:border-box !important; position:relative !important;"></div>
             <div class="divider"></div>
             
 <div class="lua-bar" id="luaBar">
   <label style="margin:0">LUA-output:</label>
   <div class="lua-dd" id="luaDD">
-    <button id="luaBtn" aria-haspopup="true" aria-expanded="false" onclick="(function(btn){var list=document.getElementById('luaList');if(!list)return;var open=list.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false');})(this)">LUA ▾</button>
+    <button id="luaBtn" aria-haspopup="true" aria-expanded="false">LUA ▾</button>
     <div class="lua-list" id="luaList" role="menu">
       <button id="luaGen2" role="menuitem">Generér LUA</button>
       <button id="luaCopy2" role="menuitem">Kopiér LUA</button>
@@ -1169,7 +1942,7 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
   </div>
 </div>
 
-            <textarea id="luaOut" spellcheck="false" placeholder="Åbn menuen 'LUA ▾' og vælg 'Generér LUA'."></textarea>
+            <textarea id="luaOut" spellcheck="false" placeholder="Åbn menuen 'LUA ▾' og vælg 'Generér LUA'." style="height: 260px;"></textarea>
           </div>
         </div>
       </div>
@@ -1254,12 +2027,44 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
   window.pending = pending; window.state = state;
 
   function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function log(msg, cls){ var ts=new Date().toLocaleTimeString(), k=cls?(' class="'+cls+'"'):'';
-    logEl.insertAdjacentHTML('beforeend','<span'+k+'>['+ts+'] '+escHtml(msg)+'</span><br>');
-    if(logEl.innerHTML.split('<br>').length>650){ logEl.innerHTML=logEl.innerHTML.split('<br>').slice(-600).join('<br>'); }
-    logEl.scrollTop=logEl.scrollHeight;
+  var lastLogMessage = '';
+  var logEntries = [];
+  
+  function log(msg, cls){ 
+    // Forhindre spam af samme besked
+    if (msg === lastLogMessage) return;
+    lastLogMessage = msg;
+    
+    var ts = new Date().toLocaleTimeString();
+    var entry = { time: ts, message: msg, cls: cls };
+    logEntries.push(entry);
+    
+    // Begræns til max 40 entries
+    if (logEntries.length > 40) {
+      logEntries = logEntries.slice(-30);
+    }
+    
+    // Genopbyg hele log-indholdet
+    rebuildLog();
   }
-  window.log = log; function clearLog(){ logEl.innerHTML=''; }
+  
+  function rebuildLog() {
+    logEl.innerHTML = '';
+    logEntries.forEach(function(entry) {
+      var span = document.createElement('span');
+      if (entry.cls) span.className = entry.cls;
+      span.textContent = '[' + entry.time + '] ' + entry.message;
+      
+      logEl.appendChild(span);
+      logEl.appendChild(document.createElement('br'));
+    });
+    
+    // Auto-scroll til bunden
+    setTimeout(function(){ 
+      logEl.scrollTop = logEl.scrollHeight; 
+    }, 10);
+  }
+  window.log = log; function clearLog(){ logEntries = []; logEl.innerHTML=''; }
 
   function updateKPI(){ $('#lampState').innerText = state.light ? 'ON' : 'OFF'; $('#dimmerState').innerText = state.dimmer + '%'; $('#fanState').innerText   = state.fan ? 'ON' : 'OFF'; }
   function setLight(on){ state.light=!!on; updateKPI(); log('Light → ' + (on?'ON':'OFF')); }
@@ -1271,6 +2076,7 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
   $('#pirOff').onclick=function(){ pending.motion=false; log('BUFFER: PIR = Safe'); };
   $('#doorOpen').onclick=function(){ pending.door=true;  if(!pending.globals) pending.globals={}; pending.globals['sensor.contact']='Opened'; log('BUFFER: Dørkontakt = Opened • Global sensor.contact=Opened'); };
   $('#doorClose').onclick=function(){ pending.door=false; if(!pending.globals) pending.globals={}; pending.globals['sensor.contact']='Closed'; log('BUFFER: Dørkontakt = Closed • Global sensor.contact=Closed'); };
+  $('#humiditySet').onclick=function(){ var val = parseInt($('#humidityValue').value, 10) || 45; pending.humidity = val; log('BUFFER: Fugtighed = ' + val + '%'); };
   $('#clock').onchange=function(){ pending.time=this.value; log('BUFFER: Klokkeslæt = '+pending.time); };
   $('#weekday').onchange=function(){ pending.weekday=this.value; log('BUFFER: Ugedag = '+pending.weekday); };
   $('#alarmArmed').onclick=function(){ pending.alarmArmed=this.checked; log('BUFFER: Alarm.Armed = '+this.checked); };
@@ -1311,7 +2117,7 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
 
   /* Regler UI */
   function ruleRow(r,i){
-    var name = r.ruleName ? '“'+r.ruleName+'”' : ('#'+(i+1));
+    var name = r.ruleName ? '"'+r.ruleName+'"' : ('#'+(i+1));
     var div=document.createElement('div'); div.className='rule';
     div.innerHTML='<div class="small muted">'+name+'</div>'+
       '<div><span class="tag">'+r.trigger+(r.triggerValue?(' '+r.triggerValue):'')+'</span></div>'+
@@ -1443,7 +2249,7 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
       var r=state.rules[i];
       if(matchTrigger(r,firedTrigger) && bothCondsOk(r)){
         doAction(r.action1, r.action1Value);
-        var name = r.ruleName ? '“'+r.ruleName+'”' : ('#'+(i+1));
+        var name = r.ruleName ? '"'+r.ruleName+'"' : ('#'+(i+1));
         log('MATCH: Regel '+name+' → action "'+r.action1+'"', 'match');
       }
     }
@@ -1468,7 +2274,7 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
       }
       if(ok && bothCondsOk(r)){
         doAction(r.action1, r.action1Value);
-        var name = r.ruleName ? '“'+r.ruleName+'”' : ('#'+(i+1));
+        var name = r.ruleName ? '"'+r.ruleName+'"' : ('#'+(i+1));
         log('MATCH: Regel '+name+' → action "'+r.action1+'"', 'match');
       }
     }
@@ -1658,7 +2464,7 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
     }
     var actionsLua=[
       '-- Scene genereret (v1.7.3)',
-      '-- RET ENHEDS-ID’er HERUNDER:',
+      '-- RET ENHEDS-ID\'er HERUNDER:',
       'local LIGHT_ID, DIMMER_ID, FAN_ID = 123, 123, 456',
       'local MOTION_ID, DOOR_ID = 111, 112',
       'local LUX_ID, HUM_ID, WIND_ID = 113, 114, 115',
@@ -1705,7 +2511,541 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
   document.getElementById('zwAdd').onclick = addZwRow;
 
   (function(){ refreshRules(); updateKPI(); log('v1.7.3 (WebView2 • SPA) klar.'); })();
-  (function(){ var box=document.getElementById('zwRows'); if(box){ addZwRow(); addZwRow(); } })();
+
+  // === ONBOARDING SYSTEM ===
+  (function(){
+    var onboardingSteps = [
+      {
+        title: 'Velkommen til Simulator',
+        content: 'Her kan du simulere sensorer og se hvordan de påvirker dine regler. Prøv at klikke på "Sæt: Breached" under PIR-sensoren.',
+        target: '#pirOn',
+        position: 'bottom'
+      },
+      {
+        title: 'Aktiver ændringer',
+        content: 'Når du ændrer sensorer, bliver de først "buffered". Klik "Aktivér ændringer" for at anvende dem og køre reglerne.',
+        target: '#applyPending',
+        position: 'top'
+      },
+      {
+        title: 'Regler sektion',
+        content: 'Her bygger du dine automation regler. Vælg en trigger (IF), tilføj betingelser (AND) og vælg en handling (THEN).',
+        target: '#triggerType',
+        position: 'bottom'
+      },
+      {
+        title: 'Tilføj regel',
+        content: 'Når du har konfigureret din regel, klik "Tilføj regel" for at gemme den. Den vises derefter i listen nedenfor.',
+        target: '#addRule',
+        position: 'top'
+      },
+      {
+        title: 'Kør regler',
+        content: 'Klik "Kør regler (RUN)" for at evaluere alle regler mod de aktuelle sensor-tilstande og se resultatet i loggen.',
+        target: '#runAll',
+        position: 'top'
+      },
+      {
+        title: 'LUA generering',
+        content: 'Åbn LUA-menuen og vælg "Generér LUA" for at få kode du kan bruge i Home Center 3. Koden vises i tekstområdet nedenfor.',
+        target: '#luaBtn',
+        position: 'bottom'
+      },
+      {
+        title: 'Wiresheet Editor',
+        content: 'Prøv Wiresheet-fanen (i midten) for en visuel måde at bygge regler på. Træk noder rundt og forbind dem for at skabe komplekse automationer.',
+        target: '#tabFlow',
+        position: 'bottom'
+      }
+    ];
+
+    var currentStep = 0;
+    var onboardingActive = false;
+
+    function showOnboardingStep(stepIndex) {
+      if (stepIndex >= onboardingSteps.length) {
+        finishOnboarding();
+        return;
+      }
+
+      var step = onboardingSteps[stepIndex];
+      var target = document.querySelector(step.target);
+      if (!target) {
+        showOnboardingStep(stepIndex + 1);
+        return;
+      }
+
+      var overlay = document.getElementById('onboardingOverlay');
+      var stepEl = document.createElement('div');
+      stepEl.className = 'onboarding-step';
+      
+      var progress = '';
+      for (var i = 0; i < onboardingSteps.length; i++) {
+        var dotClass = i === stepIndex ? 'active' : (i < stepIndex ? 'completed' : '');
+        progress += '<div class="dot ' + dotClass + '"></div>';
+      }
+
+      var buttonText = stepIndex === onboardingSteps.length - 1 ? 'Afslut' : 'Næste';
+      var buttonClass = stepIndex === onboardingSteps.length - 1 ? 'finish' : 'next';
+
+      stepEl.innerHTML = `
+        <div class="progress">${progress}</div>
+        <h3>${step.title}</h3>
+        <p>${step.content}</p>
+        <div class="buttons">
+          <button class="skip" onclick="skipOnboarding()">Spring over</button>
+          <button class="pause" onclick="pauseOnboarding()">⏸️ Pause</button>
+          <button class="${buttonClass}" onclick="nextOnboardingStep()">${buttonText}</button>
+        </div>
+      `;
+
+      overlay.innerHTML = '';
+      overlay.appendChild(stepEl);
+      overlay.style.display = 'block';
+
+      // Position step near target but avoid covering it
+      // Use setTimeout to ensure element is fully rendered
+      setTimeout(function() {
+        var rect = target.getBoundingClientRect();
+        
+        // Estimate tooltip size (320px width, ~200px height based on CSS)
+        var tooltipWidth = 320;
+        var tooltipHeight = 200;
+        
+        var left, top;
+        
+        // For Wiresheet tab specifically, always position to the right
+        if (step.target === '#tabFlow') {
+          // If rect has zero dimensions, use fallback position
+          if (rect.width === 0 || rect.height === 0) {
+            // Fallback - position in top-right area
+            left = window.innerWidth - tooltipWidth - 50;
+            top = 100;
+          } else {
+            left = rect.right + 20;
+            top = rect.top + (rect.height / 2) - (tooltipHeight / 2);
+          }
+        } else {
+          // Try to position tooltip to the side of the target
+          
+          // Check if there's space to the right
+          if (rect.right + tooltipWidth + 20 < window.innerWidth) {
+            left = rect.right + 20;
+            top = rect.top + (rect.height / 2) - (tooltipHeight / 2);
+          }
+          // Check if there's space to the left
+          else if (rect.left - tooltipWidth - 20 > 0) {
+            left = rect.left - tooltipWidth - 20;
+            top = rect.top + (rect.height / 2) - (tooltipHeight / 2);
+          }
+          // Check if there's space above
+          else if (rect.top - tooltipHeight - 20 > 0) {
+            left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+            top = rect.top - tooltipHeight - 20;
+          }
+          // Default to below
+          else {
+            left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+            top = rect.bottom + 20;
+          }
+        }
+        
+        // Keep within viewport
+        left = Math.max(20, Math.min(left, window.innerWidth - tooltipWidth - 20));
+        top = Math.max(20, Math.min(top, window.innerHeight - tooltipHeight - 20));
+        
+        stepEl.style.left = left + 'px';
+        stepEl.style.top = top + 'px';
+      }, 0);
+
+      // Highlight target with better visibility
+      target.style.outline = '4px solid #2ab0ff';
+      target.style.outlineOffset = '4px';
+      target.style.boxShadow = '0 0 25px rgba(42, 176, 255, 0.6), inset 0 0 10px rgba(42, 176, 255, 0.1)';
+      target.style.zIndex = '10000';
+      target.style.position = 'relative';
+      target.style.backgroundColor = 'rgba(42, 176, 255, 0.05)';
+      target.style.borderRadius = '4px';
+    }
+
+    function nextOnboardingStep() {
+      // Remove highlight from current target
+      if (currentStep < onboardingSteps.length) {
+        var currentTarget = document.querySelector(onboardingSteps[currentStep].target);
+        if (currentTarget) {
+          currentTarget.style.outline = '';
+          currentTarget.style.outlineOffset = '';
+          currentTarget.style.boxShadow = '';
+          currentTarget.style.zIndex = '';
+          currentTarget.style.position = '';
+          currentTarget.style.backgroundColor = '';
+          currentTarget.style.borderRadius = '';
+        }
+      }
+      
+      currentStep++;
+      showOnboardingStep(currentStep);
+    }
+
+    function pauseOnboarding() {
+      // Hide the tooltip but keep highlights
+      var overlay = document.getElementById('onboardingOverlay');
+      overlay.style.display = 'none';
+      
+      // Show resume button
+      var resumeBtn = document.createElement('div');
+      resumeBtn.id = 'resumeOnboarding';
+      resumeBtn.innerHTML = `
+        <div style="position: fixed; top: 20px; right: 20px; z-index: 10003; background: #2ab0ff; color: white; padding: 12px 20px; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+          ▶️ Fortsæt rundtur
+        </div>
+      `;
+      resumeBtn.onclick = function() {
+        document.getElementById('resumeOnboarding').remove();
+        overlay.style.display = 'block';
+      };
+      document.body.appendChild(resumeBtn);
+    }
+
+    function skipOnboarding() {
+      finishOnboarding();
+    }
+
+    function finishOnboarding() {
+      // Remove all highlights
+      onboardingSteps.forEach(function(step) {
+        var target = document.querySelector(step.target);
+        if (target) {
+          target.style.outline = '';
+          target.style.outlineOffset = '';
+          target.style.boxShadow = '';
+          target.style.zIndex = '';
+          target.style.position = '';
+          target.style.backgroundColor = '';
+          target.style.borderRadius = '';
+        }
+      });
+
+      // Remove resume button if it exists
+      var resumeBtn = document.getElementById('resumeOnboarding');
+      if (resumeBtn) {
+        resumeBtn.remove();
+      }
+
+      document.getElementById('onboardingOverlay').style.display = 'none';
+      onboardingActive = false;
+      localStorage.setItem('onboarding_completed', 'true');
+    }
+
+    function startOnboarding() {
+      document.getElementById('onboardingWelcome').style.display = 'none';
+      currentStep = 0;
+      onboardingActive = true;
+      showOnboardingStep(0);
+    }
+
+    function showQuickStart() {
+      document.getElementById('quickStart').style.display = 'block';
+      
+      // Update completed tasks indicators
+      var completedTasks = JSON.parse(localStorage.getItem('completed_tasks') || '[]');
+      ['ganglys', 'doorlight', 'bathroom'].forEach(function(taskId) {
+        var taskEl = document.getElementById('task-' + taskId);
+        if (taskEl) {
+          var completedEl = taskEl.querySelector('.task-completed');
+          if (completedEl) {
+            completedEl.style.display = completedTasks.includes(taskId) ? 'inline' : 'none';
+          }
+        }
+      });
+    }
+
+    function closeQuickStart() {
+      document.getElementById('quickStart').style.display = 'none';
+    }
+
+    // Task validation system
+    var activeTask = null;
+    var taskCriteria = {
+      'ganglys': {
+        name: 'Ganglys Basic',
+        steps: [
+          'Klik "Sæt: Breached" under PIR',
+          'Klik "Aktivér ændringer"',
+          'Gå til "Regler" sektionen',
+          'Vælg "IF PIR bliver Breached" som trigger',
+          'Vælg "THEN Lys → Tænd" som action',
+          'Klik "Tilføj regel"'
+        ],
+        criteria: [
+          { id: 'sensor', text: 'PIR er aktiveret (Breached + Aktiver ændringer)', check: function() { 
+            return window.state && window.state.motion === true; 
+          }},
+          { id: 'rule', text: 'Regel er oprettet', check: function() { 
+            return window.state && window.state.rules && window.state.rules.length > 0; 
+          }},
+          { id: 'trigger', text: 'Trigger er korrekt (PIR bliver Breached)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ return r.trigger === 'motionBreached'; }); 
+          }},
+          { id: 'action', text: 'Handling er korrekt (lightOn)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.length > 0 && 
+                   window.state.rules.some(r => r.action1 === 'lightOn'); 
+          }}
+        ]
+      },
+      'doorlight': {
+        name: 'Dørlys med tidsbegrænsning',
+        steps: [
+          'Klik "Sæt: Opened" under Dørkontakt',
+          'Klik "Aktivér ændringer"',
+          'Gå til "Regler" sektionen',
+          'Vælg "IF Dørkontakt ændres til Opened" som trigger',
+          'Tilføj AND: "Tid mellem" med "22:00-06:00"',
+          'Vælg "THEN Lys → Tænd" som action',
+          'Klik "Tilføj regel"'
+        ],
+        criteria: [
+          { id: 'sensor', text: 'Dørkontakt er aktiveret (Opened + Aktiver ændringer)', check: function() { 
+            return window.state && window.state.door === true; 
+          }},
+          { id: 'trigger', text: 'Trigger er korrekt (IF Dørkontakt ændres til Opened)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ return r.trigger === 'doorOpened'; }); 
+          }},
+          { id: 'timer', text: 'Tidsbetingelse tilføjet (AND: Tid mellem 22:00-06:00)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'doorOpened' && r.cond1 === 'timeBetween' && r.cond1Value && r.cond1Value.includes('22:00') && r.cond1Value.includes('06:00'); 
+            }); 
+          }},
+          { id: 'action', text: 'Handling er korrekt (THEN Lys → Tænd)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'doorOpened' && r.action1 === 'lightOn'; 
+            }); 
+          }}
+        ]
+      },
+      'bathroom': {
+        name: 'Badventilator med fugtighed',
+        steps: [
+          'Sæt fugtighed til 75% og klik "Sæt fugtighed"',
+          'Klik "Aktivér ændringer"',
+          'Gå til "Regler" sektionen',
+          'Vælg "IF Fugtighed ≥ (værdi)" som trigger med værdi 75',
+          'Tilføj AND: "Lys (lux) <" med værdi 50',
+          'Vælg "THEN Ventilator → On" som action',
+          'Klik "Tilføj regel"'
+        ],
+        criteria: [
+          { id: 'sensor', text: 'Fugtighed er sat til 75%', check: function() { 
+            return window.state && window.state.humidity >= 75; 
+          }},
+          { id: 'trigger', text: 'Trigger er korrekt (IF Fugtighed ≥ 75)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'humidityAbove' && r.triggerValue && parseFloat(r.triggerValue) >= 75; 
+            }); 
+          }},
+          { id: 'condition', text: 'Betingelse tilføjet (AND: Lys (lux) < 50)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'humidityAbove' && r.cond1 === 'luxBelow' && r.cond1Value && parseFloat(r.cond1Value) <= 50; 
+            }); 
+          }},
+          { id: 'action', text: 'Handling er korrekt (THEN Ventilator → On)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'humidityAbove' && r.action1 === 'fanOn'; 
+            }); 
+          }}
+        ]
+      }
+    };
+
+    function startTask(taskType) {
+      closeQuickStart();
+      activeTask = taskType;
+      
+      // Show task validation panel
+      showTaskValidation(taskType);
+      
+      // Switch to simulator view to start the task
+      document.querySelector('[data-target="view-sim"]').click();
+      
+      log('Opgave startet: ' + taskCriteria[taskType].name + ' - Følg trinene i valideringspanelet!');
+    }
+
+    function showTaskValidation(taskType) {
+      var task = taskCriteria[taskType];
+      if (!task) return;
+
+      var validationEl = document.getElementById('taskValidation');
+      var nameEl = document.getElementById('taskName');
+      var criteriaEl = document.getElementById('taskCriteria');
+      
+      // Reset state
+      validationEl.classList.remove('success');
+      validationEl.classList.add('active');
+      document.getElementById('taskProgress').style.display = 'block';
+      document.getElementById('taskSuccess').style.display = 'none';
+      
+      // Set task name
+      nameEl.textContent = task.name;
+      
+      // Build criteria list
+      criteriaEl.innerHTML = '';
+      task.criteria.forEach(function(criterion) {
+        var li = document.createElement('li');
+        li.id = 'criterion-' + criterion.id;
+        li.textContent = criterion.text;
+        criteriaEl.appendChild(li);
+      });
+      
+      // Build steps list
+      var stepsEl = document.getElementById('taskSteps');
+      stepsEl.innerHTML = '';
+      if (task.steps) {
+        task.steps.forEach(function(step) {
+          var li = document.createElement('li');
+          li.textContent = step;
+          stepsEl.appendChild(li);
+        });
+      }
+      
+      // Show panel
+      validationEl.style.display = 'block';
+      
+      // Load help preference
+      loadHelpPreference();
+      
+      // Start validation loop
+      if (window.taskValidationInterval) {
+        clearInterval(window.taskValidationInterval);
+      }
+      window.taskValidationInterval = setInterval(validateTask, 500);
+    }
+
+    function validateTask() {
+      if (!activeTask) return;
+      
+      var task = taskCriteria[activeTask];
+      if (!task) return;
+      
+      var completed = 0;
+      var total = task.criteria.length;
+      
+      task.criteria.forEach(function(criterion) {
+        var li = document.getElementById('criterion-' + criterion.id);
+        if (criterion.check()) {
+          li.classList.add('completed');
+          completed++;
+        } else {
+          li.classList.remove('completed');
+        }
+      });
+      
+      // Update progress bar
+      var progress = (completed / total) * 100;
+      document.getElementById('taskProgressBar').style.width = progress + '%';
+      
+      // Check if task is complete
+      if (completed === total) {
+        completeTask();
+      }
+    }
+
+    function completeTask() {
+      var validationEl = document.getElementById('taskValidation');
+      validationEl.classList.remove('active');
+      validationEl.classList.add('success');
+      
+      document.getElementById('taskProgress').style.display = 'none';
+      document.getElementById('taskSuccess').style.display = 'block';
+      
+      // Stop validation loop
+      if (window.taskValidationInterval) {
+        clearInterval(window.taskValidationInterval);
+      }
+      
+      // Log success
+      log('🎉 Opgave fuldført: ' + taskCriteria[activeTask].name + '!');
+      
+      // Store completion in localStorage
+      var completedTasks = JSON.parse(localStorage.getItem('completed_tasks') || '[]');
+      if (!completedTasks.includes(activeTask)) {
+        completedTasks.push(activeTask);
+        localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
+      }
+    }
+
+    function closeTaskValidation() {
+      document.getElementById('taskValidation').style.display = 'none';
+      if (window.taskValidationInterval) {
+        clearInterval(window.taskValidationInterval);
+      }
+      activeTask = null;
+    }
+
+    // Toggle help steps visibility
+    var helpVisible = false;
+    function toggleTaskHelp() {
+      helpVisible = !helpVisible;
+      var stepsEl = document.getElementById('taskSteps').parentNode;
+      var toggleBtn = document.querySelector('.help-toggle-btn');
+      
+      if (helpVisible) {
+        stepsEl.style.display = 'block';
+        toggleBtn.classList.add('active');
+        toggleBtn.title = 'Skjul hjælp-trin';
+      } else {
+        stepsEl.style.display = 'none';
+        toggleBtn.classList.remove('active');
+        toggleBtn.title = 'Vis hjælp-trin';
+      }
+      
+      // Gem præference
+      localStorage.setItem('task_help_visible', helpVisible);
+    }
+
+    // Indlæs gemt præference
+    function loadHelpPreference() {
+      var saved = localStorage.getItem('task_help_visible');
+      if (saved !== null) {
+        // Brug gemt præference
+        helpVisible = saved === 'true';
+      } else {
+        // Standard: hjælp er skjult
+        helpVisible = false;
+      }
+      
+      // Juster UI til aktuel tilstand
+      var stepsEl = document.getElementById('taskSteps').parentNode;
+      var toggleBtn = document.querySelector('.help-toggle-btn');
+      
+      if (helpVisible) {
+        stepsEl.style.display = 'block';
+        toggleBtn.classList.add('active');
+        toggleBtn.title = 'Skjul hjælp-trin';
+      } else {
+        stepsEl.style.display = 'none';
+        toggleBtn.classList.remove('active');
+        toggleBtn.title = 'Vis hjælp-trin';
+      }
+    }
+
+    // Make functions globally available
+    window.skipOnboarding = skipOnboarding;
+    window.startOnboarding = startOnboarding;
+    window.nextOnboardingStep = nextOnboardingStep;
+    window.pauseOnboarding = pauseOnboarding;
+    window.showQuickStart = showQuickStart;
+    window.closeQuickStart = closeQuickStart;
+    window.startTask = startTask;
+    window.closeTaskValidation = closeTaskValidation;
+    window.toggleTaskHelp = toggleTaskHelp;
+
+    // Check if first time user
+    if (!localStorage.getItem('onboarding_completed')) {
+      setTimeout(function() {
+        document.getElementById('onboardingWelcome').style.display = 'block';
+      }, 1000);
+    }
+  })();
 
 
   // === WIRESHEET MVP ===
@@ -2143,65 +3483,39 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <script>
-
-// === LUA bar dropdown ===
+// === LUA bar dropdown (konsolideret) ===
 (function(){
   const dd = document.getElementById('luaDD');
   if(!dd) return;
   const btn = document.getElementById('luaBtn');
   const list = document.getElementById('luaList');
-  btn.addEventListener('click', ()=>{
-    const open = list.classList.toggle('open');
-    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-  document.addEventListener('click', (e)=>{
-    if(!dd.contains(e.target)) { list.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
-  });
-})();
-
-</script>
-
-<script>
-// LUA dropdown toggle + bridge from new buttons to original hidden header buttons
-(function(){
-  var dd   = document.getElementById('luaDD');
-  var btn  = document.getElementById('luaBtn');
-  var list = document.getElementById('luaList');
+  
   if (btn && list){
     btn.addEventListener('click', function(){
-      list.classList.toggle('open');
-      btn.setAttribute('aria-expanded', list.classList.contains('open') ? 'true' : 'false');
+      const open = list.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
-    document.addEventListener('click', function(e){
-      if (dd && !dd.contains(e.target)){ list.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
-    });
-  }
-  // Bridge: forward new button clicks to the original hidden ones (if they exist)
-  var oldGen  = document.getElementById('btnGenLua');
-  var oldCopy = document.getElementById('btnCopyLua');
-  var oldSave = document.getElementById('btnSaveLua');
-  var nGen  = document.getElementById('luaGen2');
-  var nCopy = document.getElementById('luaCopy2');
-  var nSave = document.getElementById('luaSave2');
-  if (nGen && oldGen)  nGen.addEventListener('click',  function(){ oldGen.click();  });
-  if (nCopy && oldCopy) nCopy.addEventListener('click', function(){ oldCopy.click(); });
-  if (nSave && oldSave) nSave.addEventListener('click', function(){ oldSave.click(); });
-})();
-</script>
-
-
-<script>
-(function(){
+    
+    // Close dropdown when clicking outside
   document.addEventListener('click', function(e){
-    var dd = document.getElementById('luaDD');
-    var list = document.getElementById('luaList');
-    var btn = document.getElementById('luaBtn');
-    if(!dd || !list || !btn) return;
-    if(!dd.contains(e.target)){
+      if(!dd.contains(e.target)) { 
       list.classList.remove('open');
       btn.setAttribute('aria-expanded','false');
     }
   });
+    
+    // Bridge: forward new button clicks to the original hidden ones
+    const oldGen  = document.getElementById('btnGenLua');
+    const oldCopy = document.getElementById('btnCopyLua');
+    const oldSave = document.getElementById('btnSaveLua');
+    const nGen  = document.getElementById('luaGen2');
+    const nCopy = document.getElementById('luaCopy2');
+    const nSave = document.getElementById('luaSave2');
+    
+    if (nGen && oldGen)  nGen.addEventListener('click',  function(){ oldGen.click();  });
+    if (nCopy && oldCopy) nCopy.addEventListener('click', function(){ oldCopy.click(); });
+    if (nSave && oldSave) nSave.addEventListener('click', function(){ oldSave.click(); });
+  }
 })();
 </script>
 
