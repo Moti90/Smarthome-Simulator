@@ -101,6 +101,208 @@
     }
     .log .match{ color:#00d26a; font-weight:600; }
 
+    /* Nye styles for forbedret design */
+    .section-group {
+      margin-bottom: 16px;
+      padding: 8px;
+      background: rgba(15, 20, 28, 0.6);
+      border: 1px solid #1f2933;
+      border-radius: 12px;
+    }
+    
+    .section-group:last-child {
+      margin-bottom: 0;
+    }
+    
+    .control-group {
+      margin-bottom: 12px;
+    }
+    
+    .control-group:last-child {
+      margin-bottom: 0;
+    }
+    
+    .input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .input-row .styled-input {
+      flex: 1;
+    }
+    
+    .button-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .styled-input {
+      background: rgba(255, 255, 255, 0.95) !important;
+      color: #1f2937 !important;
+      border: 1px solid #d1d5db !important;
+      padding: 10px 12px !important;
+      border-radius: 8px !important;
+      font-size: 13px !important;
+      transition: all 0.2s ease !important;
+    }
+    
+    .styled-input:focus {
+      outline: none;
+      border-color: #3b82f6 !important;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    }
+    
+    .styled-input:hover {
+      border-color: #9ca3af !important;
+    }
+
+    /* CSS variabler for tema support */
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #334155;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --border-color: #475569;
+      --accent-color: #60a5fa;
+    }
+
+    /* Indstillinger side styling */
+    .settings-section {
+      margin-bottom: 24px;
+      padding: 20px;
+      background: rgba(15, 20, 28, 0.4);
+      border: 1px solid #1f2933;
+      border-radius: 16px;
+      transition: all 0.2s ease;
+    }
+    
+    .settings-section:hover {
+      background: rgba(15, 20, 28, 0.6);
+      border-color: #2a3442;
+    }
+    
+    .settings-section h3 {
+      margin: 0 0 16px 0;
+      color: #e5e9f0;
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .setting-item {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .setting-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .setting-item label {
+      color: #d1d5db;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    
+    .setting-description {
+      color: #9ca3af;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    
+    .styled-select {
+      background: rgba(15, 20, 28, 0.8);
+      color: #e5e9f0;
+      border: 1px solid #2a3442;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .styled-select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .styled-select:hover {
+      border-color: #4b5563;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #2563eb, #1e40af);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #6b7280, #4b5563);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
+    }
+    
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #4b5563, #374151);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4);
+    }
+    
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+    }
+    
+    .btn-danger:hover {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+
+    /* Style for ugedag og dæmper felter - matcher klokkeslæts boksen */
+    .styled-input.weekday-select,
+    .styled-input.dimmer-select {
+      background: rgba(15, 20, 28, 0.8) !important;
+      color: #e5e9f0 !important;
+      border: 1px solid #2a3442 !important;
+    }
+
     /* Z-Wave rækker – nu med wrap og metachips */
     .zw-row{
       display:flex; align-items:center; gap:8px;
@@ -1398,6 +1600,36 @@ input:focus, select:focus, textarea:focus{
   line-height: 1.5;
 }
 
+.quick-start .task .case-description {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.quick-start .task .case-description h4 {
+  margin: 0 0 8px 0;
+  color: #3b82f6;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.quick-start .task .case-description p {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #e5e7eb;
+}
+
+.quick-start .task .case-description p:last-child {
+  margin-bottom: 0;
+}
+
+.quick-start .task .case-description strong {
+  color: #3b82f6;
+}
+
 .quick-start .task .steps {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 6px;
@@ -1448,11 +1680,14 @@ input:focus, select:focus, textarea:focus{
 .quick-start .buttons {
   display: flex;
   gap: 12px;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-top: 24px;
+  align-items: flex-start;
 }
 
-.quick-start .buttons button {
+.quick-start .buttons .close {
+  background: #374151;
+  color: #9ca3af;
   padding: 10px 20px;
   border-radius: 8px;
   border: none;
@@ -1461,14 +1696,42 @@ input:focus, select:focus, textarea:focus{
   font-weight: 500;
 }
 
-.quick-start .buttons .close {
-  background: #374151;
-  color: #9ca3af;
+.quick-start .task-buttons {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-.quick-start .buttons .start-task {
+.quick-start .button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.quick-start .button-group h4 {
+  margin: 0 0 8px 0;
+  color: #9ca3af;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.quick-start .button-group .start-task {
   background: #10b981;
   color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.quick-start .button-group .start-task:hover {
+  background: #059669;
 }
 
 /* Task validation feedback */
@@ -1972,7 +2235,11 @@ html {
       <span class="difficulty easy">Let</span>
       <span class="task-completed" style="display:none;">✅</span>
       <h3>Ganglys Basic</h3>
-      <p>Lav en regel der tænder lyset når der er bevægelse.</p>
+      <div class="case-description">
+        <h4>📋 Case: Automatisk ganglys</h4>
+        <p>Du arbejder på et kontor hvor gangene ofte er tomme om aftenen. For at spare energi og sikre sikkerhed, skal du implementere et automatisk ganglys der tænder når der er bevægelse.</p>
+        <p><strong>Læringsmål:</strong> Forstå grundlæggende trigger-action logik og hvordan PIR-sensorer fungerer.</p>
+      </div>
       <div class="steps">
         <ol>
           <li>Gå til "Simulator" fanen</li>
@@ -1991,11 +2258,20 @@ html {
       <span class="difficulty medium">Mellem</span>
       <span class="task-completed" style="display:none;">✅</span>
       <h3>Dørlys med tidsbegrænsning</h3>
-      <p>Lys der kun tænder om natten når døren åbnes.</p>
+      <div class="case-description">
+        <h4>📋 Case: Natligt dørlys</h4>
+        <p>En familie har problemer med at finde vej i mørket om natten når de skal til toilettet. De vil have et lys der automatisk tænder når døren åbnes, men kun mellem 22:00 og 06:00 for at spare energi.</p>
+        <p><strong>Læringsmål:</strong> Kombinere sensor-triggers med tidsbetingelser og forstå AND-logik.</p>
+      </div>
       <div class="steps">
         <ol>
-          <li>Sæt dørkontakt til "Opened"</li>
-          <li>Vælg "IF Dørkontakt ændres til Opened"</li>
+          <li>Gå til "Z-Wave sensorer" sektionen</li>
+          <li>Vælg "Dør-/vindueskontakt" fra dropdown</li>
+          <li>Sæt værdi til "Opened"</li>
+          <li>Klik "Sæt (buffer)"</li>
+          <li>Klik "Aktivér ændringer"</li>
+          <li>Gå til "Regler" sektionen</li>
+          <li>Vælg "IF Dørkontakt ændres til Opened" som trigger</li>
           <li>Tilføj AND: "Tid mellem" med "22:00-06:00"</li>
           <li>Vælg "THEN Lys → Tænd" som action</li>
           <li>Tilføj regel og test</li>
@@ -2007,10 +2283,17 @@ html {
       <span class="difficulty hard">Svær</span>
       <span class="task-completed" style="display:none;">✅</span>
       <h3>Badventilator med fugtighed</h3>
-      <p>Ventilator der starter ved høj fugtighed og slukker automatisk.</p>
+      <div class="case-description">
+        <h4>📋 Case: Intelligent badventilator</h4>
+        <p>Et badeværelse har problemer med skimmel på grund af høj fugtighed efter bad. Du skal implementere en ventilator der automatisk starter når fugtigheden er høj, men kun når der ikke er nogen i rummet (lavt lys).</p>
+        <p><strong>Læringsmål:</strong> Arbejde med numeriske sensorer, kombinere multiple betingelser og forstå miljøbaseret automation.</p>
+      </div>
       <div class="steps">
         <ol>
-          <li>Sæt fugtighed til 75% og klik "Sæt fugtighed"</li>
+          <li>Gå til "Z-Wave sensorer" sektionen</li>
+          <li>Vælg "Fugtighed (%)" fra dropdown</li>
+          <li>Sæt værdi til 75</li>
+          <li>Klik "Sæt (buffer)"</li>
           <li>Klik "Aktivér ændringer"</li>
           <li>Gå til "Regler" sektionen</li>
           <li>Vælg "IF Fugtighed ≥ (værdi)" som trigger med værdi 75</li>
@@ -2021,11 +2304,196 @@ html {
       </div>
     </div>
     
+    <div class="task" id="task-security">
+      <span class="difficulty medium">Mellem</span>
+      <span class="task-completed" style="display:none;">✅</span>
+      <h3>Sikkerhedsalarm</h3>
+      <div class="case-description">
+        <h4>📋 Case: Hjemmesikkerhed</h4>
+        <p>En familie vil have et sikkerhedssystem der aktiverer en alarm når der er bevægelse om natten, men kun når de ikke er hjemme (døren er lukket).</p>
+        <p><strong>Læringsmål:</strong> Implementere sikkerhedslogik med multiple sensorer og forstå hvordan man kombinerer forskellige sensorer.</p>
+      </div>
+      <div class="steps">
+        <ol>
+          <li>Gå til "Z-Wave sensorer" sektionen</li>
+          <li>Vælg "PIR (bevægelse)" fra dropdown og sæt til "Breached"</li>
+          <li>Vælg "Dør-/vindueskontakt" fra dropdown og sæt til "Closed"</li>
+          <li>Klik "Sæt (buffer)" for begge sensorer</li>
+          <li>Klik "Aktivér ændringer"</li>
+          <li>Gå til "Regler" sektionen</li>
+          <li>Vælg "IF PIR bliver Breached" som trigger</li>
+          <li>Tilføj AND: "Dørkontakt = Closed"</li>
+          <li>Tilføj AND: "Tid mellem" med "22:00-06:00"</li>
+          <li>Vælg "THEN Push (log)" som action</li>
+          <li>Tilføj regel og test</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div class="task" id="task-energy">
+      <span class="difficulty hard">Svær</span>
+      <span class="task-completed" style="display:none;">✅</span>
+      <h3>Energibesparende lys</h3>
+      <div class="case-description">
+        <h4>📋 Case: Smart energistyring</h4>
+        <p>Et kontor vil spare energi ved at have lys der automatisk slukker når der ikke er nogen i rummet, men kun hvis det er lyst udenfor (dagslys).</p>
+        <p><strong>Læringsmål:</strong> Implementere kompleks energistyring med multiple betingelser og forstå hvordan man optimerer for både komfort og effektivitet.</p>
+      </div>
+      <div class="steps">
+        <ol>
+          <li>Gå til "Z-Wave sensorer" sektionen</li>
+          <li>Vælg "PIR (bevægelse)" fra dropdown og sæt til "Safe"</li>
+          <li>Vælg "Lys (lux)" fra dropdown og sæt til 800</li>
+          <li>Klik "Sæt (buffer)" for begge sensorer</li>
+          <li>Klik "Aktivér ændringer"</li>
+          <li>Gå til "Regler" sektionen</li>
+          <li>Vælg "IF PIR bliver Safe" som trigger</li>
+          <li>Tilføj AND: "Lys (lux) >" med værdi 500</li>
+          <li>Tilføj AND: "Tid mellem" med "08:00-18:00"</li>
+          <li>Vælg "THEN Lys → Off" som action</li>
+          <li>Tilføj regel og test</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div class="task" id="task-comfort">
+      <span class="difficulty medium">Mellem</span>
+      <span class="task-completed" style="display:none;">✅</span>
+      <h3>Komfortstyring</h3>
+      <div class="case-description">
+        <h4>📋 Case: Optimalt indeklima</h4>
+        <p>Et kontor har problemer med tør luft om vinteren. Du skal implementere en løsning der automatisk dæmper lyset når luften er tør og der er mørkt, for at skabe et mere behageligt miljø.</p>
+        <p><strong>Læringsmål:</strong> Arbejde med numeriske sensorer og forstå hvordan man skaber behagelige miljøer gennem automation.</p>
+      </div>
+      <div class="steps">
+        <ol>
+          <li>Gå til "Z-Wave sensorer" sektionen</li>
+          <li>Vælg "Fugtighed (%)" fra dropdown og sæt til 40</li>
+          <li>Vælg "Lys (lux)" fra dropdown og sæt til 200</li>
+          <li>Klik "Sæt (buffer)" for begge sensorer</li>
+          <li>Klik "Aktivér ændringer"</li>
+          <li>Gå til "Regler" sektionen</li>
+          <li>Vælg "IF Fugtighed < (værdi)" som trigger med værdi 45</li>
+          <li>Tilføj AND: "Lys (lux) <" med værdi 300</li>
+          <li>Vælg "THEN Dæmper → 30%" som action</li>
+          <li>Klik "Tilføj regel"</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div class="task" id="task-schedule">
+      <span class="difficulty easy">Let</span>
+      <span class="task-completed" style="display:none;">✅</span>
+      <h3>Tidsbaseret automation</h3>
+      <div class="case-description">
+        <h4>📋 Case: Automatisk morgenstart</h4>
+        <p>En familie vil have lys der automatisk tænder kl. 7:00 om morgenen, men kun på hverdage (mandag-fredag) når børnene skal i skole.</p>
+        <p><strong>Læringsmål:</strong> Implementere tidsbaseret automation og forstå hvordan man kombinerer tid med ugedage.</p>
+      </div>
+      <div class="steps">
+        <ol>
+          <li>Gå til "Regler" sektionen</li>
+          <li>Vælg "IF Time = hh:mm" som trigger med værdi "07:00"</li>
+          <li>Tilføj AND: "Ugedag i" med værdi "1-5" (mandag-fredag)</li>
+          <li>Vælg "THEN Lys → Tænd" som action</li>
+          <li>Klik "Tilføj regel"</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div class="task" id="task-ventilation">
+      <span class="difficulty medium">Mellem</span>
+      <span class="task-completed" style="display:none;">✅</span>
+      <h3>Intelligent ventilation</h3>
+      <div class="case-description">
+        <h4>📋 Case: Vejrbaseret ventilation</h4>
+        <p>Et kontor vil have ventilation der automatisk starter når fugtigheden er høj, men kun hvis det ikke blæser for meget udenfor (for at undgå at blæse varm luft ud).</p>
+        <p><strong>Læringsmål:</strong> Kombinere miljøsensorer og forstå hvordan man optimerer ventilation baseret på vejrforhold.</p>
+      </div>
+      <div class="steps">
+        <ol>
+          <li>Gå til "Z-Wave sensorer" sektionen</li>
+          <li>Vælg "Fugtighed (%)" fra dropdown og sæt til 80</li>
+          <li>Vælg "Vind (m/s)" fra dropdown og sæt til 15</li>
+          <li>Klik "Sæt (buffer)" for begge sensorer</li>
+          <li>Klik "Aktivér ændringer"</li>
+          <li>Gå til "Regler" sektionen</li>
+          <li>Vælg "IF Fugtighed ≥ (værdi)" som trigger med værdi 70</li>
+          <li>Tilføj AND: "Vind <" med værdi 20</li>
+          <li>Vælg "THEN Ventilator → On" som action</li>
+          <li>Klik "Tilføj regel"</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div class="task" id="task-alarm">
+      <span class="difficulty hard">Svær</span>
+      <span class="task-completed" style="display:none;">✅</span>
+      <h3>Alarm system</h3>
+      <div class="case-description">
+        <h4>📋 Case: Avanceret sikkerhed</h4>
+        <p>En virksomhed vil have et alarm system der aktiveres når både døren åbnes OG der er bevægelse, men kun når alarmen er aktiveret. Dette for at undgå falske alarmer.</p>
+        <p><strong>Læringsmål:</strong> Implementere kompleks sikkerhedslogik med multiple sensorer og forstå hvordan man undgår falske alarmer.</p>
+      </div>
+      <div class="steps">
+        <ol>
+          <li>Gå til "Z-Wave sensorer" sektionen</li>
+          <li>Vælg "Dør-/vindueskontakt" fra dropdown og sæt til "Opened"</li>
+          <li>Vælg "PIR (bevægelse)" fra dropdown og sæt til "Breached"</li>
+          <li>Klik "Sæt (buffer)" for begge sensorer</li>
+          <li>Klik "Aktivér ændringer"</li>
+          <li>Gå til "Regler" sektionen</li>
+          <li>Vælg "IF Dørkontakt ændres til Opened" som trigger</li>
+          <li>Tilføj AND: "PIR = Breached"</li>
+          <li>Tilføj AND: "Alarm = Armed"</li>
+          <li>Vælg "THEN Push (log)" som action</li>
+          <li>Klik "Tilføj regel"</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div class="task" id="task-global">
+      <span class="difficulty medium">Mellem</span>
+      <span class="task-completed" style="display:none;">✅</span>
+      <h3>Global variabel styring</h3>
+      <div class="case-description">
+        <h4>📋 Case: Scene styring</h4>
+        <p>En familie vil have et "away mode" der automatisk slukker alle lys når de sætter systemet i "away" tilstand. Dette skal implementeres ved hjælp af globale variabler.</p>
+        <p><strong>Læringsmål:</strong> Forstå globale variabler og hvordan man bruger dem til at styre hele systemet med en enkelt indstilling.</p>
+      </div>
+      <div class="steps">
+        <ol>
+          <li>Gå til "Regler" sektionen</li>
+          <li>Vælg "IF Global name=value" som trigger med værdi "mode=away"</li>
+          <li>Vælg "THEN Set Global" som action med værdi "lights=off"</li>
+          <li>Klik "Tilføj regel"</li>
+        </ol>
+      </div>
+    </div>
+    
     <div class="buttons">
       <button class="close" onclick="closeQuickStart()">Luk</button>
-      <button class="start-task" onclick="startTask('ganglys')">Start Ganglys</button>
-      <button class="start-task" onclick="startTask('doorlight')">Start Dørlys</button>
-      <button class="start-task" onclick="startTask('bathroom')">Start Badventilator</button>
+      <div class="task-buttons">
+        <div class="button-group">
+          <h4>Let</h4>
+          <button class="start-task" onclick="startTask('ganglys')">Ganglys</button>
+          <button class="start-task" onclick="startTask('schedule')">Tidsstyring</button>
+        </div>
+        <div class="button-group">
+          <h4>Mellem</h4>
+          <button class="start-task" onclick="startTask('doorlight')">Dørlys</button>
+          <button class="start-task" onclick="startTask('security')">Sikkerhed</button>
+          <button class="start-task" onclick="startTask('comfort')">Komfort</button>
+          <button class="start-task" onclick="startTask('ventilation')">Ventilation</button>
+          <button class="start-task" onclick="startTask('global')">Global</button>
+        </div>
+        <div class="button-group">
+          <h4>Svær</h4>
+          <button class="start-task" onclick="startTask('bathroom')">Badventilator</button>
+          <button class="start-task" onclick="startTask('energy')">Energistyring</button>
+          <button class="start-task" onclick="startTask('alarm')">Alarm</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2058,97 +2526,71 @@ html {
         <div class="card" data-section="sensors">
           <h2>1) Virtuelle sensorer & tilstande</h2>
           <div class="body">
-            <div class="grid3">
-              <!-- Fysiske sensorer -->
-              <div>
-                <h3 style="margin-top:0; color:#10b981; font-size:14px;">🔌 Fysiske sensorer</h3>
-                
-                <label class="has-tip" data-tip="PIR (bevægelsessensor). Breached = bevægelse; Safe = ingen bevægelse.">PIR (bevægelse)</label>
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                  <button id="pirOn">Sæt: Breached</button>
-                  <button id="pirOff" class="danger">Sæt: Safe</button>
-                </div>
-                <div class="sp"></div>
-
-                <label class="has-tip" data-tip="Dørkontakt (åben/lukket).">Dørkontakt</label>
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                  <button id="doorOpen">Sæt: Opened</button>
-                  <button id="doorClose" class="danger">Sæt: Closed</button>
-                </div>
-                <div class="sp"></div>
-
-                <label class="has-tip" data-tip="Fugtighedssensor (%). Sæt til høj værdi for at teste ventilator-regler.">Fugtighed (%)</label>
-                <div class="row">
-                  <input type="number" id="humidityValue" value="45" min="0" max="100" step="1" style="width:80px;">
-                  <button id="humiditySet">Sæt fugtighed</button>
-                </div>
+            <!-- Tid & miljø -->
+            <div class="section-group">
+              <h3 style="margin:0 0 12px 0; color:#f59e0b; font-size:16px; display:flex; align-items:center; gap:8px;">
+                <span>⏰</span>
+                <span>Tid & miljø</span>
+              </h3>
+              
+              <div class="control-group">
+                <label class="has-tip" data-tip="Virtuelt klokkeslæt til 'Time = hh:mm' og 'Tid mellem'.">Klokkeslæt</label>
+                <input type="time" id="clock" value="21:30" class="styled-input">
               </div>
 
-              <!-- Tid & miljø -->
-              <div>
-                <h3 style="margin-top:0; color:#f59e0b; font-size:14px;">⏰ Tid & miljø</h3>
-                
-                <label class="has-tip" data-tip="Virtuelt klokkeslæt til 'Time = hh:mm' og 'Tid mellem'.">Klokkeslæt</label>
-                <input type="time" id="clock" value="21:30">
-                <div class="sp"></div>
-
+              <div class="control-group">
                 <label class="has-tip" data-tip="Ugedag (Mon..Sun) – bruges i 'Ugedag i'.">Ugedag</label>
-                <select id="weekday">
+                <select id="weekday" class="styled-input weekday-select">
                   <option>Mon</option><option>Tue</option><option>Wed</option>
                   <option>Thu</option><option>Fri</option><option>Sat</option><option>Sun</option>
                 </select>
               </div>
+            </div>
 
-              <!-- System tilstande -->
-              <div>
-                <h3 style="margin-top:0; color:#ef4444; font-size:14px;">🔒 System tilstande</h3>
+            <!-- System tilstande -->
+            <div class="section-group">
+              <h3 style="margin:0 0 12px 0; color:#ef4444; font-size:16px; display:flex; align-items:center; gap:8px;">
+                <span>🔒</span>
+                <span>System tilstande</span>
+              </h3>
 
-                <label class="has-tip" data-tip="Alarmtilstande. 'Armed' kan testes i AND-betingelse. 'Home mode' er ekstra flag.">Alarmtilstande</label>
-                <div class="row" style="flex-direction:column; align-items:flex-start; gap:8px;">
-                  <label class="pill"><input type="checkbox" id="alarmArmed"> Armed</label>
-                  <label class="pill has-tip" data-tip="Home mode: din egen 'hjemme'-tilstand."><input type="checkbox" id="alarmHome"> Home mode</label>
+              <div class="control-group">
+                <label class="has-tip" data-tip="Egne globale variabler (fx mode=night). Brug i AND: 'Global name=value'.">Globale variabler</label>
+                <div class="input-row">
+                  <input type="text" id="globalName" placeholder="fx mode" class="styled-input">
+                  <input type="text" id="globalValue" placeholder="fx night" class="styled-input">
+                </div>
+                <div class="button-row">
+                  <button id="setGlobal" class="info">Sæt (buffer)</button>
+                  <button id="clearGlobals" class="danger">Clear alle</button>
                 </div>
               </div>
             </div>
 
-            <div class="divider"></div>
-            <label class="has-tip" data-tip="Egne globale variabler (fx mode=night). Brug i AND: 'Global name=value'.">Globale variabler</label>
-            <div class="row">
-              <input type="text" id="globalName" placeholder="fx mode">
-              <input type="text" id="globalValue" placeholder="fx night">
-            </div>
-            <div class="row">
-              <button id="setGlobal" class="info">Sæt (buffer)</button>
-              <button id="clearGlobals" class="danger">Clear alle</button>
-            </div>
+            <!-- Aktører -->
+            <div class="section-group">
+              <h3 style="margin:0 0 12px 0; color:#3b82f6; font-size:16px; display:flex; align-items:center; gap:8px;">
+                <span>💡</span>
+                <span>Aktører</span>
+              </h3>
+              
+              <div class="kpi">
+                <div class="box"><div class="small">Lampe</div><div id="lampState" class="tag">OFF</div></div>
+                <div class="box"><div class="small">Dæmper</div><div id="dimmerState" class="tag">0%</div></div>
+                <div class="box"><div class="small">Ventilator</div><div id="fanState" class="tag">OFF</div></div>
+              </div>
 
-            <!-- Z-Wave fleksible sensorer -->
-            <div class="divider"></div>
-            <label class="has-tip" data-tip="Z-Wave-inspirerede sensorer. Vælg type og sæt værdi. Lys/Vind/Fugt mappes direkte til felter. Øvrige bliver globals: sensor.&lt;navn&gt;. Hold mus over 'Binær/Numerisk' for hjælp.">
-              Z-Wave sensorer (fleksible)
-            </label>
-            <div id="zwRows"></div>
-            <div class="row">
-              <button type="button" id="zwAdd">Tilføj sensor</button>
-            </div>
+              <div class="control-group">
+                <div class="button-row">
+                  <button id="turnLampOn">Tænd lampe</button>
+                  <button id="turnLampOff">Sluk lampe</button>
+                </div>
+              </div>
 
-            <div class="divider"></div>
-
-            <div class="kpi">
-              <div class="box"><div class="small">Lampe</div><div id="lampState" class="tag">OFF</div></div>
-              <div class="box"><div class="small">Dæmper</div><div id="dimmerState" class="tag">0%</div></div>
-              <div class="box"><div class="small">Ventilator</div><div id="fanState" class="tag">OFF</div></div>
-            </div>
-
-            <div class="sp"></div>
-            <div class="row">
-              <button id="turnLampOn">Tænd lampe</button>
-              <button id="turnLampOff">Sluk lampe</button>
-
-              <div style="flex:1" class="has-tip" data-tip="Vælg dæmperniveau 0–100% og tryk 'Sæt'.">
+              <div class="control-group has-tip" data-tip="Vælg dæmperniveau 0–100% og tryk 'Sæt'.">
                 <label for="dimSel" class="small muted">Dæmper (0–100%)</label>
-                <div class="row">
-                  <select id="dimSel">
+                <div class="input-row">
+                  <select id="dimSel" class="styled-input dimmer-select">
                     <option value="0">0%</option><option value="10">10%</option><option value="20">20%</option>
                     <option value="30" selected>30%</option><option value="40">40%</option><option value="50">50%</option>
                     <option value="60">60%</option><option value="70">70%</option><option value="80">80%</option>
@@ -2158,11 +2600,31 @@ html {
                 </div>
               </div>
 
-              <button id="fanOn">Fan On</button>
-              <button id="fanOff">Fan Off</button>
+              <div class="control-group">
+                <div class="button-row">
+                  <button id="fanOn">Fan On</button>
+                  <button id="fanOff">Fan Off</button>
+                </div>
+              </div>
             </div>
 
-            <div class="divider"></div>
+            <!-- Z-Wave Sensorer -->
+            <div class="section-group">
+              <h3 style="margin:0 0 12px 0; color:#10b981; font-size:16px; display:flex; align-items:center; gap:8px;">
+                <span>📡</span>
+                <span>Z-Wave Sensorer</span>
+              </h3>
+              
+              <div class="control-group">
+                <p class="small muted" style="margin-bottom: 12px;">Alle Z-Wave-inspirerede sensorer. Vælg type og sæt værdi. Lys/Vind/Fugt mappes direkte til felter. Øvrige bliver globals: sensor.&lt;navn&gt;. Hold mus over 'Binær/Numerisk' for hjælp.</p>
+                
+                <div id="zwRows"></div>
+                <div class="button-row">
+                  <button type="button" id="zwAdd" class="info">➕ Tilføj sensor</button>
+                </div>
+              </div>
+            </div>
+
             <div class="row">
               <button id="applyPending" class="success" title="Anvend bufferede ændringer og kør regler">Aktivér ændringer</button>
               <span class="small muted">Nyeste log nederst • Intet trigges før "Aktivér".</span>
@@ -2268,9 +2730,9 @@ html {
             </div>
             <div id="rules"></div>
           </div>
-        </div>
+                        </div>
 
-        <!-- 3) Log + LUA -->
+                <!-- 3) Log + LUA -->
         <div class="card" data-section="log">
           <h2>3) Log & LUA</h2>
           <div class="body">
@@ -2341,19 +2803,58 @@ html {
     <!-- ===== View: Indstillinger ===== -->
     <section id="view-settings" class="view">
       <div class="card">
-        <h2>Indstillinger</h2>
+        <h2>⚙️ Indstillinger</h2>
         <div class="body">
-          <div class="row" style="gap:8px;flex-wrap:wrap">
-            <input id="setUser" placeholder="Nyt brugernavn">
-            <input id="setPass" type="password" placeholder="Ny adgangskode">
-            <button id="btnSaveCreds">Gem</button>
-            <span class="small muted">Standard er <code>admin</code> / <code>1234</code>, indtil du gemmer nye.</span>
+          
+          <!-- Tema indstillinger -->
+          <div class="settings-section">
+            <h3>🎨 Udseende</h3>
+            <div class="setting-item">
+              <label for="themeSelect">Tema</label>
+              <select id="themeSelect" class="styled-select">
+                <option value="auto">Automatisk (følger system)</option>
+                <option value="light">Lyst tema</option>
+                <option value="dark">Mørkt tema</option>
+                <option value="powerful">Powerful Color</option>
+              </select>
+              <span class="setting-description">Vælg mellem lyst, mørkt eller powerful color tema</span>
+            </div>
           </div>
+
           <div class="divider"></div>
-          <div class="row">
-            <button id="btnLogout" class="danger">Log ud</button>
-            <span class="small muted">Log ud skjuler appen og viser login-skærmen igen.</span>
+
+          <!-- Brugerindstillinger -->
+          <div class="settings-section">
+            <h3>👤 Bruger</h3>
+            <div class="setting-item">
+              <label for="setUser">Brugernavn</label>
+              <input id="setUser" type="text" placeholder="Indtast nyt brugernavn" class="styled-input">
+            </div>
+            <div class="setting-item">
+              <label for="setPass">Adgangskode</label>
+              <input id="setPass" type="password" placeholder="Indtast ny adgangskode" class="styled-input">
+            </div>
+            <div class="setting-item">
+              <button id="btnSaveCreds" class="btn-primary">💾 Gem brugerindstillinger</button>
+              <span class="setting-description">Standard er <code>admin</code> / <code>1234</code>, indtil du gemmer nye.</span>
+            </div>
           </div>
+
+          <div class="divider"></div>
+
+          <!-- App indstillinger -->
+          <div class="settings-section">
+            <h3>🔧 App</h3>
+            <div class="setting-item">
+              <button id="btnResetOnboarding" class="btn-secondary">🔄 Reset onboarding</button>
+              <span class="setting-description">Start forfra med onboarding guiden</span>
+            </div>
+            <div class="setting-item">
+              <button id="btnLogout" class="btn-danger">🚪 Log ud</button>
+              <span class="setting-description">Log ud og vis login-skærmen igen</span>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
@@ -2384,7 +2885,7 @@ html {
   document.addEventListener('click', function(e){ if(!menu.contains(e.target)) { menu.classList.remove('open'); $('#btnMenu').setAttribute('aria-expanded','false'); } });
 
   /* State */
-  var state   = { motion:false, door:false, lux:100, wind:2, humidity:45, time:'21:30', weekday:'Mon', alarmArmed:false, alarmHome:false, globals:{}, light:false, dimmer:0, fan:false, rules:[] };
+  var state   = { motion:false, door:false, lux:100, wind:2, humidity:45, time:'21:30', weekday:'Mon', globals:{}, light:false, dimmer:0, fan:false, alarmArmed:false, alarmHome:false, rules:[] };
   var pending = JSON.parse(JSON.stringify(state));
   window.pending = pending; window.state = state;
 
@@ -2559,21 +3060,19 @@ html {
   // Attach CSV export to button
   $('#exportLogCSV').onclick = exportLogToCSV;
 
-  function updateKPI(){ $('#lampState').innerText = state.light ? 'ON' : 'OFF'; $('#dimmerState').innerText = state.dimmer + '%'; $('#fanState').innerText   = state.fan ? 'ON' : 'OFF'; }
+  // Helper function for updating state values
+  function ch(k,pretty,fmt){ var ov=state[k], nv=pending[k]; if(JSON.stringify(ov)!==JSON.stringify(nv)){ state[k]=nv; log('AKTIVERET: '+pretty+' = '+(fmt?fmt(nv):nv)); } }
+  
+  function updateKPI(){ $('#lampState').innerText = state.light ? 'ON' : 'OFF'; $('#dimmerState').innerText = state.dimmer + '%'; $('#fanState').innerText   = state.fan ? 'ON' : 'OFF'; ch('alarmArmed','Alarm.Armed'); ch('alarmHome','Alarm.Home'); }
   function setLight(on){ state.light=!!on; updateKPI(); log('Light → ' + (on?'ON':'OFF')); }
   function setDimmer(v){ v=Math.max(0,Math.min(100,parseInt(v)||0)); state.dimmer=v; state.light=v>0; updateKPI(); log('Dimmer → '+v+'%'); }
   function setFan(on){ state.fan=!!on; updateKPI(); log('Fan → ' + (on?'ON':'OFF')); }
 
-  /* Buffer */
-  $('#pirOn').onclick=function(){ pending.motion=true; log('BUFFER: PIR = Breached'); };
-  $('#pirOff').onclick=function(){ pending.motion=false; log('BUFFER: PIR = Safe'); };
-  $('#doorOpen').onclick=function(){ pending.door=true;  if(!pending.globals) pending.globals={}; pending.globals['sensor.contact']='Opened'; log('BUFFER: Dørkontakt = Opened • Global sensor.contact=Opened'); };
-  $('#doorClose').onclick=function(){ pending.door=false; if(!pending.globals) pending.globals={}; pending.globals['sensor.contact']='Closed'; log('BUFFER: Dørkontakt = Closed • Global sensor.contact=Closed'); };
-  $('#humiditySet').onclick=function(){ var val = parseInt($('#humidityValue').value, 10) || 45; pending.humidity = val; log('BUFFER: Fugtighed = ' + val + '%'); };
+  /* Buffer - nu håndteres alle sensorer via Z-Wave systemet */
+  // Gamle hardcodede sensorer er fjernet - brug Z-Wave sensorer i stedet
   $('#clock').onchange=function(){ pending.time=this.value; log('BUFFER: Klokkeslæt = '+pending.time); };
   $('#weekday').onchange=function(){ pending.weekday=this.value; log('BUFFER: Ugedag = '+pending.weekday); };
-  $('#alarmArmed').onclick=function(){ pending.alarmArmed=this.checked; log('BUFFER: Alarm.Armed = '+this.checked); };
-  $('#alarmHome').onclick=function(){ pending.alarmHome=this.checked; log('BUFFER: Alarm.Home = '+this.checked); };
+
   $('#setGlobal').onclick=function(){ var k=$('#globalName').value.trim(), v=$('#globalValue').value.trim(); if(!k){ alert('Angiv globalt navn.'); return; } if(!pending.globals) pending.globals={}; pending.globals[k]=v; log('BUFFER: Global '+k+'='+v); };
   $('#clearGlobals').onclick=function(){ pending.globals={}; log('BUFFER: Alle globale variabler nulstilles ved aktivering.'); };
 
@@ -2592,11 +3091,12 @@ html {
   function setCondHints(selEl, valEl){
     var v = selEl.value, map = {
       '':'værdi','luxBelow':'tal (fx 50)','luxAbove':'tal (fx 200)','humAbove':'procent (fx 65)','humBelow':'procent (fx 35)',
-      'windBelow':'m/s (fx 5)','weekdayIn':'liste (fx Mon,Fri)','alarmArmed':'(ingen værdi)','globalEq':'navn=værdi (fx mode=night)',
+      'windBelow':'m/s (fx 5)','weekdayIn':'liste (fx Mon,Fri)','alarmArmed':'(ingen værdi)','alarmHome':'(ingen værdi)',
+      'globalEq':'navn=værdi (fx mode=night)',
       'sensorEq':'navn=værdi (fx sensor.smoke=Detected)','sensorNe':'navn=værdi','sensorGt':'navn=tal','sensorLt':'navn=tal',
       'sensorGe':'navn=tal','sensorLe':'navn=tal','sensorContains':'navn=delstreng','timeBetween':'HH:MM-HH:MM (fx 22:00-06:00)'
     };
-    valEl.placeholder = map[v] || 'værdi'; valEl.title = 'Indtast: ' + (map[v] || 'værdi'); if(v==='alarmArmed'){ valEl.value=''; }
+            valEl.placeholder = map[v] || 'værdi'; valEl.title = 'Indtast: ' + (map[v] || 'værdi');
   }
   $('#cond1').onchange=function(){ setCondHints(this,$('#cond1Value')); }; $('#cond2').onchange=function(){ setCondHints(this,$('#cond2Value')); };
   setCondHints($('#cond1'),$('#cond1Value')); setCondHints($('#cond2'),$('#cond2Value'));
@@ -2889,13 +3389,7 @@ html {
           description: 'Ugedag = ' + state.weekday + ' (i: ' + allowedDays.join(', ') + ')',
           explain: matches ? null : 'Ugedagen skal være en af: ' + allowedDays.join(', ')
         };
-      case 'alarmArmed':
-        var isArmed = state.alarmArmed === true;
-        return {
-          ok: isArmed,
-          description: 'Alarm = ' + (state.alarmArmed ? 'Armed' : 'Disarmed'),
-          explain: isArmed ? null : 'Alarm systemet skal være Armed'
-        };
+
       case 'globalEq':
         var parts = (condValue || '').split('=');
         var key = (parts[0] || '').trim();
@@ -3021,6 +3515,8 @@ html {
       'windBelow': 'Vind <',
       'weekdayIn': 'Ugedag i',
       'alarmArmed': 'Alarm = Armed',
+      'alarmHome': 'Home Mode',
+      
       'globalEq': 'Global ==',
       'sensorEq': 'Sensor ==',
       'sensorNe': 'Sensor ≠',
@@ -3112,7 +3608,9 @@ html {
       case 'humBelow': return state.humidity <= parseFloat(v||'0');
       case 'windBelow': return state.wind < parseFloat(v||'0');
       case 'weekdayIn': return v.split(',').map(function(s){return s.trim();}).includes(state.weekday);
-      case 'alarmArmed': return state.alarmArmed===true;
+      case 'alarmArmed': return state.alarmArmed === true;
+      case 'alarmHome': return state.alarmHome === true;
+      
       case 'globalEq': { var sp=v.split('='), k=(sp[0]||'').trim(), expect=(sp[1]||'').trim(); return (state.globals[k]||'')===expect; }
       case 'sensorEq': { var p=parseNameValue(v); return gget(p.name)===p.value; }
       case 'sensorNe': { var p2=parseNameValue(v); return gget(p2.name)!==p2.value; }
@@ -3199,11 +3697,11 @@ html {
   }
 
   function applyPending(){
-    function ch(k,pretty,fmt){ var ov=state[k], nv=pending[k]; if(JSON.stringify(ov)!==JSON.stringify(nv)){ state[k]=nv; log('AKTIVERET: '+pretty+' = '+(fmt?fmt(nv):nv)); } }
     ch('motion','PIR',function(v){return v?'Breached':'Safe';});
     ch('door','Dørkontakt',function(v){return v?'Opened':'Closed';});
     ch('lux','Lys(lux)'); ch('wind','Vind',function(v){return v+' m/s';}); ch('humidity','Fugtighed',function(v){return v+'%';});
-    ch('time','Klokkeslæt'); ch('weekday','Ugedag'); ch('alarmArmed','Alarm.Armed'); ch('alarmHome','Alarm.Home');
+            ch('time','Klokkeslæt'); ch('weekday','Ugedag');
+    ch('alarmArmed','Alarm.Armed'); ch('alarmHome','Alarm.Home');
     var pg=pending.globals||{}; for(var k in pg){ if(pg.hasOwnProperty(k)){ if((state.globals[k]||'')!==pg[k]){ state.globals[k]=pg[k]; log('AKTIVERET: Global '+k+'='+pg[k]); } } }
     updateKPI(); runAll();
   }
@@ -3218,14 +3716,17 @@ html {
   var SENSOR_DEFS = {
     'PIR (bevægelse)':     {kind:'binary', key:'pir',        on:'Breached', off:'Safe'},
     'Dør-/vindueskontakt': {kind:'binary', key:'contact',    on:'Opened',   off:'Closed'},
+    'Fugtighed (%)':       {kind:'number', key:'humidity',   unit:'%',    step:1,   min:0,   max:100,  mapsTo:'humidity'},
     'Lys (lux)':           {kind:'number', key:'lux',        unit:'lux',  step:1,   min:0,   max:5000, mapsTo:'lux'},
     'Vind (m/s)':          {kind:'number', key:'wind',       unit:'m/s',  step:0.1, min:0,   max:60,   mapsTo:'wind'},
-    'Fugtighed (%)':       {kind:'number', key:'humidity',   unit:'%',    step:1,   min:0,   max:100,  mapsTo:'humidity'},
     'Temperatur (°C)':     {kind:'number', key:'temp',       unit:'°C',   step:0.1, min:-30, max:60},
     'Røgalarm':            {kind:'binary', key:'smoke',      on:'Detected', off:'Clear'},
     'Vandlækage':          {kind:'binary', key:'leak',       on:'Wet',     off:'Dry'},
     'CO₂ (ppm)':           {kind:'number', key:'co2',        unit:'ppm',  step:50,  min:300, max:5000},
-    'Tilstedeværelse':     {kind:'binary', key:'presence',   on:'Occupied', off:'Vacant'}
+    'Tilstedeværelse':     {kind:'binary', key:'presence',   on:'Occupied', off:'Vacant'},
+    'Alarm (Armed)':       {kind:'binary', key:'alarmArmed', on:'Armed',   off:'Disarmed'},
+    'Home Mode':           {kind:'binary', key:'alarmHome',  on:'Home',    off:'Away'},
+    
   };
   function makeSensorTip(name){
     var def=SENSOR_DEFS[name]; if(!def) return 'Sensor (global)\nSkriv i Regler: navn=værdi';
@@ -3293,6 +3794,17 @@ html {
         var v=String(valCtl.value||def.off);
         if(!pending.globals) pending.globals={}; pending.globals['sensor.'+key]=v;
         log('BUFFER: Global sensor.'+key+'='+v);
+        
+        // Special håndtering for PIR og dørkontakt til backward compatibility
+        if(key === 'pir') {
+          pending.motion = (v === def.on);
+        } else if(key === 'contact') {
+          pending.door = (v === def.on);
+        } else if(key === 'alarmArmed') {
+          pending.alarmArmed = (v === def.on);
+        } else if(key === 'alarmHome') {
+          pending.alarmHome = (v === def.on);
+        }
       } else {
         var numv=String(valCtl.value);
         if(!pending.globals) pending.globals={}; pending.globals['sensor.'+key]=numv;
@@ -3343,6 +3855,8 @@ html {
       case 'windBelow': return '(tonumber(fibaro.getValue(WIND_ID, "value")) or 0) < '+(parseFloat(v||'0')||0);
       case 'weekdayIn': { var parts=v.split(','), set='{'+parts.map(function(pw){ pw=pw.replace(/"/g,'\\"'); return '["'+pw+'"]=true'; }).join(', ')+'}'; return '(function() local D='+set+'; return D[os.date("%a")] == true end)()'; }
       case 'alarmArmed': return 'fibaro.getGlobalVariable("Alarm") == "Armed"';
+      case 'alarmHome': return 'fibaro.getGlobalVariable("HomeMode") == "Home"';
+      
       case 'globalEq': { var sp=v.split('='), k=(sp[0]||'mode'), expect=(sp[1]||'night'); return 'fibaro.getGlobalVariable("'+esc(k)+'") == "'+esc(expect)+'"'; }
       case 'sensorEq': { var pp=p(); return 'fibaro.getGlobalVariable("'+esc(pp.name||'')+'") == "'+esc(pp.value||'')+'"'; }
       case 'sensorNe': { var pp2=p(); return 'fibaro.getGlobalVariable("'+esc(pp2.name||'')+'") ~= "'+esc(pp2.value||'')+'"'; }
@@ -3427,20 +3941,29 @@ html {
   function addZwRow(){ var box = document.getElementById('zwRows'); if (!box){ alert('zwRows mangler'); return; } zwMakeRow(box); log('Ny Z-Wave sensor-række tilføjet.'); }
   document.getElementById('zwAdd').onclick = addZwRow;
 
-  (function(){ refreshRules(); updateKPI(); log('v1.7.3 (WebView2 • SPA) klar.'); })();
+
+
+  (function(){ 
+    refreshRules(); 
+    updateKPI(); 
+    
+
+    
+    log('v1.7.3 (WebView2 • SPA) klar.'); 
+  })();
 
   // === ONBOARDING SYSTEM ===
   (function(){
     var onboardingSteps = [
       {
         title: 'Velkommen til Simulator',
-        content: 'Her kan du simulere sensorer og se hvordan de påvirker dine regler. Prøv at klikke på "Sæt: Breached" under PIR-sensoren.',
-        target: '#pirOn',
+        content: 'Her kan du simulere sensorer og se hvordan de påvirker dine regler. Prøv at gå til "Z-Wave sensorer" sektionen og tilføj en PIR-sensor.',
+        target: '#zwAdd',
         position: 'bottom'
       },
       {
         title: 'Aktiver ændringer',
-        content: 'Når du ændrer sensorer, bliver de først "buffered". Klik "Aktivér ændringer" for at anvende dem og køre reglerne.',
+        content: 'Når du ændrer sensorer via Z-Wave systemet, bliver de først "buffered". Klik "Aktivér ændringer" for at anvende dem og køre reglerne.',
         target: '#applyPending',
         position: 'top'
       },
@@ -3687,7 +4210,10 @@ html {
       'ganglys': {
         name: 'Ganglys Basic',
         steps: [
-          'Klik "Sæt: Breached" under PIR',
+          'Gå til "Z-Wave sensorer" sektionen',
+          'Vælg "PIR (bevægelse)" fra dropdown',
+          'Sæt værdi til "Breached"',
+          'Klik "Sæt (buffer)"',
           'Klik "Aktivér ændringer"',
           'Gå til "Regler" sektionen',
           'Vælg "IF PIR bliver Breached" som trigger',
@@ -3713,7 +4239,10 @@ html {
       'doorlight': {
         name: 'Dørlys med tidsbegrænsning',
         steps: [
-          'Klik "Sæt: Opened" under Dørkontakt',
+          'Gå til "Z-Wave sensorer" sektionen',
+          'Vælg "Dør-/vindueskontakt" fra dropdown',
+          'Sæt værdi til "Opened"',
+          'Klik "Sæt (buffer)"',
           'Klik "Aktivér ændringer"',
           'Gå til "Regler" sektionen',
           'Vælg "IF Dørkontakt ændres til Opened" som trigger',
@@ -3743,7 +4272,10 @@ html {
       'bathroom': {
         name: 'Badventilator med fugtighed',
         steps: [
-          'Sæt fugtighed til 75% og klik "Sæt fugtighed"',
+          'Gå til "Z-Wave sensorer" sektionen',
+          'Vælg "Fugtighed (%)" fra dropdown',
+          'Sæt værdi til 75',
+          'Klik "Sæt (buffer)"',
           'Klik "Aktivér ændringer"',
           'Gå til "Regler" sektionen',
           'Vælg "IF Fugtighed ≥ (værdi)" som trigger med værdi 75',
@@ -3768,6 +4300,241 @@ html {
           { id: 'action', text: 'Handling er korrekt (THEN Ventilator → On)', check: function() { 
             return window.state && window.state.rules && window.state.rules.some(function(r){ 
               return r.trigger === 'humidityAbove' && r.action1 === 'fanOn'; 
+            }); 
+          }}
+        ]
+      },
+      'security': {
+        name: 'Sikkerhedsalarm',
+        steps: [
+          'Gå til "Z-Wave sensorer" sektionen',
+          'Vælg "PIR (bevægelse)" fra dropdown og sæt til "Breached"',
+          'Vælg "Dør-/vindueskontakt" fra dropdown og sæt til "Closed"',
+          'Klik "Sæt (buffer)" for begge sensorer',
+          'Klik "Aktivér ændringer"',
+          'Gå til "Regler" sektionen',
+          'Vælg "IF PIR bliver Breached" som trigger',
+          'Tilføj AND: "Dørkontakt = Closed"',
+          'Tilføj AND: "Tid mellem" med "22:00-06:00"',
+          'Vælg "THEN Push (log)" som action',
+          'Klik "Tilføj regel"'
+        ],
+        criteria: [
+          { id: 'sensor', text: 'PIR er Breached og dørkontakt er Closed', check: function() { 
+            return window.state && window.state.motion === true && window.state.door === false; 
+          }},
+          { id: 'trigger', text: 'Trigger er korrekt (IF PIR bliver Breached)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ return r.trigger === 'motionBreached'; }); 
+          }},
+          { id: 'condition1', text: 'Betingelse 1 tilføjet (AND: Dørkontakt = Closed)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'motionBreached' && r.cond1 === 'doorClosed'; 
+            }); 
+          }},
+          { id: 'condition2', text: 'Betingelse 2 tilføjet (AND: Tid mellem 22:00-06:00)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'motionBreached' && r.cond2 === 'timeBetween' && r.cond2Value && r.cond2Value.includes('22:00') && r.cond2Value.includes('06:00'); 
+            }); 
+          }},
+          { id: 'action', text: 'Handling er korrekt (THEN Push log)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'motionBreached' && r.action1 === 'push'; 
+            }); 
+          }}
+        ]
+      },
+      'energy': {
+        name: 'Energibesparende lys',
+        steps: [
+          'Gå til "Z-Wave sensorer" sektionen',
+          'Vælg "PIR (bevægelse)" fra dropdown og sæt til "Safe"',
+          'Vælg "Lys (lux)" fra dropdown og sæt til 800',
+          'Klik "Sæt (buffer)" for begge sensorer',
+          'Klik "Aktivér ændringer"',
+          'Gå til "Regler" sektionen',
+          'Vælg "IF PIR bliver Safe" som trigger',
+          'Tilføj AND: "Lys (lux) >" med værdi 500',
+          'Tilføj AND: "Tid mellem" med "08:00-18:00"',
+          'Vælg "THEN Lys → Off" som action',
+          'Klik "Tilføj regel"'
+        ],
+        criteria: [
+          { id: 'sensor', text: 'PIR er Safe og lys er 800 lux', check: function() { 
+            return window.state && window.state.motion === false && window.state.lux >= 800; 
+          }},
+          { id: 'trigger', text: 'Trigger er korrekt (IF PIR bliver Safe)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ return r.trigger === 'motionSafe'; }); 
+          }},
+          { id: 'condition1', text: 'Betingelse 1 tilføjet (AND: Lys (lux) > 500)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'motionSafe' && r.cond1 === 'luxAbove' && r.cond1Value && parseFloat(r.cond1Value) >= 500; 
+            }); 
+          }},
+          { id: 'condition2', text: 'Betingelse 2 tilføjet (AND: Tid mellem 08:00-18:00)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'motionSafe' && r.cond2 === 'timeBetween' && r.cond2Value && r.cond2Value.includes('08:00') && r.cond2Value.includes('18:00'); 
+            }); 
+          }},
+          { id: 'action', text: 'Handling er korrekt (THEN Lys → Off)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'motionSafe' && r.action1 === 'lightOff'; 
+            }); 
+          }}
+        ]
+      },
+      'comfort': {
+        name: 'Komfortstyring',
+        steps: [
+          'Gå til "Z-Wave sensorer" sektionen',
+          'Vælg "Fugtighed (%)" fra dropdown og sæt til 40',
+          'Vælg "Lys (lux)" fra dropdown og sæt til 200',
+          'Klik "Sæt (buffer)" for begge sensorer',
+          'Klik "Aktivér ændringer"',
+          'Gå til "Regler" sektionen',
+          'Vælg "IF Fugtighed < (værdi)" som trigger med værdi 45',
+          'Tilføj AND: "Lys (lux) <" med værdi 300',
+          'Vælg "THEN Dæmper → 30%" som action',
+          'Klik "Tilføj regel"'
+        ],
+        criteria: [
+          { id: 'sensor', text: 'Fugtighed er 40% og lys er 200 lux', check: function() { 
+            return window.state && window.state.humidity <= 40 && window.state.lux <= 200; 
+          }},
+          { id: 'trigger', text: 'Trigger er korrekt (IF Fugtighed < 45)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'humidityBelow' && r.triggerValue && parseFloat(r.triggerValue) <= 45; 
+            }); 
+          }},
+          { id: 'condition', text: 'Betingelse tilføjet (AND: Lys (lux) < 300)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'humidityBelow' && r.cond1 === 'luxBelow' && r.cond1Value && parseFloat(r.cond1Value) <= 300; 
+            }); 
+          }},
+          { id: 'action', text: 'Handling er korrekt (THEN Dæmper → 30%)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'humidityBelow' && r.action1 === 'dim30'; 
+            }); 
+          }}
+        ]
+      },
+      'schedule': {
+        name: 'Tidsbaseret automation',
+        steps: [
+          'Gå til "Regler" sektionen',
+          'Vælg "IF Time = hh:mm" som trigger med værdi "07:00"',
+          'Tilføj AND: "Ugedag i" med værdi "1-5" (mandag-fredag)',
+          'Vælg "THEN Lys → Tænd" som action',
+          'Klik "Tilføj regel"'
+        ],
+        criteria: [
+          { id: 'trigger', text: 'Trigger er korrekt (IF Time = 07:00)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'timeEquals' && r.triggerValue === '07:00'; 
+            }); 
+          }},
+          { id: 'condition', text: 'Betingelse tilføjet (AND: Ugedag i 1-5)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'timeEquals' && r.cond1 === 'weekdayIn' && r.cond1Value === '1-5'; 
+            }); 
+          }},
+          { id: 'action', text: 'Handling er korrekt (THEN Lys → Tænd)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'timeEquals' && r.action1 === 'lightOn'; 
+            }); 
+          }}
+        ]
+      },
+      'ventilation': {
+        name: 'Intelligent ventilation',
+        steps: [
+          'Gå til "Z-Wave sensorer" sektionen',
+          'Vælg "Fugtighed (%)" fra dropdown og sæt til 80',
+          'Vælg "Vind (m/s)" fra dropdown og sæt til 15',
+          'Klik "Sæt (buffer)" for begge sensorer',
+          'Klik "Aktivér ændringer"',
+          'Gå til "Regler" sektionen',
+          'Vælg "IF Fugtighed ≥ (værdi)" som trigger med værdi 70',
+          'Tilføj AND: "Vind <" med værdi 20',
+          'Vælg "THEN Ventilator → On" som action',
+          'Klik "Tilføj regel"'
+        ],
+        criteria: [
+          { id: 'sensor', text: 'Fugtighed er 80% og vind er 15 km/t', check: function() { 
+            return window.state && window.state.humidity >= 80 && window.state.wind <= 15; 
+          }},
+          { id: 'trigger', text: 'Trigger er korrekt (IF Fugtighed ≥ 70)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'humidityAbove' && r.triggerValue && parseFloat(r.triggerValue) >= 70; 
+            }); 
+          }},
+          { id: 'condition', text: 'Betingelse tilføjet (AND: Vind < 20)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'humidityAbove' && r.cond1 === 'windBelow' && r.cond1Value && parseFloat(r.cond1Value) <= 20; 
+            }); 
+          }},
+          { id: 'action', text: 'Handling er korrekt (THEN Ventilator → On)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'humidityAbove' && r.action1 === 'fanOn'; 
+            }); 
+          }}
+        ]
+      },
+      'alarm': {
+        name: 'Alarm system',
+        steps: [
+          'Gå til "Z-Wave sensorer" sektionen',
+          'Vælg "Dør-/vindueskontakt" fra dropdown og sæt til "Opened"',
+          'Vælg "PIR (bevægelse)" fra dropdown og sæt til "Breached"',
+          'Klik "Sæt (buffer)" for begge sensorer',
+          'Klik "Aktivér ændringer"',
+          'Gå til "Regler" sektionen',
+          'Vælg "IF Dørkontakt ændres til Opened" som trigger',
+          'Tilføj AND: "PIR = Breached"',
+          'Tilføj AND: "Alarm = Armed"',
+          'Vælg "THEN Push (log)" som action',
+          'Klik "Tilføj regel"'
+        ],
+        criteria: [
+          { id: 'sensor', text: 'Dørkontakt er Opened og PIR er Breached', check: function() { 
+            return window.state && window.state.door === true && window.state.motion === true; 
+          }},
+          { id: 'trigger', text: 'Trigger er korrekt (IF Dørkontakt ændres til Opened)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ return r.trigger === 'doorOpened'; }); 
+          }},
+          { id: 'condition1', text: 'Betingelse 1 tilføjet (AND: PIR = Breached)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'doorOpened' && r.cond1 === 'motionBreached'; 
+            }); 
+          }},
+          { id: 'condition2', text: 'Betingelse 2 tilføjet (AND: Alarm = Armed)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'doorOpened' && r.cond2 === 'alarmArmed'; 
+            }); 
+          }},
+          { id: 'action', text: 'Handling er korrekt (THEN Push log)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'doorOpened' && r.action1 === 'push'; 
+            }); 
+          }}
+        ]
+      },
+      'global': {
+        name: 'Global variabel styring',
+        steps: [
+          'Gå til "Regler" sektionen',
+          'Vælg "IF Global name=value" som trigger med værdi "mode=away"',
+          'Vælg "THEN Set Global" som action med værdi "lights=off"',
+          'Klik "Tilføj regel"'
+        ],
+        criteria: [
+          { id: 'trigger', text: 'Trigger er korrekt (IF Global mode=away)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'globalEqTrig' && r.triggerValue === 'mode=away'; 
+            }); 
+          }},
+          { id: 'action', text: 'Handling er korrekt (THEN Set Global lights=off)', check: function() { 
+            return window.state && window.state.rules && window.state.rules.some(function(r){ 
+              return r.trigger === 'globalEqTrig' && r.action1 === 'setGlobal' && r.action1Value === 'lights=off'; 
             }); 
           }}
         ]
@@ -4009,7 +4776,8 @@ html {
       ['luxBelow','Lys <'],['luxAbove','Lys >'],
       ['humAbove','Fugt ≥'],['humBelow','Fugt ≤'],
       ['windBelow','Vind <'],['weekdayIn','Ugedag i'],
-      ['alarmArmed','Alarm = Armed'],['globalEq','Global name=value'],
+      ['alarmArmed','Alarm = Armed'],['alarmHome','Home Mode'],
+              ['globalEq','Global name=value'],
       ['sensorEq','Sensor =='],['sensorNe','Sensor ≠'],
       ['sensorGt','Sensor >'],['sensorLt','Sensor <'],
       ['sensorGe','Sensor ≥'],['sensorLe','Sensor ≤'],
@@ -4028,7 +4796,7 @@ html {
     }
     function phCond(k){
       return {'luxBelow':'tal','luxAbove':'tal','humAbove':'procent','humBelow':'procent','windBelow':'tal',
-        'weekdayIn':'Mon,Fri','alarmArmed':'','globalEq':'name=value','sensorEq':'name=value','sensorNe':'name=value',
+        'weekdayIn':'Mon,Fri','globalEq':'name=value','sensorEq':'name=value','sensorNe':'name=value',
         'sensorGt':'name=tal','sensorLt':'name=tal','sensorGe':'name=tal','sensorLe':'name=tal',
         'sensorContains':'name=del','timeBetween':'HH:MM-HH:MM'}[k]||'';
     }
@@ -4339,14 +5107,19 @@ function renderWires(){
   }
   function tryLogin(u,p){ const c=getStoredCreds(); return (u===c.user && p===c.pass); }
   function doLogin(){
+    console.log('doLogin function called');
     const u=document.getElementById('loginUser').value.trim();
     const p=document.getElementById('loginPass').value.trim();
+    console.log('Login attempt with user:', u, 'pass length:', p.length);
+    
     if(tryLogin(u,p)){
+      console.log('Login successful!');
       document.getElementById('loginView').style.display='none';
       document.getElementById('mainApp').style.display='block';
       document.querySelector('.appbar').style.display = 'block';
       if (typeof setTab==='function') setTab('sim');
     } else {
+      console.log('Login failed!');
       document.getElementById('loginError').innerText='Forkert login!';
     }
   }
@@ -4367,12 +5140,139 @@ function renderWires(){
       document.getElementById('loginView').style.display='flex';
     document.getElementById('loginUser').focus();
   }
-  (function(){
-    const btnLogin=document.getElementById('btnLogin'); if(btnLogin) btnLogin.onclick=doLogin;
-    const lp=document.getElementById('loginPass'); if(lp) lp.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
-    const btnSave=document.getElementById('btnSaveCreds'); if(btnSave) btnSave.onclick=updateCreds;
-    const btnLogout=document.getElementById('btnLogout'); if(btnLogout) btnLogout.onclick=doLogout;
-  })();
+  // === Login event setup ===
+  function setupLoginEvents() {
+    console.log('Setting up login events...');
+    const btnLogin = document.getElementById('btnLogin');
+    const lp = document.getElementById('loginPass');
+    const btnSave = document.getElementById('btnSaveCreds');
+    const btnLogout = document.getElementById('btnLogout');
+    
+    if(btnLogin) {
+      console.log('Login button found, adding click handler');
+      btnLogin.onclick = doLogin;
+    } else {
+      console.error('Login button not found!');
+    }
+    
+    if(lp) {
+      console.log('Password field found, adding Enter key handler');
+      lp.addEventListener('keydown', e => { 
+        if(e.key === 'Enter') {
+          console.log('Enter pressed, attempting login');
+          doLogin(); 
+        }
+      });
+    } else {
+      console.error('Password field not found!');
+    }
+    
+    if(btnSave) btnSave.onclick = updateCreds;
+    if(btnLogout) btnLogout.onclick = doLogout;
+  }
+
+  // === Settings event setup ===
+  function setupSettingsEvents() {
+    console.log('Setting up settings events...');
+    
+    // Tema selector
+    const themeSelect = document.getElementById('themeSelect');
+    if(themeSelect) {
+      // Indlæs gemt tema
+      const savedTheme = localStorage.getItem('ibi.theme') || 'auto';
+      themeSelect.value = savedTheme;
+      applyTheme(savedTheme);
+      
+      // Lyt til ændringer
+      themeSelect.addEventListener('change', (e) => {
+        const theme = e.target.value;
+        console.log('Theme changed to:', theme);
+        applyTheme(theme);
+      });
+    }
+    
+    // Onboarding reset
+    const btnResetOnboarding = document.getElementById('btnResetOnboarding');
+    if(btnResetOnboarding) {
+      btnResetOnboarding.onclick = () => {
+        if(confirm('Er du sikker på, at du vil starte forfra med onboarding? Dette vil nulstille alle onboarding trin.')) {
+          // Slet alle onboarding-relaterede data
+          localStorage.removeItem('onboarding_completed');
+          localStorage.removeItem('completed_tasks');
+          localStorage.removeItem('task_help_visible');
+          localStorage.removeItem('ibi.onboarding');
+          localStorage.removeItem('ibi.completedTasks');
+          localStorage.removeItem('ibi.onboardingStep');
+          
+          // Vis bekræftelse
+          alert('Onboarding er nulstillet! Siden vil genindlæses for at aktivere onboarding igen.');
+          
+          // Genindlæs siden
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        }
+      };
+    }
+  }
+
+  // === Tema funktionalitet ===
+  function applyTheme(theme) {
+    console.log('Applying theme:', theme);
+    
+    if(theme === 'light') {
+      // Lyst tema - sapphire pine green baggrund med guld tekst
+      document.documentElement.style.setProperty('--hc-bg', '#1a4d2e'); // Sapphire pine green
+      document.documentElement.style.setProperty('--hc-panel', '#2d5a3d'); // Slightly lighter green for panels
+      document.documentElement.style.setProperty('--hc-head', '#1f3d2a'); // Darker green for headers
+      document.documentElement.style.setProperty('--hc-text', '#ffd700'); // Gold text
+      document.documentElement.style.setProperty('--hc-muted', '#b8860b'); // Darker gold for muted text
+      document.documentElement.style.setProperty('--hc-hair', 'rgba(255,215,0,0.2)'); // Gold with transparency
+      document.documentElement.style.setProperty('--hc-hair-2', 'rgba(255,215,0,0.3)'); // Gold with more transparency
+      
+    } else if(theme === 'dark') {
+      // Mørkt tema - gendan originale CSS variabler
+      document.documentElement.style.setProperty('--hc-bg', '#0b0d10');
+      document.documentElement.style.setProperty('--hc-panel', '#0f1319');
+      document.documentElement.style.setProperty('--hc-head', '#0d1116');
+      document.documentElement.style.setProperty('--hc-text', '#eef3f8');
+      document.documentElement.style.setProperty('--hc-muted', '#a7b4c5');
+      document.documentElement.style.setProperty('--hc-hair', 'rgba(255,255,255,.14)');
+      document.documentElement.style.setProperty('--hc-hair-2', 'rgba(255,255,255,.22)');
+      
+           } else if(theme === 'powerful') {
+         // Powerful Color tema - bruger de specificerede hex koder
+         document.documentElement.style.setProperty('--hc-bg', '#212121'); // Mørk grå baggrund
+         document.documentElement.style.setProperty('--hc-panel', '#e67514'); // Orange panel baggrund
+         document.documentElement.style.setProperty('--hc-head', '#e67514'); // Orange header baggrund
+         document.documentElement.style.setProperty('--hc-text', '#D3ECCD'); // Lys grøn tekst
+         document.documentElement.style.setProperty('--hc-muted', '#D3ECCD'); // Lys grøn muted tekst
+         document.documentElement.style.setProperty('--hc-hair', 'rgba(6,146,62,0.3)'); // Grøn accent med transparency
+         document.documentElement.style.setProperty('--hc-hair-2', 'rgba(6,146,62,0.5)'); // Grøn accent med mere transparency
+      
+    } else {
+      // Auto - følg system preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      console.log('Auto theme - system prefers:', prefersDark ? 'dark' : 'light');
+      applyTheme(prefersDark ? 'dark' : 'light');
+      return;
+    }
+    
+    // Gem tema valg
+    localStorage.setItem('ibi.theme', theme);
+    console.log('Theme applied and saved:', theme);
+  }
+  
+  // Setup events when DOM is ready
+  if(document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      setupLoginEvents();
+      setupSettingsEvents();
+    });
+  } else {
+    setupLoginEvents();
+    setupSettingsEvents();
+  }
 
 </script>
   </div>

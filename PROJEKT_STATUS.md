@@ -9,9 +9,11 @@
 - Hjælp toggle (slået fra som standard)
 
 ### Opgavebank
-- 3 interaktive øvelser implementeret
+- 10 interaktive øvelser implementeret (3 → 10)
+- Case-beskrivelser med kontekst og læringsmål for hver opgave
 - Opgave status tracking
 - Tips system for hver opgave
+- Organiseret efter sværhedsgrad (Let/Mellem/Svær)
 
 ### UI/UX Forbedringer
 - Login side redesign med IBI logo
@@ -27,20 +29,31 @@
 
 ## 🔄 Næste Skridt
 
-### Simulator Funktionalitet
-- Sensor integration
-- Regel system
-- LUA scripting engine
+### M1 - Opgavebank (Færdiggjort ✅)
+- ✅ 10 øvelser implementeret
+- ✅ Case-beskrivelser tilføjet
+- ✅ Sværhedsgrader organiseret
+- 🔄 Import/Export funktionalitet (mangler)
+- 🔄 Del-link funktionalitet (mangler)
 
-### Wiresheet Udvidelse
+### M2 - Diagnosepanel (I gang)
+- ✅ Diagnosepanel implementeret
+- 🔄 "Explain why/why not" knap
+- 🔄 Log-tilstand med tidslinje
+- 🔄 CSV eksport funktionalitet
+
+### M3 - Flow-editor 2.0 (Ikke startet)
 - Block funktionalitet
 - Connection system
 - Validation
 
-### Database & Testing
-- Data persistence
-- Unit tests
-- Integration tests
+### M4 - Evalueringsmode (Ikke startet)
+- Test Runner
+- Testcases og rapporter
+
+### M5 - Deling & PWA (Ikke startet)
+- Versionering
+- Offline support
 
 ## 📁 Filer
 - `index.html` - Hovedapplikation med alle UI komponenter
@@ -54,4 +67,4 @@ dotnet run
 
 ---
 *Sidst opdateret: $(Get-Date)*
-*Status: UI/UX fase færdig, klar til funktionalitetsudvikling*
+*Status: M1 (Opgavebank) færdig, klar til M2 (Diagnosepanel udvidelse)*
