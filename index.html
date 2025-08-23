@@ -2372,12 +2372,12 @@ html {
         
         <div style="margin-bottom:16px;">
           <label style="display:block; margin-bottom:8px; color:#9ca3af; font-size:14px;">Skole ID</label>
-          <input id="teacherSchoolId" placeholder="fx: skole1" value="default" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e7eb;">
+          <input id="teacherLoginSchoolId" placeholder="fx: skole1" value="default" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e7eb;">
         </div>
         
         <div style="margin-bottom:24px;">
           <label style="display:block; margin-bottom:8px; color:#9ca3af; font-size:14px;">Klasse ID</label>
-          <input id="teacherClassId" placeholder="fx: 9a" value="default" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e7eb;">
+          <input id="teacherLoginClassId" placeholder="fx: 9a" value="default" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e7eb;">
         </div>
         
         <button id="btnTeacherLoginSubmit" class="success" style="width:100%; padding:12px; font-size:16px; border-radius:12px; margin-bottom:16px;">
@@ -5474,6 +5474,10 @@ function renderWires(){
     
     if(tryLogin(u,p)){
       console.log('Login successful!');
+      console.log('🔍 Gemmer username i localStorage:', u);
+      localStorage.setItem('simUser', u);
+      localStorage.setItem('simPass', p);
+      console.log('🔍 localStorage simUser efter gem:', localStorage.getItem('simUser'));
       document.getElementById('loginView').style.display='none';
       document.getElementById('mainApp').style.display='block';
       document.querySelector('.appbar').style.display = 'block';
@@ -5635,8 +5639,8 @@ function renderWires(){
   function doTeacherLogin() {
     const username = document.getElementById('teacherUsername').value.trim();
     const password = document.getElementById('teacherPassword').value.trim();
-    const schoolId = document.getElementById('teacherSchoolId').value.trim();
-    const classId = document.getElementById('teacherClassId').value.trim();
+    const schoolId = document.getElementById('teacherLoginSchoolId').value.trim();
+    const classId = document.getElementById('teacherLoginClassId').value.trim();
     
     if (!username || !password) {
       document.getElementById('teacherLoginError').textContent = 'Indtast venligst både brugernavn og adgangskode';
@@ -6004,7 +6008,12 @@ function renderWires(){
 
     function getCurrentUser() {
     const username = localStorage.getItem('simUser');
-    if (!username) return null;
+    console.log('🔍 getCurrentUser - localStorage simUser:', username);
+    
+    if (!username) {
+      console.log('❌ getCurrentUser - ingen username i localStorage');
+      return null;
+    }
 
     console.log('🔍 getCurrentUser kaldt med username:', username);
 
