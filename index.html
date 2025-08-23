@@ -2733,6 +2733,7 @@ html {
     <div class="brand"><h1 class="goldtext"> Simulator  </h1></div>
     <div class="top-left">
       <button id="btnTeacherLogin" class="btn-secondary" style="margin-right: 12px; background: #4a5568 !important; color: white !important; border: 1px solid #2d3748 !important; padding: 6px 12px !important; border-radius: 6px !important; font-weight: 500 !important; font-size: 12px !important; box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important; z-index: 9999 !important; position: relative !important; display: block !important;">👨‍🏫 Lærer</button>
+      <button id="btnTeacherTab" class="btn-secondary" style="margin-right: 12px; background: #059669 !important; color: white !important; border: 1px solid #047857 !important; padding: 6px 12px !important; border-radius: 6px !important; font-weight: 500 !important; font-size: 12px !important; box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important; z-index: 9999 !important; position: relative !important; display: none !important;">📊 Dashboard</button>
     </div>
     <div class="top-right">
       <div class="menu">
@@ -5507,8 +5508,9 @@ function renderWires(){
     document.querySelector('.appbar').style.display = 'none';
     document.getElementById('loginView').style.display='flex';
     
-    // Vis lærer login knap igen
+    // Vis lærer login knap igen og skjul dashboard knap
     document.getElementById('btnTeacherLogin').style.display = 'block';
+    document.getElementById('btnTeacherTab').style.display = 'none';
     
     // Ryd lærer login status
     localStorage.removeItem('teacher_logged_in');
@@ -5575,6 +5577,16 @@ function renderWires(){
     const btnTeacherLogin = document.getElementById('btnTeacherLogin');
     if(btnTeacherLogin) {
       btnTeacherLogin.onclick = showTeacherLoginModal;
+    }
+    
+    // Lærer dashboard knap
+    const btnTeacherTab = document.getElementById('btnTeacherTab');
+    if(btnTeacherTab) {
+      btnTeacherTab.onclick = () => {
+        // Skift til lærer fane
+        document.getElementById('tabTeacher').style.display = 'block';
+        switchToTeacherTab();
+      };
     }
     
     // Lærer login submit knap
@@ -5673,14 +5685,9 @@ function renderWires(){
       localStorage.setItem('teacher_school_id', schoolId);
       localStorage.setItem('teacher_class_id', classId);
       
-      // Vis lærer dashboard
-      document.getElementById('tabTeacher').style.display = 'block';
-      
-      // Skift til lærer fane
-      switchToTeacherTab();
-      
-      // Skjul lærer login knap
+      // Skjul lærer login knap og vis dashboard knap
       document.getElementById('btnTeacherLogin').style.display = 'none';
+      document.getElementById('btnTeacherTab').style.display = 'inline-block';
       
       // Luk modal
       closeTeacherLoginModal();
@@ -5750,12 +5757,17 @@ function renderWires(){
     const isTeacherLoggedIn = localStorage.getItem('teacher_logged_in') === 'true';
     
     if (isTeacherLoggedIn) {
-      // Vis lærer dashboard
-      document.getElementById('tabTeacher').style.display = 'block';
+      // Vis lærer dashboard knap
+      document.getElementById('btnTeacherTab').style.display = 'inline-block';
       document.getElementById('btnTeacherLogin').style.display = 'none';
       
       // Indlæs elev progress
       loadTeacherProgress();
+    } else {
+      // Skjul lærer dashboard og knap
+      document.getElementById('tabTeacher').style.display = 'none';
+      document.getElementById('btnTeacherTab').style.display = 'none';
+      document.getElementById('btnTeacherLogin').style.display = 'block';
     }
   }
   
@@ -5766,9 +5778,10 @@ function renderWires(){
     document.getElementById('tabTeacher').style.display = 'none';
     console.log('🔍 Lærer dashboard skjult');
     
-    // Vis lærer login knap igen
+    // Vis lærer login knap igen og skjul dashboard knap
     document.getElementById('btnTeacherLogin').style.display = 'block';
-    console.log('🔍 Lærer login knap vist igen');
+    document.getElementById('btnTeacherTab').style.display = 'none';
+    console.log('🔍 Lærer login knap vist igen og dashboard knap skjult');
     
     // Skift til simulator fane
     if (typeof setTab === 'function') {
