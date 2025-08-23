@@ -5743,10 +5743,10 @@ function renderWires(){
     return (u===c.user && p===c.pass); 
   }
   function doLogin(){
-    console.log('doLogin function called');
+    console.log('🚀 doLogin function called');
     const u=document.getElementById('loginUser').value.trim();
     const p=document.getElementById('loginPass').value.trim();
-    console.log('Login attempt with user:', u, 'pass length:', p.length);
+    console.log('🔐 Login attempt with user:', u, 'pass length:', p.length);
     
     if(tryLogin(u,p)){
       console.log('Login successful!');
@@ -5792,17 +5792,24 @@ function renderWires(){
   }
   // === Login event setup ===
   function setupLoginEvents() {
-    console.log('Setting up login events...');
+    console.log('🔑 Setting up login events...');
     const btnLogin = document.getElementById('btnLogin');
     const lp = document.getElementById('loginPass');
     const btnSave = document.getElementById('btnSaveCreds');
     const btnLogout = document.getElementById('btnLogout');
     
+    console.log('🔍 Found elements:', { 
+      btnLogin: !!btnLogin, 
+      loginPass: !!lp, 
+      btnSave: !!btnSave, 
+      btnLogout: !!btnLogout 
+    });
+    
     if(btnLogin) {
-      console.log('Login button found, adding click handler');
+      console.log('✅ Login button found, adding click handler');
       btnLogin.onclick = doLogin;
     } else {
-      console.error('Login button not found!');
+      console.error('❌ Login button not found!');
     }
     
     if(lp) {
@@ -6541,12 +6548,14 @@ function renderWires(){
   // Setup events when DOM is ready
   if(document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+      console.log('🔄 DOMContentLoaded - setting up events...');
       setupLoginEvents();
       setupSettingsEvents();
       loadStudentName(); // Indlæs gemt elevnavn
       checkTeacherLogin(); // Tjek om læreren er logget ind
     });
   } else {
+    console.log('🔄 DOM already ready - setting up events...');
     setupLoginEvents();
     setupSettingsEvents();
     loadStudentName(); // Indlæs gemt elevnavn
