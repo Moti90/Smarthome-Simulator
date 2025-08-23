@@ -3129,11 +3129,11 @@ html {
               <h3>📊 Data indstillinger</h3>
               <div class="setting-item">
                 <label for="teacherSchoolId">Skole ID</label>
-                <input id="teacherSchoolId" type="text" value="default" class="styled-input">
+                <input id="teacherSchoolId" type="text" value="default" class="styled-input" placeholder="fx: default, skole1, etc.">
               </div>
               <div class="setting-item">
                 <label for="teacherClassId">Klasse ID</label>
-                <input id="teacherClassId" type="text" value="default" class="styled-input">
+                <input id="teacherClassId" type="text" value="default" class="styled-input" placeholder="fx: default, 9a, etc.">
               </div>
               <div class="setting-item">
                 <button id="btnLoadProgress" class="btn-primary">📥 Indlæs elev progress</button>
@@ -5675,14 +5675,20 @@ function renderWires(){
     const schoolId = localStorage.getItem('teacher_school_id') || 'default';
     const classId = localStorage.getItem('teacher_class_id') || 'default';
     
+    console.log('🔍 loadTeacherProgress kaldt med:', { schoolId, classId });
+    
     // Opdater input felter
     document.getElementById('teacherSchoolId').value = schoolId;
     document.getElementById('teacherClassId').value = classId;
     
     // Indlæs data fra Firebase
+    console.log('🔍 Kalder getClassProgress...');
     getClassProgress(schoolId, classId).then(progress => {
+      console.log('🔍 Fik progress data:', progress);
       displayTeacherProgress(progress);
       updateTeacherStats(progress);
+    }).catch(error => {
+      console.error('❌ Fejl ved indlæs af progress:', error);
     });
   }
   
