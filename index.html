@@ -3116,9 +3116,26 @@ html {
     <section id="view-flow" class="view">
       <div class="wrap">
         <div class="card">
-          <h2>🧩 Wiresheet (Beta)</h2>
+          <h2>Flow (beta) — Wiresheet MVP</h2>
           <div class="body">
-            <p class="muted">Wiresheet funktionalitet kommer snart...</p>
+            <div class="row" style="margin-bottom:8px;flex-wrap:wrap;gap:8px">
+              <button id="wsAddTrig">+ Trigger</button>
+              <button id="wsAddCond">+ AND</button>
+              <button id="wsAddAct">+ Action</button>
+              <button id="wsAddRule" class="info">+ Rule (samler)</button>
+              <span class="small muted" style="margin-left:auto">Tip: Træk noder rundt, klik en <span class="tag">● out</span> og derefter en <span class="tag">in ●</span> på Rule for at forbinde.</span>
+            </div>
+            <div class="row" style="margin-bottom:8px;flex-wrap:wrap;gap:8px">
+              <button id="wsBuild" class="success">Build → Tilføj regler</button>
+              <button id="wsClear" class="danger">Ryd wiresheet</button>
+              <button id="wsSave">Gem (local)</button>
+              <button id="wsLoad">Hent (local)</button>
+            </div>
+
+            <div id="wsCanvas" class="ws-canvas">
+              <svg id="wsWires" class="ws-wires"></svg>
+              <div id="wsNodes" class="ws-nodes"></div>
+            </div>
           </div>
         </div>
       </div>

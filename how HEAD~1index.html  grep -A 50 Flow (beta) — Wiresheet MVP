@@ -1,0 +1,10 @@
+[33ma634374[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m  Fix: Ryd op i HTML struktur - flyt alle views til views containeren og ret strukturen
+[33m9422345[m  Fix: Fjern gammelt tab system og ret syntaksfejl - nu kun ét tab system der bruger CSS klasser
+[33m7bd3157[m  Fix: Tilføj view-learning til JavaScript og brug CSS klasser i stedet for inline styles
+[33m91d3e42[m  Fix: Flyt læringsside til views containeren så den vises korrekt
+[33m861487b[m  Debug: Tilføj console logs til login system for at diagnosticere knap problemer
+[33m0beb43f[m  Fix: Tilføj manglende tabLearning knap til tab navigation
+[33m7e4837f[m  Tilføj ny 'Læring' fane med omfattende sensor information, praktiske eksempler og tips
+[33mb341801[m  Tilføj manglende trigger og condition for opgaver: IF Fugtighed < og AND Dørkontakt = Closed
+[33m4be1ec8[m  Obfusker lærer login credentials for at gøre dem sværere at finde i kildekode
+[33mcaac76a[m  SIKKERHED: Ændre lærer password og skjul standard admin login for at beskytte mod misbrug
