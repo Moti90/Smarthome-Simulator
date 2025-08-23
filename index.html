@@ -3108,10 +3108,14 @@ html {
               <button id="btnResetOnboarding" class="btn-secondary">🔄 Reset onboarding</button>
               <span class="setting-description">Start forfra med onboarding guiden</span>
             </div>
-            <div class="setting-item">
-              <button id="btnLogout" class="btn-danger">🚪 Log ud</button>
-              <span class="setting-description">Log ud og vis login-skærmen igen</span>
-            </div>
+                      <div class="setting-item">
+            <button id="btnLogout" class="btn-danger">🚪 Log ud</button>
+            <span class="setting-description">Log ud og vis login-skærmen igen</span>
+          </div>
+          <div class="setting-item">
+            <button id="btnTeacherLogout" class="btn-danger">👨‍🏫 Log ud som lærer</button>
+            <span class="setting-description">Log ud fra lærer dashboard</span>
+          </div>
           </div>
 
         </div>
@@ -5501,7 +5505,16 @@ function renderWires(){
   function doLogout(){
     document.getElementById('mainApp').style.display='none';
     document.querySelector('.appbar').style.display = 'none';
-      document.getElementById('loginView').style.display='flex';
+    document.getElementById('loginView').style.display='flex';
+    
+    // Vis lærer login knap igen
+    document.getElementById('btnTeacherLogin').style.display = 'block';
+    
+    // Ryd lærer login status
+    localStorage.removeItem('teacher_logged_in');
+    localStorage.removeItem('teacher_school_id');
+    localStorage.removeItem('teacher_class_id');
+    
     document.getElementById('loginUser').focus();
   }
   // === Login event setup ===
@@ -5533,6 +5546,12 @@ function renderWires(){
     
     if(btnSave) btnSave.onclick = updateCreds;
     if(btnLogout) btnLogout.onclick = doLogout;
+    
+    // Lærer logout knap
+    const btnTeacherLogout = document.getElementById('btnTeacherLogout');
+    if(btnTeacherLogout) {
+      btnTeacherLogout.onclick = doTeacherLogout;
+    }
     
     // Brugerregistrering
     const btnRegister = document.getElementById('btnRegister');
@@ -5738,6 +5757,24 @@ function renderWires(){
       // Indlæs elev progress
       loadTeacherProgress();
     }
+  }
+  
+  function doTeacherLogout() {
+    // Skjul lærer dashboard
+    document.getElementById('tabTeacher').style.display = 'none';
+    
+    // Vis lærer login knap igen
+    document.getElementById('btnTeacherLogin').style.display = 'block';
+    
+    // Skift til simulator fane
+    setTab('sim');
+    
+    // Ryd lærer login status
+    localStorage.removeItem('teacher_logged_in');
+    localStorage.removeItem('teacher_school_id');
+    localStorage.removeItem('teacher_class_id');
+    
+    alert('✅ Logget ud som lærer!');
   }
   
   // Hjælpefunktion til at skifte fane
