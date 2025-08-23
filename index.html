@@ -2,7 +2,7 @@
 <html lang="da">
 <head>
   <meta charset="utf-8" />
-  <title>IBISIMULATOR (WebView2)</title>
+  <title>SMARTHOME SIMULATOR (WebView2)</title>
   <meta http-equiv="x-ua-compatible" content="IE=edge" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   
@@ -530,10 +530,11 @@
   position: relative;
 }
 
-.login-logo .logo-ibi {
-  width: 140px;
-  height: 120px;
+.login-logo .logo-smarthome {
+  width: 200px;
+  height: 140px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
@@ -542,54 +543,34 @@
 }
 
 @keyframes logoGlow {
-  from { filter: drop-shadow(0 10px 20px rgba(0, 194, 168, 0.3)); }
-  to { filter: drop-shadow(0 15px 30px rgba(0, 194, 168, 0.5)); }
+  from { filter: drop-shadow(0 10px 20px rgba(229, 231, 235, 0.3)); }
+  to { filter: drop-shadow(0 15px 30px rgba(229, 231, 235, 0.5)); }
 }
 
-/* IBI Letter styling */
-.ibi-letter {
-  display: inline-block;
+/* SMARTHOME Logo text styling */
+.logo-text {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.logo-title {
   font-family: 'Arial', sans-serif;
   font-weight: 900;
-  font-size: 48px;
-  margin: 0 2px;
-  position: relative;
-}
-
-.ibi-letter.i1,
-.ibi-letter.i2 {
+  font-size: 24px;
   color: #e5e7eb;
+  letter-spacing: 2px;
+  margin: 0;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.ibi-letter.b {
-  color: #e5e7eb;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-/* Decorative squares */
-.ibi-letter.i1::before {
-  content: '';
-  position: absolute;
-  top: -8px;
-  left: -8px;
-  width: 12px;
-  height: 12px;
-  background: #00c2a8;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 194, 168, 0.4);
-}
-
-.ibi-letter.i2::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  right: -8px;
-  width: 12px;
-  height: 12px;
-  background: #00c2a8;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 194, 168, 0.4);
+.logo-subtitle {
+  font-family: 'Arial', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #9ca3af;
+  letter-spacing: 1px;
+  margin: 0;
+  margin-top: 2px;
 }
 
 .login-logo h1 {
@@ -2341,17 +2322,8 @@ html {
 <header class="appbar">
   <div class="wrap">
     <div class="brand">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" height="28" aria-label="IBI logo">
-        <defs>
-          <linearGradient id="gradLogo" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#2ab0ff"/>
-            <stop offset="100%" stop-color="#5bd2ff"/>
-          </linearGradient>
-        </defs>
-        <circle cx="25" cy="25" r="20" fill="url(#gradLogo)"/>
-        <polygon points="22,12 32,22 26,22 34,38 18,24 24,24" fill="white"/>
-      </svg>
-      <span class="name">IBI SIMULATOR</span>
+      <img src="LOGO.png" alt="SMARTHOME SIMULATOR logo" height="40" style="margin-right: 8px;">
+      <span class="name" style="font-size: 14px; letter-spacing: 0.5px;">SMARTHOME SIMULATOR</span>
     </div>
     <nav class="mainnav">
       <button type="button" data-target="view-sim">🏠 Simulator</button>
@@ -2365,12 +2337,10 @@ html {
 
   <!-- Login overlay -->
   <div id="loginView" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
-    <!-- IBI Logo -->
+    <!-- SMARTHOME SIMULATOR Logo -->
     <div class="login-logo">
-      <div class="logo-ibi">
-        <span class="ibi-letter i1">I</span>
-        <span class="ibi-letter b">B</span>
-        <span class="ibi-letter i2">I</span>
+      <div class="logo-smarthome">
+        <img src="LOGO.png" alt="SMARTHOME SIMULATOR logo" height="120" style="margin-bottom: 20px;">
       </div>
     </div>
 
@@ -2396,11 +2366,6 @@ html {
         </button>
         
         <p id="loginError" style="color:#ef4444; text-align:center; margin-bottom:16px;"></p>
-        
-        <div style="text-align:center; padding:16px; background:rgba(31,41,55,0.3); border-radius:10px; border:1px solid rgba(75,85,99,0.2);">
-          <p style="margin:0; font-size:13px; color:#9ca3af;">Standard login:</p>
-          <p style="margin:8px 0 0 0; font-size:14px; color:#9ca3af;">Standard login eller opret ny bruger</p>
-      </div>
     </div>
     </div>
     
@@ -2494,7 +2459,7 @@ html {
   
   <!-- Welcome Screen -->
   <div id="onboardingWelcome" class="onboarding-welcome" style="display:none;">
-    <h2>🎉 Velkommen til IBI Simulator!</h2>
+            <h2>🎉 Velkommen til SMARTHOME SIMULATOR!</h2>
     <p>Lær at bygge smart home automation med denne interaktive simulator. Du kan teste regler, generere LUA-kode og se hvordan det hele fungerer sammen.</p>
     
     <div class="features">
