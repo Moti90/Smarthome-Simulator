@@ -3114,8 +3114,8 @@ html {
 
     <!-- ===== View: Flow (beta) ===== -->
     <section id="view-flow" class="view">
-      <div class="wrap">
-        <div class="card">
+      <div class="wrap" style="grid-template-columns: 1fr; max-width: none;">
+        <div class="card" style="width: 100%; max-width: none;">
           <h2>Flow (beta) — Wiresheet MVP</h2>
           <div class="body">
             <div class="row" style="margin-bottom:8px;flex-wrap:wrap;gap:8px">
@@ -3132,7 +3132,7 @@ html {
               <button id="wsLoad">Hent (local)</button>
             </div>
 
-            <div id="wsCanvas" class="ws-canvas">
+            <div id="wsCanvas" class="ws-canvas" style="min-height: 500px; width: 100%;">
               <svg id="wsWires" class="ws-wires"></svg>
               <div id="wsNodes" class="ws-nodes"></div>
             </div>
@@ -6071,6 +6071,7 @@ function renderWires(){
     document.querySelectorAll('.view').forEach(view => {
       if (view.id !== 'view-teacher') {
         view.style.display = 'block';
+        view.classList.remove('active'); // Fjern active fra alle views
       }
     });
     
@@ -6079,7 +6080,7 @@ function renderWires(){
     document.getElementById('btnTeacherTab').style.display = 'none';
     console.log('🔍 Lærer login knap vist igen og dashboard knap skjult');
     
-    // Skift til simulator fane
+    // Skift til simulator fane og aktiver den
     if (typeof show === 'function') {
       show('view-sim');
       console.log('🔍 Skiftet til simulator fane med show');
@@ -6087,11 +6088,15 @@ function renderWires(){
       // Fallback til manuelt fane skift
       document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
       document.getElementById('tabSim').classList.add('active');
+      
+      // Aktiver simulator view og deaktiver alle andre
       document.querySelectorAll('.view').forEach(view => {
         if (view.id === 'view-sim') {
           view.classList.add('active');
-        } else {
+          view.style.display = 'block';
+        } else if (view.id !== 'view-teacher') {
           view.classList.remove('active');
+          view.style.display = 'none'; // Skjul alle andre views
         }
       });
       console.log('🔍 Skiftet til simulator fane manuelt (fallback)');
