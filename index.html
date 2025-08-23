@@ -6002,30 +6002,49 @@ function renderWires(){
 
 
 
-  function getCurrentUser() {
+    function getCurrentUser() {
     const username = localStorage.getItem('simUser');
     if (!username) return null;
-    
+
+    console.log('🔍 getCurrentUser kaldt med username:', username);
+
     // Først tjek registrerede brugere
     const users = JSON.parse(localStorage.getItem('ibi_users') || '[]');
     const registeredUser = users.find(user => user.username === username);
-    if (registeredUser) return registeredUser;
+    if (registeredUser) {
+      console.log('🔍 Registreret bruger fundet:', registeredUser);
+      return registeredUser;
+    }
+
+    // Hvis ikke registreret, returner standard bruger info
+    if (username === 'admin') {
+      // Tjek om der er gemt et elevnavn
+      const studentName = JSON.parse(localStorage.getItem('student_name') || '{}');
+      
+      const adminUser = {
+        id: 'admin',
+        firstName: studentName.firstName || 'Admin',
+        lastName: studentName.lastName || 'Bruger',
+        email: studentName.email || 'admin@ibisimulator.dk',
+        username: 'admin'
+      };
+      console.log('🔍 Admin bruger returneret:', adminUser);
+      return adminUser;
+    }
+
+    // For alle andre brugere (fx Test1), returner standard bruger info
+    const studentName = JSON.parse(localStorage.getItem('student_name') || '{}');
     
-               // Hvis ikke registreret, returner standard bruger info
-           if (username === 'admin') {
-             // Tjek om der er gemt et elevnavn
-             const studentName = JSON.parse(localStorage.getItem('student_name') || '{}');
-             
-             return {
-               id: 'admin',
-               firstName: studentName.firstName || 'Admin',
-               lastName: studentName.lastName || 'Bruger',
-               email: studentName.email || 'admin@ibisimulator.dk',
-               username: 'admin'
-             };
-           }
+    const defaultUser = {
+      id: username,
+      firstName: studentName.firstName || username,
+      lastName: studentName.lastName || 'Bruger',
+      email: studentName.email || `${username}@ibisimulator.dk`,
+      username: username
+    };
     
-    return null;
+    console.log('🔍 Standard bruger returneret for:', username, defaultUser);
+    return defaultUser;
   }
 
   function updateUserTaskCompletion(taskId, taskName) {
