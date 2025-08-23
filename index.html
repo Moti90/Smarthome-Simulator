@@ -6569,12 +6569,14 @@ function renderWires(){
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const ids = ['view-sim','view-flow','view-settings'];
+  const ids = ['view-sim','view-flow','view-learning','view-settings'];
   const buttons = document.querySelectorAll('.mainnav button');
   function show(id){
     ids.forEach(x => {
       const el = document.getElementById(x);
-      if(el){ el.style.display = (x===id)?'block':'none'; }
+      if(el){ 
+        el.classList.toggle('active', x===id);
+      }
       const btn = document.querySelector(`.mainnav button[data-target="${x}"]`);
       if(btn){ btn.classList.toggle('active', x===id); }
     });
