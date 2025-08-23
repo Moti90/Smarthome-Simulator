@@ -5760,24 +5760,37 @@ function renderWires(){
   }
   
   function doTeacherLogout() {
+    console.log('🔍 doTeacherLogout kaldt - starter logout process');
+    
     // Skjul lærer dashboard
     document.getElementById('tabTeacher').style.display = 'none';
+    console.log('🔍 Lærer dashboard skjult');
     
     // Vis lærer login knap igen
     document.getElementById('btnTeacherLogin').style.display = 'block';
+    console.log('🔍 Lærer login knap vist igen');
     
-    // Skift til simulator fane manuelt
-    document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
-    document.getElementById('tabSim').classList.add('active');
-    document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
-    document.getElementById('view-sim').classList.add('active');
+    // Skift til simulator fane
+    if (typeof setTab === 'function') {
+      setTab('sim');
+      console.log('🔍 Skiftet til simulator fane med setTab');
+    } else {
+      // Fallback til manuelt fane skift
+      document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('tabSim').classList.add('active');
+      document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+      document.getElementById('view-sim').classList.add('active');
+      console.log('🔍 Skiftet til simulator fane manuelt (fallback)');
+    }
     
     // Ryd lærer login status
     localStorage.removeItem('teacher_logged_in');
     localStorage.removeItem('teacher_school_id');
     localStorage.removeItem('teacher_class_id');
+    console.log('🔍 Lærer login status ryddet');
     
     alert('✅ Logget ud som lærer!');
+    console.log('🔍 doTeacherLogout færdig');
   }
   
   // Hjælpefunktion til at skifte fane
