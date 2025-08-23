@@ -4798,10 +4798,17 @@ html {
       console.log('Opgave fuldført:', taskCriteria[activeTask].name);
       
       // Gem progress i cloud database
+      console.log('🔍 Forsøger at gemme progress...');
       const currentUser = getCurrentUser();
+      console.log('🔍 Current user:', currentUser);
+      
       if (currentUser) {
+        console.log('🔍 Bruger fundet, kalder saveUserProgress...');
         const completedAt = new Date().toLocaleDateString('da-DK') + ' ' + new Date().toLocaleTimeString('da-DK');
+        console.log('🔍 Data til Firebase:', { userId: currentUser.id, taskId: activeTask, taskName: taskCriteria[activeTask].name, completedAt });
         saveUserProgress(currentUser.id, activeTask, taskCriteria[activeTask].name, completedAt);
+      } else {
+        console.log('❌ Ingen bruger fundet - kan ikke gemme progress');
       }
     }
 
@@ -5399,14 +5406,17 @@ function renderWires(){
   // === Cloud Database funktionalitet ===
   async function saveUserProgress(userId, taskId, taskName, completedAt) {
     try {
-      console.log('Forsøger at gemme progress til Firebase...');
-      console.log('Data:', { userId, taskId, taskName, completedAt });
+      console.log('🚀 saveUserProgress kaldt med data:', { userId, taskId, taskName, completedAt });
       
       if (!window.db) {
-        console.error('Firebase database ikke tilgængelig');
+        console.error('❌ Firebase database ikke tilgængelig - window.db er undefined');
+        console.log('🔍 window.db:', window.db);
+        console.log('🔍 window.firebase:', window.firebase);
         saveToLocalStorage(userId, taskId, taskName, completedAt);
         return false;
       }
+      
+      console.log('🔍 Firebase database tilgængelig, forsøger at gemme...');
       
       await window.db.collection('user_progress').add({
         userId: userId,
@@ -5421,6 +5431,7 @@ function renderWires(){
       return true;
     } catch (error) {
       console.error('❌ Fejl ved gem af progress:', error);
+      console.log('🔍 Fejl detaljer:', error.message, error.stack);
       // Fallback til localStorage hvis cloud fejler
       saveToLocalStorage(userId, taskId, taskName, completedAt);
       return false;
@@ -5600,8 +5611,23 @@ function renderWires(){
     const username = localStorage.getItem('simUser');
     if (!username) return null;
     
+    // Først tjek registrerede brugere
     const users = JSON.parse(localStorage.getItem('ibi_users') || '[]');
-    return users.find(user => user.username === username) || null;
+    const registeredUser = users.find(user => user.username === username);
+    if (registeredUser) return registeredUser;
+    
+    // Hvis ikke registreret, returner standard bruger info
+    if (username === 'admin') {
+      return {
+        id: 'admin',
+        firstName: 'Admin',
+        lastName: 'Bruger',
+        email: 'admin@ibisimulator.dk',
+        username: 'admin'
+      };
+    }
+    
+    return null;
   }
 
   function updateUserTaskCompletion(taskId, taskName) {
