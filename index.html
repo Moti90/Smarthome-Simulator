@@ -3437,23 +3437,7 @@ html {
   var $ = function(sel){ return document.querySelector(sel); };
   var logEl = $('#log'), luaOut = $('#luaOut');
 
-  /* Faner */
-  function setTab(which){
-    $('#tabSim').classList.toggle('active', which==='sim');
-    $('#tabFlow').classList.toggle('active', which==='flow');
-    $('#tabLearning').classList.toggle('active', which==='learning');
-    $('#tabSettings').classList.toggle('active', which==='settings');
-
-    $('#view-sim').classList.toggle('active', which==='sim');
-    $('#view-flow').classList.toggle('active', which==='flow');
-    $('#view-learning').classList.toggle('active', which==='learning');
-    $('#view-settings').classList.toggle('active', which==='settings');
-
-  }
-  $('#tabSim').onclick = ()=>setTab('sim');
-  $('#tabFlow').onclick = ()=>setTab('flow');
-  $('#tabLearning').onclick = ()=>setTab('learning');
-  $('#tabSettings').onclick = ()=>setTab('settings');
+  /* Faner - Fjernet gammelt system */
 
 
   /* Topbar menu */
@@ -5760,7 +5744,7 @@ function renderWires(){
       document.getElementById('loginView').style.display='none';
       document.getElementById('mainApp').style.display='block';
       document.querySelector('.appbar').style.display = 'block';
-      if (typeof setTab==='function') setTab('sim');
+      show('view-sim');
     } else {
       console.log('Login failed!');
       document.getElementById('loginError').innerText='Forkert login!';
@@ -6096,9 +6080,9 @@ function renderWires(){
     console.log('🔍 Lærer login knap vist igen og dashboard knap skjult');
     
     // Skift til simulator fane
-    if (typeof setTab === 'function') {
-      setTab('sim');
-      console.log('🔍 Skiftet til simulator fane med setTab');
+    if (typeof show === 'function') {
+      show('view-sim');
+      console.log('🔍 Skiftet til simulator fane med show');
     } else {
       // Fallback til manuelt fane skift
       document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
