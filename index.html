@@ -2881,6 +2881,7 @@ html {
                 <option value="doorOpened">IF Dørkontakt ændres til Opened</option>
                 <option value="timeEquals">IF Klokkeslæt = (hh:mm)</option>
                 <option value="humidityAbove">IF Fugtighed ≥ (værdi)</option>
+                <option value="humidityBelow">IF Fugtighed < (værdi)</option>
                 <option value="globalEqTrig">IF Global name=value</option>
                 <option value="sensorEqTrig">IF Sensor (global) = (navn=værdi)</option>
                 <option value="sensorGtTrig">IF Sensor (global) > (navn=tal)</option>
@@ -2901,6 +2902,7 @@ html {
                 <option value="windBelow">Vind <</option>
                 <option value="weekdayIn">Ugedag i (Mon,Fri,…)</option>
                 <option value="alarmArmed">Alarm = Armed</option>
+                <option value="doorClosed">Dørkontakt = Closed</option>
                 <option value="globalEq">Global name=value</option>
                 <option value="sensorEq">Sensor (global) ==</option>
                 <option value="sensorNe">Sensor (global) ≠</option>
@@ -2924,6 +2926,7 @@ html {
                 <option value="windBelow">Vind <</option>
                 <option value="weekdayIn">Ugedag i (Mon,Fri,…)</option>
                 <option value="alarmArmed">Alarm = Armed</option>
+                <option value="doorClosed">Dørkontakt = Closed</option>
                 <option value="globalEq">Global name=value</option>
                 <option value="sensorEq">Sensor (global) ==</option>
                 <option value="sensorNe">Sensor (global) ≠</option>
@@ -3591,6 +3594,14 @@ html {
           description: 'Fugt = ' + state.humidity + '% (≥ ' + threshold + '%)',
           explain: above ? null : 'Fugtighed skal være ' + threshold + '% eller højere'
         };
+      case 'humidityBelow':
+        var threshold = parseFloat(rule.triggerValue || '0');
+        var below = state.humidity < threshold;
+        return {
+          ok: below,
+          description: 'Fugt = ' + state.humidity + '% (< ' + threshold + '%)',
+          explain: below ? null : 'Fugtighed skal være under ' + threshold + '%'
+        };
       case 'globalEqTrig':
         var p = parseNameValue(rule.triggerValue || '');
         if (!p.name) return { ok: false, description: 'Ugyldig global reference', explain: 'Global navn mangler' };
@@ -3806,6 +3817,13 @@ html {
           description: 'Tid = ' + state.time + ' (mellem ' + (condValue || 'ikke sat') + ')',
           explain: inRange ? null : 'Tiden skal være mellem ' + condValue
         };
+      case 'doorClosed':
+        var closed = state.door === false;
+        return {
+          ok: closed,
+          description: 'Dør = ' + (state.door ? 'Åben' : 'Lukket') + ' (forventet: Lukket)',
+          explain: closed ? null : 'Døren skal være lukket'
+        };
       default:
         return { ok: false, description: 'Ukendt condition type', explain: 'Condition type "' + condType + '" ikke understøttet i diagnose' };
     }
@@ -3819,6 +3837,7 @@ html {
       'doorOpened': 'Dør → Opened',
       'timeEquals': 'Tid =',
       'humidityAbove': 'Fugt ≥',
+      'humidityBelow': 'Fugt <',
       'globalEqTrig': 'Global ==',
       'sensorEqTrig': 'Sensor ==',
       'sensorGtTrig': 'Sensor >',
@@ -3838,6 +3857,7 @@ html {
       'windBelow': 'Vind <',
       'weekdayIn': 'Ugedag i',
       'alarmArmed': 'Alarm = Armed',
+      'doorClosed': 'Dørkontakt = Closed',
       'alarmHome': 'Home Mode',
       
       'globalEq': 'Global ==',
@@ -3932,6 +3952,7 @@ html {
       case 'windBelow': return state.wind < parseFloat(v||'0');
       case 'weekdayIn': return v.split(',').map(function(s){return s.trim();}).includes(state.weekday);
       case 'alarmArmed': return state.alarmArmed === true;
+      case 'doorClosed': return state.door === false;
       case 'alarmHome': return state.alarmHome === true;
       
       case 'globalEq': { var sp=v.split('='), k=(sp[0]||'').trim(), expect=(sp[1]||'').trim(); return (state.globals[k]||'')===expect; }
@@ -3958,6 +3979,7 @@ html {
       case 'doorOpened': return state.door===true;
       case 'timeEquals': return !!rule.triggerValue && rule.triggerValue===state.time;
       case 'humidityAbove': return state.humidity >= parseFloat((rule.triggerValue||'0').trim());
+      case 'humidityBelow': return state.humidity < parseFloat((rule.triggerValue||'0').trim());
       case 'globalEqTrig': { var p=parseNameValue(rule.triggerValue||''); if(!p.name) return false; return gget(p.name)===p.value; }
       case 'sensorEqTrig':  { var p2=parseNameValue(rule.triggerValue||''); if(!p2.name) return false; return gget(p2.name)===p2.value; }
       case 'sensorGtTrig':  { var p3=parseNameValue(rule.triggerValue||''); if(!p3.name) return false; return toNum(gget(p3.name)) >  toNum(p3.value); }
@@ -4003,6 +4025,7 @@ html {
         case 'doorOpened': ok=(state.door===true); break;
         case 'timeEquals': ok=(!!r.triggerValue && r.triggerValue===state.time); break;
         case 'humidityAbove': ok=(state.humidity >= parseFloat((r.triggerValue||'0').trim())); break;
+        case 'humidityBelow': ok=(state.humidity < parseFloat((r.triggerValue||'0').trim())); break;
         case 'globalEqTrig': { var p=parseNameValue(r.triggerValue||''); ok=!!p.name && (gget(p.name)===p.value); break; }
         case 'sensorEqTrig':  { var p2=parseNameValue(r.triggerValue||''); ok=!!p2.name && (gget(p2.name)===p2.value); break; }
         case 'sensorGtTrig':  { var p3=parseNameValue(r.triggerValue||''); ok=!!p3.name && (toNum(gget(p3.name)) >  toNum(p3.value)); break; }
@@ -4161,6 +4184,7 @@ html {
       case 'doorOpened':     return 'fibaro.getValue(DOOR_ID, "value") == "true"';
       case 'timeEquals':     return 'os.date("%H:%M") == "'+esc(r.triggerValue||"07:30")+'"';
       case 'humidityAbove':  return '(tonumber(fibaro.getValue(HUM_ID, "value")) or 0) >= '+(parseFloat(r.triggerValue||'0')||0);
+      case 'humidityBelow':  return '(tonumber(fibaro.getValue(HUM_ID, "value")) or 0) < '+(parseFloat(r.triggerValue||'0')||0);
       case 'globalEqTrig': { var p=pnv(); return 'fibaro.getGlobalVariable("'+esc(p.name||'')+'") == "'+esc(p.value||'')+'"'; }
       case 'sensorEqTrig':  { var p2=pnv(); return 'fibaro.getGlobalVariable("'+esc(p2.name||'')+'") == "'+esc(p2.value||'')+'"'; }
       case 'sensorGtTrig':  { var p3=pnv(); return '(tonumber(fibaro.getGlobalVariable("'+esc(p3.name||'')+'")) or 0) > '+(parseFloat(p3.value||'0')||0); }
@@ -4235,6 +4259,7 @@ html {
         case 'doorOpened':     return '{ type="device", id=DOOR_ID,   property="value", operator="==", value=true,  isTrigger=true }';
         case 'timeEquals':     return '{ type="time", operator="==", value="'+(r.triggerValue||"07:30").replace(/"/g,'\\\"')+'", isTrigger=true }';
         case 'humidityAbove':  return '{ type="device", id=HUM_ID,    property="value", operator=">=", value='+(parseFloat(r.triggerValue||"0")||0)+', isTrigger=true }';
+        case 'humidityBelow':  return '{ type="device", id=HUM_ID,    property="value", operator="<", value='+(parseFloat(r.triggerValue||"0")||0)+', isTrigger=true }';
         default: return null;
       }
     }
