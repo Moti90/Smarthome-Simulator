@@ -5766,8 +5766,11 @@ function renderWires(){
     // Vis lærer login knap igen
     document.getElementById('btnTeacherLogin').style.display = 'block';
     
-    // Skift til simulator fane
-    setTab('sim');
+    // Skift til simulator fane manuelt
+    document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('tabSim').classList.add('active');
+    document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+    document.getElementById('view-sim').classList.add('active');
     
     // Ryd lærer login status
     localStorage.removeItem('teacher_logged_in');
