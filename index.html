@@ -6070,7 +6070,8 @@ function renderWires(){
     document.querySelector('.tabs').style.display = 'flex';
     document.querySelectorAll('.view').forEach(view => {
       if (view.id !== 'view-teacher') {
-        view.style.display = 'block';
+        // Brug CSS klasser i stedet for inline styles
+        view.style.display = ''; // Fjern inline display style
         view.classList.remove('active'); // Fjern active fra alle views
       }
     });
@@ -6089,14 +6090,12 @@ function renderWires(){
       document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
       document.getElementById('tabSim').classList.add('active');
       
-      // Aktiver simulator view og deaktiver alle andre
+      // Aktiver simulator view og deaktiver alle andre (kun med CSS klasser, ikke display)
       document.querySelectorAll('.view').forEach(view => {
         if (view.id === 'view-sim') {
           view.classList.add('active');
-          view.style.display = 'block';
         } else if (view.id !== 'view-teacher') {
           view.classList.remove('active');
-          view.style.display = 'none'; // Skjul alle andre views
         }
       });
       console.log('🔍 Skiftet til simulator fane manuelt (fallback)');
