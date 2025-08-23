@@ -3143,14 +3143,12 @@ html {
     
     <!-- ===== View: Læring ===== -->
     <section id="view-learning" class="view">
-      <div class="wrap">
+      <div class="wrap" style="grid-template-columns: 1fr 1fr 1fr; gap: 24px; max-width: none;">
+        <!-- Venstre kolonne: Sensor oversigt -->
         <div class="card">
-          <h2>📚 Læring - Smart Home Sensorer</h2>
+          <h2>🔍 Sensor Oversigt</h2>
           <div class="body">
-            <p class="muted">Lær om forskellige sensorer og hvordan de bruges i smart home automation</p>
-            
-            <!-- Sensor oversigt -->
-            <div class="sensor-grid">
+            <p class="muted">Lær om forskellige sensorer og deres funktioner</p>
               <!-- PIR Sensor -->
               <div class="sensor-card">
                 <h3>🔄 PIR (Passive Infrared) - Bevægelse</h3>
@@ -3233,9 +3231,16 @@ html {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        
+        <!-- Midter kolonne: Praktiske eksempler -->
+        <div class="card">
+          <h2>🎯 Praktiske Eksempler</h2>
+          <div class="body">
+            <p class="muted">Se hvordan sensorer kan kombineres i smarte regler</p>
             
-            <!-- Praktiske eksempler -->
-            <div class="examples-section">
+            <div class="example-card">
               <h3>🎯 Praktiske Eksempler</h3>
               
               <div class="example-card">
@@ -3269,21 +3274,59 @@ html {
                   THEN Ventilator → On</code>
                 </div>
               </div>
+              
+              <div class="example-card">
+                <h4>🌬️ Ventilation</h4>
+                <p><strong>Scenario:</strong> Åbn vinduer når fugtighed er høj og der er let vind</p>
+                <div class="rule-example">
+                  <code>IF Fugtighed ≥ 70%<br>
+                  AND Vind < 8 m/s<br>
+                  AND Lys (lux) > 100<br>
+                  THEN Vindue → Åbn</code>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+        
+        <!-- Højre kolonne: Tips og tricks -->
+        <div class="card">
+          <h2>💡 Tips & Tricks</h2>
+          <div class="body">
+            <p class="muted">Værdifulde råd til at få mest ud af dine sensorer</p>
             
-            <!-- Tips og tricks -->
             <div class="tips-section">
-              <h3>💡 Tips & Tricks</h3>
+              <h4>🔧 Installation</h4>
               <ul>
-                <li><strong>Sensor placering:</strong> Undgå direkte sollys på PIR sensorer</li>
+                <li><strong>PIR placering:</strong> Undgå direkte sollys og varmekilder</li>
+                <li><strong>Højde:</strong> 2-3 meter giver bedste dækning</li>
+                <li><strong>Vinkler:</strong> Test forskellige retninger for optimal dækning</li>
+              </ul>
+              
+              <h4>⚙️ Kalibrering</h4>
+              <ul>
                 <li><strong>Fugtighed:</strong> 40-60% er optimal for komfort og sundhed</li>
-                <li><strong>Lys:</strong> Kombiner med PIR for bedste energibesparelse</li>
-                <li><strong>Dørkontakt:</strong> Test både åben og lukket tilstand</li>
-                <li><strong>Vind:</strong> Brug til at styre ventilation baseret på vejrforhold</li>
+                <li><strong>Lys:</strong> Test både dag og nat for bedste grænseværdier</li>
+                <li><strong>Dørkontakt:</strong> Verificer både åben og lukket tilstand</li>
+              </ul>
+              
+              <h4>🎯 Kombinationer</h4>
+              <ul>
+                <li><strong>PIR + Lys:</strong> Perfekt til energibesparelse</li>
+                <li><strong>Fugtighed + Vind:</strong> Ideel til ventilation</li>
+                <li><strong>Dør + PIR:</strong> Sikkerhed og komfort</li>
+              </ul>
+              
+              <h4>🚀 Avancerede tips</h4>
+              <ul>
+                <li><strong>Tidsbaseret:</strong> Kombiner med tidsstempler for bedre kontrol</li>
+                <li><strong>Graduering:</strong> Brug numeriske værdier for mere præcis styring</li>
+                <li><strong>Logging:</strong> Gem data for at optimere dine regler</li>
               </ul>
             </div>
           </div>
         </div>
+        
       </div>
     </section>
     </section>
