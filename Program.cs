@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 
+
 namespace IBISimulator
 {
     internal static class Program
@@ -215,6 +216,7 @@ namespace IBISimulator
                         }
                         break;
                     }
+
                     default:
                         Logger.Log("Unknown cmd from JS: " + cmd);
                         break;
@@ -266,5 +268,7 @@ namespace IBISimulator
             };
             return ofd.ShowDialog() == DialogResult.OK ? ofd.FileName : null;
         }
+
+
     }
 }
