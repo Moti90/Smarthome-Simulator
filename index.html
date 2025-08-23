@@ -2752,7 +2752,7 @@ html {
     <button id="tabSim"  class="active">Simulator</button>
     <button id="tabFlow">Flow (beta)</button>
     <button id="tabSettings">Indstillinger</button>
-    <button id="tabTeacher" style="display: none;">👨‍🏫 Lærer</button>
+
   </div>
 
   <div class="views">
@@ -3191,16 +3191,16 @@ html {
     $('#tabSim').classList.toggle('active', which==='sim');
     $('#tabFlow').classList.toggle('active', which==='flow');
     $('#tabSettings').classList.toggle('active', which==='settings');
-    $('#tabTeacher').classList.toggle('active', which==='teacher');
+
     $('#view-sim').classList.toggle('active', which==='sim');
     $('#view-flow').classList.toggle('active', which==='flow');
     $('#view-settings').classList.toggle('active', which==='settings');
-    $('#view-teacher').classList.toggle('active', which==='teacher');
+
   }
   $('#tabSim').onclick = ()=>setTab('sim');
   $('#tabFlow').onclick = ()=>setTab('flow');
   $('#tabSettings').onclick = ()=>setTab('settings');
-  $('#tabTeacher').onclick = ()=>setTab('teacher');
+
 
   /* Topbar menu */
   var menu = document.querySelector('.menu');
@@ -5581,9 +5581,21 @@ function renderWires(){
     const btnTeacherTab = document.getElementById('btnTeacherTab');
     if(btnTeacherTab) {
       btnTeacherTab.onclick = () => {
-        // Skift til lærer fane
-        document.getElementById('tabTeacher').style.display = 'block';
-        switchToTeacherTab();
+        // Skjul alle normale faner
+        document.querySelector('.tabs').style.display = 'none';
+        
+        // Skjul alle normale views
+        document.querySelectorAll('.view').forEach(view => {
+          if (view.id !== 'view-teacher') {
+            view.style.display = 'none';
+          }
+        });
+        
+        // Vis kun lærer dashboard
+        document.getElementById('view-teacher').style.display = 'block';
+        document.getElementById('view-teacher').classList.add('active');
+        
+        console.log('🔍 Skiftet til separat lærer dashboard side');
       };
     }
     
@@ -5763,7 +5775,7 @@ function renderWires(){
       loadTeacherProgress();
     } else {
       // Skjul lærer dashboard og knap
-      document.getElementById('tabTeacher').style.display = 'none';
+      document.getElementById('view-teacher').style.display = 'none';
       document.getElementById('btnTeacherTab').style.display = 'none';
       document.getElementById('btnTeacherLogin').style.display = 'block';
     }
@@ -5773,8 +5785,17 @@ function renderWires(){
     console.log('🔍 doTeacherLogout kaldt - starter logout process');
     
     // Skjul lærer dashboard
-    document.getElementById('tabTeacher').style.display = 'none';
+    document.getElementById('view-teacher').style.display = 'none';
+    document.getElementById('view-teacher').classList.remove('active');
     console.log('🔍 Lærer dashboard skjult');
+    
+    // Vis alle normale faner og views igen
+    document.querySelector('.tabs').style.display = 'flex';
+    document.querySelectorAll('.view').forEach(view => {
+      if (view.id !== 'view-teacher') {
+        view.style.display = 'block';
+      }
+    });
     
     // Vis lærer login knap igen og skjul dashboard knap
     document.getElementById('btnTeacherLogin').style.display = 'block';
@@ -5789,8 +5810,13 @@ function renderWires(){
       // Fallback til manuelt fane skift
       document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
       document.getElementById('tabSim').classList.add('active');
-      document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
-      document.getElementById('view-sim').classList.add('active');
+      document.querySelectorAll('.view').forEach(view => {
+        if (view.id === 'view-sim') {
+          view.classList.add('active');
+        } else {
+          view.classList.remove('active');
+        }
+      });
       console.log('🔍 Skiftet til simulator fane manuelt (fallback)');
     }
     
@@ -5804,13 +5830,7 @@ function renderWires(){
     console.log('🔍 doTeacherLogout færdig');
   }
   
-  // Hjælpefunktion til at skifte fane
-  function switchToTeacherTab() {
-    document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
-    document.getElementById('tabTeacher').classList.add('active');
-    document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
-    document.getElementById('view-teacher').classList.add('active');
-  }
+
 
   // === Firebase konfiguration ===
   console.log('🔍 Firebase konfiguration startet');
