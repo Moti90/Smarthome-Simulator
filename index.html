@@ -949,6 +949,25 @@
     linear-gradient(180deg, var(--city-bg-0), #060c18);
   border-radius:12px;
 }
+
+/* LEARNING VIEW - ONLY INLINE STYLES WORK! */
+
+/* Hide Tips & Tricks section on other pages */
+#view-sim .tips-section,
+#view-flow .tips-section,
+#view-settings .tips-section,
+#view-sim .card:has(h2:contains("Tips")),
+#view-flow .card:has(h2:contains("Tips")),
+#view-settings .card:has(h2:contains("Tips")) {
+  display: none !important;
+}
+
+/* Alternative: Hide any card with Tips & Tricks heading on non-learning pages */
+#view-sim .card:has(h2:contains("💡")),
+#view-flow .card:has(h2:contains("💡")),
+#view-settings .card:has(h2:contains("💡")) {
+  display: none !important;
+}
 #view-flow .card{
   background:linear-gradient(180deg, var(--city-bg-1), #0a1529);
   border:1px solid var(--city-hair);
@@ -2322,7 +2341,7 @@ html {
 <header class="appbar">
   <div class="wrap">
     <div class="brand">
-      <img src="LOGO.png" alt="SMARTHOME SIMULATOR logo" height="40" style="margin-right: 8px;">
+      <img src="LOGO.png" alt="SMARTHOME SIMULATOR logo" height="50" style="margin-right: 10px;">
       <span class="name" style="font-size: 14px; letter-spacing: 0.5px;">SMARTHOME SIMULATOR</span>
     </div>
     <nav class="mainnav">
@@ -2330,7 +2349,7 @@ html {
       <button type="button" data-target="view-flow">🧩 Wiresheet</button>
       <button type="button" data-target="view-learning">📚 Læring</button>
       <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
-      <button type="button" onclick="showQuickStart()" title="Kom godt i gang">🚀 Hjælp</button>
+      <button type="button" onclick="showQuickStart()" title="Kom godt i gang">🚀 Opgaver</button>
     </nav>
   </div>
 </header>
@@ -2340,7 +2359,7 @@ html {
     <!-- SMARTHOME SIMULATOR Logo -->
     <div class="login-logo">
       <div class="logo-smarthome">
-        <img src="LOGO.png" alt="SMARTHOME SIMULATOR logo" height="120" style="margin-bottom: 20px;">
+        <img src="LOGO.png" alt="SMARTHOME SIMULATOR logo" height="250" style="margin-bottom: 35px;">
       </div>
     </div>
 
@@ -3097,7 +3116,7 @@ html {
               <button id="wsLoad">Hent (local)</button>
             </div>
 
-            <div id="wsCanvas" class="ws-canvas" style="min-height: 500px; width: 100%;">
+            <div id="wsCanvas" class="ws-canvas" style="min-height: 700px; width: 100%;">
               <svg id="wsWires" class="ws-wires"></svg>
               <div id="wsNodes" class="ws-nodes"></div>
             </div>
@@ -3108,192 +3127,23 @@ html {
     
     <!-- ===== View: Læring ===== -->
     <section id="view-learning" class="view">
-      <div class="wrap" style="grid-template-columns: 1fr 1fr 1fr; gap: 24px; max-width: none;">
-        <!-- Venstre kolonne: Sensor oversigt -->
+      <div class="wrap">
         <div class="card">
-          <h2>🔍 Sensor Oversigt</h2>
+          <h2>📚 Læring</h2>
           <div class="body">
-            <p class="muted">Lær om forskellige sensorer og deres funktioner</p>
-              <!-- PIR Sensor -->
-              <div class="sensor-card">
-                <h3>🔄 PIR (Passive Infrared) - Bevægelse</h3>
-                <div class="sensor-info">
-                  <p><strong>Hvad måler det:</strong> Bevægelse i et område</p>
-                  <p><strong>Værdier:</strong> Breached (bevægelse) / Safe (ingen bevægelse)</p>
-                  <p><strong>Anvendelser:</strong></p>
-                  <ul>
-                    <li>Ganglys der tænder automatisk</li>
-                    <li>Sikkerhedsalarm når der er bevægelse</li>
-                    <li>Energibesparelse (sluk lys når ingen er der)</li>
-                  </ul>
-                  <p><strong>Typisk placering:</strong> Loft eller væg, 2-3 meter højde</p>
-                </div>
-              </div>
-              
-              <!-- Dørkontakt -->
-              <div class="sensor-card">
-                <h3>🚪 Dør-/Vindueskontakt</h3>
-                <div class="sensor-info">
-                  <p><strong>Hvad måler det:</strong> Om døre/vinduer er åbne eller lukkede</p>
-                  <p><strong>Værdier:</strong> Opened (åben) / Closed (lukket)</p>
-                  <p><strong>Anvendelser:</strong></p>
-                  <ul>
-                    <li>Automatisk lys når døren åbnes</li>
-                    <li>Sikkerhedssystem (alarm når dør åbnes om natten)</li>
-                    <li>Ventilation styring</li>
-                  </ul>
-                  <p><strong>Typisk placering:</strong> Dørkarm eller vindueramme</p>
-                </div>
-              </div>
-              
-              <!-- Fugtighed -->
-              <div class="sensor-card">
-                <h3>💧 Fugtighed (%)</h3>
-                <div class="sensor-info">
-                  <p><strong>Hvad måler det:</strong> Luftfugtighed i procent</p>
-                  <p><strong>Værdier:</strong> 0-100% (40-60% er optimal)</p>
-                  <p><strong>Anvendelser:</strong></p>
-                  <ul>
-                    <li>Badventilator der starter ved høj fugtighed</li>
-                    <li>Skimmel forebyggelse</li>
-                    <li>Komfortstyring (tør luft om vinteren)</li>
-                  </ul>
-                  <p><strong>Typisk placering:</strong> Badeværelse, kælder, vindueskarm</p>
-                </div>
-              </div>
-              
-              <!-- Lys -->
-              <div class="sensor-card">
-                <h3>💡 Lys (lux)</h3>
-                <div class="sensor-info">
-                  <p><strong>Hvad måler det:</strong> Lysstyrke i lux</p>
-                  <p><strong>Værdier:</strong> 0-1000+ lux</p>
-                  <p><strong>Referencer:</strong></p>
-                  <ul>
-                    <li>0-50 lux: Mørkt (nat)</li>
-                    <li>100-300 lux: Svagt lys (morgen/aften)</li>
-                    <li>500-1000 lux: Dagslys</li>
-                    <li>1000+ lux: Stærkt dagslys</li>
-                  </ul>
-                  <p><strong>Anvendelser:</strong> Energibesparelse, komfort, sikkerhed</p>
-                </div>
-              </div>
-              
-              <!-- Vind -->
-              <div class="sensor-card">
-                <h3>🌬️ Vind (m/s)</h3>
-                <div class="sensor-info">
-                  <p><strong>Hvad måler det:</strong> Vindhastighed i meter per sekund</p>
-                  <p><strong>Værdier:</strong> 0-20+ m/s</p>
-                  <p><strong>Referencer:</strong></p>
-                  <ul>
-                    <li>0-5 m/s: Let vind</li>
-                    <li>5-10 m/s: Moderat vind</li>
-                    <li>10-15 m/s: Stærk vind</li>
-                    <li>15+ m/s: Meget stærk vind</li>
-                  </ul>
-                  <p><strong>Anvendelser:</strong> Ventilation styring, sikkerhed</p>
-                </div>
-              </div>
+            <div style="text-align: center; padding: 60px 20px;">
+              <h3 style="color: #2ab0ff; font-size: 24px; margin-bottom: 20px;">🚧 Kommer snart</h3>
+              <p style="font-size: 16px; color: #888; line-height: 1.6;">
+                Vi arbejder på at udvikle omfattende læringsmateriale om sensorer, 
+                praktiske eksempler og tips & tricks til smart home automation.
+              </p>
+              <p style="font-size: 14px; color: #666; margin-top: 30px;">
+                Hold øje med opdateringer! 🔄
+              </p>
             </div>
           </div>
         </div>
-        
-        <!-- Midter kolonne: Praktiske eksempler -->
-        <div class="card">
-          <h2>🎯 Praktiske Eksempler</h2>
-          <div class="body">
-            <p class="muted">Se hvordan sensorer kan kombineres i smarte regler</p>
-            
-            <div class="example-card">
-              <h3>🎯 Praktiske Eksempler</h3>
-              
-              <div class="example-card">
-                <h4>🏠 Sikkerhedssystem</h4>
-                <p><strong>Scenario:</strong> Aktiver alarm når der er bevægelse om natten, men kun når døren er lukket</p>
-                <div class="rule-example">
-                  <code>IF PIR bliver Breached<br>
-                  AND Dørkontakt = Closed<br>
-                  AND Tid mellem 22:00-06:00<br>
-                  THEN Send Push (log)</code>
-                </div>
-              </div>
-              
-              <div class="example-card">
-                <h4>💡 Energibesparelse</h4>
-                <p><strong>Scenario:</strong> Sluk lys automatisk når der ikke er nogen i rummet, men kun om dagen</p>
-                <div class="rule-example">
-                  <code>IF PIR bliver Safe<br>
-                  AND Lys (lux) > 500<br>
-                  AND Tid mellem 08:00-18:00<br>
-                  THEN Lys → Sluk</code>
-                </div>
-              </div>
-              
-              <div class="example-card">
-                <h4>🛁 Komfortstyring</h4>
-                <p><strong>Scenario:</strong> Start ventilator når fugtighed er høj og der ikke er nogen i rummet</p>
-                <div class="rule-example">
-                  <code>IF Fugtighed ≥ 75%<br>
-                  AND Lys (lux) < 50<br>
-                  THEN Ventilator → On</code>
-                </div>
-              </div>
-              
-              <div class="example-card">
-                <h4>🌬️ Ventilation</h4>
-                <p><strong>Scenario:</strong> Åbn vinduer når fugtighed er høj og der er let vind</p>
-                <div class="rule-example">
-                  <code>IF Fugtighed ≥ 70%<br>
-                  AND Vind < 8 m/s<br>
-                  AND Lys (lux) > 100<br>
-                  THEN Vindue → Åbn</code>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Højre kolonne: Tips og tricks -->
-        <div class="card">
-          <h2>💡 Tips & Tricks</h2>
-          <div class="body">
-            <p class="muted">Værdifulde råd til at få mest ud af dine sensorer</p>
-            
-            <div class="tips-section">
-              <h4>🔧 Installation</h4>
-              <ul>
-                <li><strong>PIR placering:</strong> Undgå direkte sollys og varmekilder</li>
-                <li><strong>Højde:</strong> 2-3 meter giver bedste dækning</li>
-                <li><strong>Vinkler:</strong> Test forskellige retninger for optimal dækning</li>
-              </ul>
-              
-              <h4>⚙️ Kalibrering</h4>
-              <ul>
-                <li><strong>Fugtighed:</strong> 40-60% er optimal for komfort og sundhed</li>
-                <li><strong>Lys:</strong> Test både dag og nat for bedste grænseværdier</li>
-                <li><strong>Dørkontakt:</strong> Verificer både åben og lukket tilstand</li>
-              </ul>
-              
-              <h4>🎯 Kombinationer</h4>
-              <ul>
-                <li><strong>PIR + Lys:</strong> Perfekt til energibesparelse</li>
-                <li><strong>Fugtighed + Vind:</strong> Ideel til ventilation</li>
-                <li><strong>Dør + PIR:</strong> Sikkerhed og komfort</li>
-              </ul>
-              
-              <h4>🚀 Avancerede tips</h4>
-              <ul>
-                <li><strong>Tidsbaseret:</strong> Kombiner med tidsstempler for bedre kontrol</li>
-                <li><strong>Graduering:</strong> Brug numeriske værdier for mere præcis styring</li>
-                <li><strong>Logging:</strong> Gem data for at optimere dine regler</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        
       </div>
-    </section>
     </section>
     
     <!-- ===== View: Indstillinger ===== -->
@@ -6123,6 +5973,26 @@ function renderWires(){
 
   // === Firebase konfiguration ===
   console.log('🔍 Firebase konfiguration startet');
+  
+  // Force 3-column layout for learning page
+  function forceLearningLayout() {
+    const learningWrap = document.getElementById('learning-wrap');
+    if (learningWrap) {
+      learningWrap.style.display = 'grid';
+      learningWrap.style.gridTemplateColumns = '1fr 1fr 1fr';
+      learningWrap.style.gap = '24px';
+      learningWrap.style.width = '100%';
+      console.log('🔧 Forced 3-column layout for learning page');
+    }
+  }
+  
+  // Run when learning page is shown
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if we're on learning page
+    if (window.location.hash === '#learning' || document.querySelector('#view-learning.active')) {
+      setTimeout(forceLearningLayout, 100);
+    }
+  });
   console.log('🔍 firebase object tilgængelig:', typeof firebase);
   
   const firebaseConfig = {
