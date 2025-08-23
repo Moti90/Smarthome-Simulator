@@ -192,6 +192,57 @@
       transition: all 0.2s ease;
     }
     
+    /* Lærer Dashboard styling */
+    .progress-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .progress-item {
+      background: #0f141c;
+      border: 1px solid #1f2933;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+    .progress-item .student-name {
+      font-weight: 600;
+      color: #e5e9f0;
+      margin-bottom: 4px;
+    }
+    .progress-item .task-info {
+      color: #cbd5e1;
+      font-size: 12px;
+    }
+    .progress-item .timestamp {
+      color: #64748b;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .stat-box {
+      background: #0f141c;
+      border: 1px solid #1f2933;
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: #10b981;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      color: #cbd5e1;
+      font-size: 12px;
+    }
+    
     .settings-section:hover {
       background: rgba(15, 20, 28, 0.6);
       border-color: #2a3442;
@@ -2301,6 +2352,43 @@ html {
     </div>
   </div>
 
+  <!-- Teacher Login Modal -->
+  <div id="teacherLoginModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>👨‍🏫 Lærer Login</h3>
+        <button class="modal-close" onclick="closeTeacherLoginModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom:16px;">
+          <label style="display:block; margin-bottom:8px; color:#9ca3af; font-size:14px;">Lærer brugernavn</label>
+          <input id="teacherUsername" placeholder="Indtast lærer brugernavn" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e7eb;">
+        </div>
+        
+        <div style="margin-bottom:16px;">
+          <label style="display:block; margin-bottom:8px; color:#9ca3af; font-size:14px;">Lærer adgangskode</label>
+          <input id="teacherPassword" type="password" placeholder="Indtast lærer adgangskode" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e7eb;">
+        </div>
+        
+        <div style="margin-bottom:16px;">
+          <label style="display:block; margin-bottom:8px; color:#9ca3af; font-size:14px;">Skole ID</label>
+          <input id="teacherSchoolId" placeholder="fx: skole1" value="default" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e7eb;">
+        </div>
+        
+        <div style="margin-bottom:24px;">
+          <label style="display:block; margin-bottom:8px; color:#9ca3af; font-size:14px;">Klasse ID</label>
+          <input id="teacherClassId" placeholder="fx: 9a" value="default" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e7eb;">
+        </div>
+        
+        <button id="btnTeacherLoginSubmit" class="success" style="width:100%; padding:12px; font-size:16px; border-radius:12px; margin-bottom:16px;">
+          🔓 Log ind som lærer
+        </button>
+        
+        <p id="teacherLoginError" style="color:#ef4444; text-align:center; margin-bottom:16px;"></p>
+      </div>
+    </div>
+  </div>
+
   <div id="mainApp" style="display:none;">
 
   <!-- Onboarding System -->
@@ -2644,6 +2732,7 @@ html {
   <header>
     <div class="brand"><h1 class="goldtext"> Simulator  </h1></div>
     <div class="top-right">
+      <button id="btnTeacherLogin" class="btn-secondary" style="margin-right: 12px; background: #ff6b35 !important; color: white !important; border: 3px solid #e55a2b !important; padding: 10px 20px !important; border-radius: 10px !important; font-weight: 700 !important; font-size: 16px !important; box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important; z-index: 9999 !important; position: relative !important; display: block !important;">👨‍🏫 LÆRER LOGIN</button>
       <div class="menu">
         <button id="btnMenu" aria-haspopup="true" aria-expanded="false" title="LUA-værktøjer">LUA ▾</button>
         <div class="menu-list" id="menuList" role="menu">
@@ -2660,6 +2749,7 @@ html {
     <button id="tabSim"  class="active">Simulator</button>
     <button id="tabFlow">Flow (beta)</button>
     <button id="tabSettings">Indstillinger</button>
+    <button id="tabTeacher" style="display: none;">👨‍🏫 Lærer</button>
   </div>
 
   <div class="views">
@@ -3026,6 +3116,64 @@ html {
       </div>
     </section>
     
+    <!-- ===== View: Lærer Dashboard ===== -->
+    <section id="view-teacher" class="view">
+      <div class="wrap">
+        <!-- Lærer kontroller -->
+        <div class="card">
+          <h2>👨‍🏫 Lærer Dashboard</h2>
+          <div class="body">
+            <div class="settings-section">
+              <h3>📊 Data indstillinger</h3>
+              <div class="setting-item">
+                <label for="teacherSchoolId">Skole ID</label>
+                <input id="teacherSchoolId" type="text" value="default" class="styled-input">
+              </div>
+              <div class="setting-item">
+                <label for="teacherClassId">Klasse ID</label>
+                <input id="teacherClassId" type="text" value="default" class="styled-input">
+              </div>
+              <div class="setting-item">
+                <button id="btnLoadProgress" class="btn-primary">📥 Indlæs elev progress</button>
+                <button id="btnExportCSV" class="btn-success">📊 Eksporter CSV</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Elev progress liste -->
+        <div class="card">
+          <h2>📈 Elev Progress</h2>
+          <div class="body">
+            <div id="teacherProgressList" class="progress-list">
+              <p class="muted">Klik "Indlæs elev progress" for at se data</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Statistikker -->
+        <div class="card">
+          <h2>📊 Statistikker</h2>
+          <div class="body">
+            <div id="teacherStats" class="stats-grid">
+              <div class="stat-box">
+                <div class="stat-number" id="totalStudents">-</div>
+                <div class="stat-label">Elever</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-number" id="totalTasks">-</div>
+                <div class="stat-label">Opgaver</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-number" id="completionRate">-</div>
+                <div class="stat-label">Gennemførelse</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
   </div>
 
 <script>
@@ -3038,13 +3186,16 @@ html {
     $('#tabSim').classList.toggle('active', which==='sim');
     $('#tabFlow').classList.toggle('active', which==='flow');
     $('#tabSettings').classList.toggle('active', which==='settings');
+    $('#tabTeacher').classList.toggle('active', which==='teacher');
     $('#view-sim').classList.toggle('active', which==='sim');
     $('#view-flow').classList.toggle('active', which==='flow');
     $('#view-settings').classList.toggle('active', which==='settings');
+    $('#view-teacher').classList.toggle('active', which==='teacher');
   }
   $('#tabSim').onclick = ()=>setTab('sim');
   $('#tabFlow').onclick = ()=>setTab('flow');
   $('#tabSettings').onclick = ()=>setTab('settings');
+  $('#tabTeacher').onclick = ()=>setTab('teacher');
 
   /* Topbar menu */
   var menu = document.querySelector('.menu');
@@ -5395,6 +5546,32 @@ function renderWires(){
       btnSaveName.onclick = saveStudentName;
     }
     
+    // Lærer login knap
+    const btnTeacherLogin = document.getElementById('btnTeacherLogin');
+    if(btnTeacherLogin) {
+      btnTeacherLogin.onclick = showTeacherLoginModal;
+    }
+    
+    // Lærer login submit knap
+    const btnTeacherLoginSubmit = document.getElementById('btnTeacherLoginSubmit');
+    if(btnTeacherLoginSubmit) {
+      btnTeacherLoginSubmit.onclick = doTeacherLogin;
+    }
+    
+    // Lærer dashboard knapper
+    const btnLoadProgress = document.getElementById('btnLoadProgress');
+    if(btnLoadProgress) {
+      btnLoadProgress.onclick = loadTeacherProgress;
+    }
+    
+    const btnExportCSV = document.getElementById('btnExportCSV');
+    if(btnExportCSV) {
+      btnExportCSV.onclick = () => exportClassData(
+        localStorage.getItem('teacher_school_id') || 'default',
+        localStorage.getItem('teacher_class_id') || 'default'
+      );
+    }
+    
 
     
 
@@ -5441,6 +5618,122 @@ function renderWires(){
     if (studentName.email) {
       document.getElementById('setEmail').value = studentName.email;
     }
+  }
+  
+  // === Lærer Login funktionalitet ===
+  function showTeacherLoginModal() {
+    document.getElementById('teacherLoginModal').style.display = 'flex';
+  }
+  
+  function closeTeacherLoginModal() {
+    document.getElementById('teacherLoginModal').style.display = 'none';
+    document.getElementById('teacherLoginError').textContent = '';
+  }
+  
+  function doTeacherLogin() {
+    const username = document.getElementById('teacherUsername').value.trim();
+    const password = document.getElementById('teacherPassword').value.trim();
+    const schoolId = document.getElementById('teacherSchoolId').value.trim();
+    const classId = document.getElementById('teacherClassId').value.trim();
+    
+    if (!username || !password) {
+      document.getElementById('teacherLoginError').textContent = 'Indtast venligst både brugernavn og adgangskode';
+      return;
+    }
+    
+    // Simpel lærer login - kan tilpasses senere
+    if (username === 'lærer' && password === '1234') {
+      // Gem lærer info
+      localStorage.setItem('teacher_logged_in', 'true');
+      localStorage.setItem('teacher_school_id', schoolId);
+      localStorage.setItem('teacher_class_id', classId);
+      
+      // Vis lærer dashboard
+      document.getElementById('tabTeacher').style.display = 'block';
+      
+      // Skift til lærer fane
+      switchToTeacherTab();
+      
+      // Skjul lærer login knap
+      document.getElementById('btnTeacherLogin').style.display = 'none';
+      
+      // Luk modal
+      closeTeacherLoginModal();
+      
+      // Indlæs elev progress
+      loadTeacherProgress();
+      
+      alert('✅ Logget ind som lærer! Du kan nu se elev progress.');
+    } else {
+      document.getElementById('teacherLoginError').textContent = 'Forkert brugernavn eller adgangskode';
+    }
+  }
+  
+  function loadTeacherProgress() {
+    const schoolId = localStorage.getItem('teacher_school_id') || 'default';
+    const classId = localStorage.getItem('teacher_class_id') || 'default';
+    
+    // Opdater input felter
+    document.getElementById('teacherSchoolId').value = schoolId;
+    document.getElementById('teacherClassId').value = classId;
+    
+    // Indlæs data fra Firebase
+    getClassProgress(schoolId, classId).then(progress => {
+      displayTeacherProgress(progress);
+      updateTeacherStats(progress);
+    });
+  }
+  
+  function displayTeacherProgress(progress) {
+    const container = document.getElementById('teacherProgressList');
+    
+    if (progress.length === 0) {
+      container.innerHTML = '<p class="muted">Ingen elev progress fundet for denne skole/klasse</p>';
+      return;
+    }
+    
+    const html = progress.map(item => `
+      <div class="progress-item">
+        <div class="student-name">${item.userFirstName} ${item.userLastName}</div>
+        <div class="task-info">✅ ${item.taskName}</div>
+        <div class="timestamp">Fuldført: ${item.completedAt}</div>
+      </div>
+    `).join('');
+    
+    container.innerHTML = html;
+  }
+  
+  function updateTeacherStats(progress) {
+    // Beregn statistikker
+    const uniqueStudents = new Set(progress.map(p => p.userId)).size;
+    const totalTasks = progress.length;
+    const uniqueTasks = new Set(progress.map(p => p.taskId)).size;
+    
+    // Opdater UI
+    document.getElementById('totalStudents').textContent = uniqueStudents;
+    document.getElementById('totalTasks').textContent = totalTasks;
+    document.getElementById('completionRate').textContent = uniqueTasks;
+  }
+  
+  function checkTeacherLogin() {
+    const isTeacherLoggedIn = localStorage.getItem('teacher_logged_in') === 'true';
+    
+    if (isTeacherLoggedIn) {
+      // Vis lærer dashboard
+      document.getElementById('tabTeacher').style.display = 'block';
+      document.getElementById('btnTeacherLogin').style.display = 'none';
+      
+      // Indlæs elev progress
+      loadTeacherProgress();
+    }
+  }
+  
+  // Hjælpefunktion til at skifte fane
+  function switchToTeacherTab() {
+    document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('tabTeacher').classList.add('active');
+    document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+    document.getElementById('view-teacher').classList.add('active');
   }
 
   // === Firebase konfiguration ===
@@ -5848,6 +6141,7 @@ function renderWires(){
       setupLoginEvents();
       setupSettingsEvents();
       loadStudentName(); // Indlæs gemt elevnavn
+      checkTeacherLogin(); // Tjek om læreren er logget ind
     });
   } else {
     setupLoginEvents();
