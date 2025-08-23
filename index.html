@@ -2857,9 +2857,6 @@ html {
   <div class="views">
     <!-- ===== View: Simulator ===== -->
     <section id="view-sim" class="view active">
-    
-            <!-- ===== View: Flow (beta) ===== -->
-    <section id="view-flow" class="view">
       <div class="wrap">
         <!-- 1) Sensorer -->
         <div class="card" data-section="sensors">
@@ -3115,8 +3112,17 @@ html {
       <div class="footer small">Beta v1 (WebView2 • SPA med faner @Rasmus Jakobsen)</div>
     </section>
 
-        <!-- ===== View: Flow (beta) ===== -->
+    <!-- ===== View: Flow (beta) ===== -->
     <section id="view-flow" class="view">
+      <div class="wrap">
+        <div class="card">
+          <h2>🧩 Wiresheet (Beta)</h2>
+          <div class="body">
+            <p class="muted">Wiresheet funktionalitet kommer snart...</p>
+          </div>
+        </div>
+      </div>
+    </section>
     
     <!-- ===== View: Læring ===== -->
     <section id="view-learning" class="view">
@@ -3263,31 +3269,8 @@ html {
         </div>
       </div>
     </section>
-  <div class="card">
-    <h2>Flow (beta) — Wiresheet MVP</h2>
-    <div class="body">
-      <div class="row" style="margin-bottom:8px;flex-wrap:wrap;gap:8px">
-        <button id="wsAddTrig">+ Trigger</button>
-        <button id="wsAddCond">+ AND</button>
-        <button id="wsAddAct">+ Action</button>
-        <button id="wsAddRule" class="info">+ Rule (samler)</button>
-        <span class="small muted" style="margin-left:auto">Tip: Træk noder rundt, klik en <span class="tag">● out</span> og derefter en <span class="tag">in ●</span> på Rule for at forbinde.</span>
-      </div>
-      <div class="row" style="margin-bottom:8px;flex-wrap:wrap;gap:8px">
-        <button id="wsBuild" class="success">Build → Tilføj regler</button>
-        <button id="wsClear" class="danger">Ryd wiresheet</button>
-        <button id="wsSave">Gem (local)</button>
-        <button id="wsLoad">Hent (local)</button>
-      </div>
-
-      <div id="wsCanvas" class="ws-canvas">
-        <svg id="wsWires" class="ws-wires"></svg>
-        <div id="wsNodes" class="ws-nodes"></div>
-      </div>
-    </div>
-  </div>
-</section>
-  
+    </section>
+    
     <!-- ===== View: Indstillinger ===== -->
     <section id="view-settings" class="view">
       <div class="card">
@@ -6553,24 +6536,46 @@ function renderWires(){
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('🚀 DOMContentLoaded - Tab system starter...');
   const ids = ['view-sim','view-flow','view-learning','view-settings'];
+  console.log('📋 Tab IDs:', ids);
+  
   const buttons = document.querySelectorAll('.mainnav button');
+  console.log('🔘 Fandt knapper:', buttons.length);
+  
   function show(id){
+    console.log('🎯 show() kaldt med:', id);
     ids.forEach(x => {
       const el = document.getElementById(x);
       if(el){ 
+        console.log(`📄 Element ${x}:`, el);
         el.classList.toggle('active', x===id);
+        console.log(`✅ ${x} active klasse:`, el.classList.contains('active'));
+      } else {
+        console.log(`❌ Element ${x} ikke fundet!`);
       }
       const btn = document.querySelector(`.mainnav button[data-target="${x}"]`);
-      if(btn){ btn.classList.toggle('active', x===id); }
+      if(btn){ 
+        btn.classList.toggle('active', x===id);
+        console.log(`🔘 Knap ${x} active:`, btn.classList.contains('active'));
+      }
     });
     try{ localStorage.setItem('ibi.activeView', id); }catch(e){}
   }
-  buttons.forEach(b => b.addEventListener('click', () => show(b.dataset.target)));
+  
+  buttons.forEach(b => {
+    console.log('🔗 Tilføjer click event til knap:', b.dataset.target);
+    b.addEventListener('click', () => {
+      console.log('🖱️ Klik på knap:', b.dataset.target);
+      show(b.dataset.target);
+    });
+  });
+  
   // initial
   let start = null;
   try{ start = localStorage.getItem('ibi.activeView'); }catch(e){}
   if(!ids.includes(start)) start = ids[0];
+  console.log('🚀 Starter med tab:', start);
   show(start);
 });
 </script>
