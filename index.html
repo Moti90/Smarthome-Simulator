@@ -5670,17 +5670,20 @@ function renderWires(){
   async function tryLogin(u,p){ 
     try {
       // Først prøv Firebase Authentication
-      if (window.firebase && window.firebase.auth) {
+      if (window.firebase && window.firebase.auth && window.db) {
+        console.log('🔍 Forsøger Firebase login...');
         const userCredential = await firebase.auth().signInWithEmailAndPassword(u + '@ibisimulator.local', p);
         const user = userCredential.user;
         
         // Opdater sidste login tid i Firestore
-        await firebase.firestore().collection('users').doc(user.uid).update({
+        await window.db.collection('users').doc(user.uid).update({
           lastLogin: firebase.firestore.FieldValue.serverTimestamp()
         });
         
         console.log('✅ Firebase login successful:', u);
         return true;
+      } else {
+        console.log('⚠️ Firebase ikke klar endnu, bruger fallback');
       }
     } catch (error) {
       console.log('❌ Firebase login failed, trying fallback:', error.message);
@@ -5744,12 +5747,13 @@ function renderWires(){
     if(u && p){
       try {
         // Prøv at oprette bruger i Firebase
-        if (window.firebase && window.firebase.auth) {
+        if (window.firebase && window.firebase.auth && window.db) {
+          console.log('🔍 Opretter bruger i Firebase...');
           const userCredential = await firebase.auth().createUserWithEmailAndPassword(u + '@ibisimulator.local', p);
           const user = userCredential.user;
           
           // Gem brugerdata i Firestore
-          await firebase.firestore().collection('users').doc(user.uid).set({
+          await window.db.collection('users').doc(user.uid).set({
             username: u,
             email: u + '@ibisimulator.local',
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -5758,6 +5762,7 @@ function renderWires(){
           
           alert('✅ Bruger oprettet i Firebase: ' + u + '\nDu kan nu logge ind på tværs af enheder!');
         } else {
+          console.log('⚠️ Firebase ikke klar endnu, bruger localStorage fallback');
           // Fallback til localStorage hvis Firebase ikke er tilgængelig
           localStorage.setItem('simUser', u);
           localStorage.setItem('simPass', p);
@@ -6214,8 +6219,7 @@ function renderWires(){
       setTimeout(forceLearningLayout, 100);
     }
   });
-  console.log('🔍 firebase object tilgængelig:', typeof firebase);
-  
+  // Firebase konfiguration
   const firebaseConfig = {
     apiKey: "AIzaSyCdXnszAUJfkC5uyv9n-kVE2Whv_0vZfLk",
     authDomain: "ibi-simulator-f6ebe.firebaseapp.com",
@@ -6226,29 +6230,51 @@ function renderWires(){
     measurementId: "G-YR3XWP3RVH"
   };
 
-  // Initialiser Firebase
-  try {
-    console.log('Initialiserer Firebase...');
-    firebase.initializeApp(firebaseConfig);
-    console.log('Firebase app initialiseret');
-    
-    const db = firebase.firestore();
-    const auth = firebase.auth();
-    console.log('Firebase services initialiseret');
-    
-    // Gør Firebase tilgængeligt globalt
-    window.firebase = firebase;
-    window.db = db;
-    window.auth = auth;
-    
-    // Test forbindelse
-    db.collection('test').doc('test').get()
-      .then(() => console.log('✅ Firebase forbindelse virker!'))
-      .catch(err => console.error('❌ Firebase forbindelse fejlede:', err));
+  // Initialiser Firebase når DOM er klar
+  function initializeFirebase() {
+    try {
+      console.log('🔍 Firebase object tilgængelig:', typeof firebase);
       
-  } catch (error) {
-    console.error('❌ Firebase initialisering fejlede:', error);
+      if (typeof firebase === 'undefined') {
+        console.error('❌ Firebase SDK ikke indlæst endnu');
+        return false;
+      }
+
+      console.log('🚀 Initialiserer Firebase...');
+      firebase.initializeApp(firebaseConfig);
+      console.log('✅ Firebase app initialiseret');
+      
+      const db = firebase.firestore();
+      const auth = firebase.auth();
+      console.log('✅ Firebase services initialiseret');
+      
+      // Gør Firebase tilgængeligt globalt
+      window.firebase = firebase;
+      window.db = db;
+      window.auth = auth;
+      
+      // Test forbindelse
+      db.collection('test').doc('test').get()
+        .then(() => console.log('✅ Firebase forbindelse virker!'))
+        .catch(err => console.error('❌ Firebase forbindelse fejlede:', err));
+        
+      return true;
+    } catch (error) {
+      console.error('❌ Firebase initialisering fejlede:', error);
+      return false;
+    }
   }
+
+  // Vent på at DOM og Firebase SDK er klar
+  document.addEventListener('DOMContentLoaded', function() {
+    // Prøv at initialisere Firebase med 100ms forsinkelse
+    setTimeout(() => {
+      if (!initializeFirebase()) {
+        console.log('🔄 Prøver igen om 500ms...');
+        setTimeout(initializeFirebase, 500);
+      }
+    }, 100);
+  });
 
   // === Cloud Database funktionalitet ===
            async function saveUserProgress(userId, taskId, taskName, completedAt, currentUser) {
