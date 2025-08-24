@@ -66,7 +66,7 @@
     .view.active{display:block}
 
     /* 3-kolonne layout inde i Simulator - balanceret plads */
-.wrap{display:grid;grid-template-columns:450px 1fr 500px;gap:16px}
+.wrap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
     .card{background:#111720;border:1px solid #1f2933;border-radius:10px;overflow:visible}
     .card h2{font-size:14px;margin:0;padding:10px 12px;border-bottom:1px solid #1f2933;background:#0f141c}
     .card .body{padding:10px 12px}
@@ -3129,6 +3129,32 @@ html {
     <section id="view-learning" class="view">
       <div class="wrap">
         <div class="card">
+          <h2>📡 Sensor Guide</h2>
+          <div class="body">
+            <div style="margin-bottom: 20px;">
+              <label for="sensorSelect" style="display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 500;">Vælg en sensor:</label>
+              <select id="sensorSelect" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(15, 20, 28, 0.8); border: 1px solid #2a3442; color: #e5e9f0; font-size: 14px;">
+                <option value="">-- Vælg sensor --</option>
+                <option value="pir">PIR (Bevægelsessensor)</option>
+                <option value="contact">Dør-/vindueskontakt</option>
+                <option value="humidity">Fugtighedssensor</option>
+                <option value="lux">Lysmåler (Lux)</option>
+                <option value="wind">Vindmåler</option>
+                <option value="smoke">Røgalarm</option>
+                <option value="leak">Vandlækage</option>
+                <option value="co2">CO₂-måler</option>
+                <option value="presence">Tilstedeværelsesensor</option>
+              </select>
+            </div>
+            <div id="sensorInfo" style="height: 400px; background: linear-gradient(180deg, rgba(42,176,255,0.1), rgba(42,176,255,0.05)); border-radius: 8px; margin: 20px; padding: 20px; overflow-y: auto; color: #e5e9f0;">
+              <div style="text-align: center; color: #9ca3af; font-size: 16px; margin-top: 150px;">
+                Vælg en sensor ovenfor for at læse mere
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
           <h2>📚 Læring</h2>
           <div class="body">
             <div style="text-align: center; padding: 60px 20px;">
@@ -3137,9 +3163,31 @@ html {
                 Vi arbejder på at udvikle omfattende læringsmateriale om sensorer, 
                 praktiske eksempler og tips & tricks til smart home automation.
               </p>
-              <p style="font-size: 14px; color: #666; margin-top: 30px;">
+              <p style="color: #666; margin-top: 30px;">
                 Hold øje med opdateringer! 🔄
               </p>
+            </div>
+            <div style="height: 400px; background: linear-gradient(180deg, rgba(42,176,255,0.1), rgba(42,176,255,0.05)); border-radius: 8px; margin: 20px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14px;">
+              Ekstra plads til fremtidigt indhold
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h2>📚 Læring</h2>
+          <div class="body">
+            <div style="text-align: center; padding: 60px 20px;">
+              <h3 style="color: #2ab0ff; font-size: 24px; margin-bottom: 20px;">🚧 Kommer snart</h3>
+              <p style="font-size: 16px; color: #888; line-height: 1.6;">
+                Vi arbejder på at udvikle omfattende læringsmateriale om sensorer, 
+                praktiske eksempler og tips & tricks til smart home automation.
+              </p>
+              <p style="color: #666; margin-top: 30px;">
+                Hold øje med opdateringer! 🔄
+              </p>
+            </div>
+            <div style="height: 400px; background: linear-gradient(180deg, rgba(42,176,255,0.1), rgba(42,176,255,0.05)); border-radius: 8px; margin: 20px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14px;">
+              Ekstra plads til fremtidigt indhold
             </div>
           </div>
         </div>
@@ -6143,9 +6191,9 @@ function renderWires(){
     
     // Opret CSV data
     const csvData = [
-      ['Bruger ID', 'Opgave ID', 'Opgave Navn', 'Fuldført Dato', 'Tidspunkt', 'Skole ID', 'Klasse ID'],
+      ['Elev Navn', 'Opgave ID', 'Opgave Navn', 'Fuldført Dato', 'Tidspunkt', 'Skole ID', 'Klasse ID'],
       ...progress.map(p => [
-        p.userId,
+        `${p.userFirstName} ${p.userLastName}`,
         p.taskId,
         p.taskName,
         p.completedAt,
@@ -6513,6 +6561,195 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nCopy && oldCopy) nCopy.addEventListener('click', function(){ oldCopy.click(); });
     if (nSave && oldSave) nSave.addEventListener('click', function(){ oldSave.click(); });
   }
+})();
+</script>
+
+<script>
+// === Sensor Guide Funktionalitet ===
+(function(){
+  const sensorSelect = document.getElementById('sensorSelect');
+  const sensorInfo = document.getElementById('sensorInfo');
+  
+  if (!sensorSelect || !sensorInfo) return;
+  
+  const sensorData = {
+    pir: {
+      title: 'PIR (Bevægelsessensor)',
+      description: 'Passive Infrared sensor der registrerer bevægelse ved at måle ændringer i infrarød stråling.',
+      uses: [
+        'Automatisk ganglys når nogen kommer ind',
+        'Sikkerhedsalarm når der er uautoriseret bevægelse',
+        'Energibesparelse ved at slukke lys når rummet er tomt',
+        'Tælle antal personer der går gennem en dør'
+      ],
+      tips: [
+        'Placer sensor i hjørner for bedste dækning',
+        'Undgå direkte sollys som kan give falske alarmer',
+        'Tjek batteristatus regelmæssigt',
+        'Test sensor med forskellige bevægelsesmønstre'
+      ]
+    },
+    contact: {
+      title: 'Dør-/vindueskontakt',
+      description: 'Magnetisk kontakt der registrerer om en dør eller vindue er åben eller lukket.',
+      uses: [
+        'Sikkerhedsalarm når døre åbnes om natten',
+        'Automatisk lys når døren åbnes',
+        'Ventilationsstyring baseret på vindue status',
+        'Logging af hvornår døre bruges'
+      ],
+      tips: [
+        'Sørg for at magneten og kontakten er præcist justeret',
+        'Undgå metalobjekter i nærheden',
+        'Test både åben og lukket tilstand',
+        'Kontroller at ledningerne ikke er beskadiget'
+      ]
+    },
+    humidity: {
+      title: 'Fugtighedssensor',
+      description: 'Måler luftfugtighed i procent og kan bruges til at styre ventilation og undgå skimmel.',
+      uses: [
+        'Automatisk ventilation når fugtigheden er høj',
+        'Skimmelvarsling i kældere og badeværelser',
+        'Styring af luftfugtere i tørre rum',
+        'Kvalitetskontrol i produktionsfaciliteter'
+      ],
+      tips: [
+        'Placer sensor væk fra direkte vandkilder',
+        'Kalibrer sensor regelmæssigt',
+        'Tjek for kondens på sensoren',
+        'Overvåg både temperatur og fugtighed sammen'
+      ]
+    },
+    lux: {
+      title: 'Lysmåler (Lux)',
+      description: 'Måler lysstyrke i lux og kan bruges til automatisk lysstyring baseret på dagslys.',
+      uses: [
+        'Automatisk tænding af lys når det bliver mørkt',
+        'Dæmpning af lys baseret på dagslys',
+        'Energibesparelse ved at bruge naturligt lys',
+        'Styring af væksthuse og dyrehuse'
+      ],
+      tips: [
+        'Placer sensor uden for direkte sollys',
+        'Undgå skygger fra træer eller bygninger',
+        'Tjek kalibrering med et professionelt luxmeter',
+        'Overvåg både morgen og aften for bedste resultater'
+      ]
+    },
+    wind: {
+      title: 'Vindmåler',
+      description: 'Måler vindhastighed og kan bruges til at styre udendørs systemer og sikkerhed.',
+      uses: [
+        'Automatisk lukning af markiser ved stærk vind',
+        'Sikkerhedsvarsling ved storm',
+        'Styring af udendørs belysning',
+        'Vejrbaseret ventilation'
+      ],
+      tips: [
+        'Placer sensor højt nok til at undgå forstyrrelser',
+        'Undgå skjul fra bygninger eller træer',
+        'Tjek for is på vingene om vinteren',
+        'Kalibrer med en professionel vindmåler'
+      ]
+    },
+    smoke: {
+      title: 'Røgalarm',
+      description: 'Detekterer røg og kan give tidlig advarsel om brand og styre sikkerhedssystemer.',
+      uses: [
+        'Tidlig brandvarsling',
+        'Automatisk åbning af branddøre',
+        'Styring af ventilationssystemer',
+        'Integration med brandalarm systemer'
+      ],
+      tips: [
+        'Test alarmen månedligt',
+        'Undgå pladsering i køkken eller badeværelser',
+        'Tjek batteristatus regelmæssigt',
+        'Placer i hver etage af bygningen'
+      ]
+    },
+    leak: {
+      title: 'Vandlækage',
+      description: 'Detekterer vand og kan give tidlig advarsel om lækager før de skader bygningen.',
+      uses: [
+        'Tidlig varsling om vandskader',
+        'Automatisk lukning af vandhane',
+        'Integration med sikkerhedssystemer',
+        'Overvågning af vandinstallationer'
+      ],
+      tips: [
+        'Placer sensor nær vandinstallationer',
+        'Tjek for falske alarmer fra kondens',
+        'Test med en vanddråbe månedligt',
+        'Placer både på gulv og vægge'
+      ]
+    },
+    co2: {
+      title: 'CO₂-måler',
+      description: 'Måler kuldioxid niveau i luften og kan styre ventilation for bedre indeklima.',
+      uses: [
+        'Automatisk ventilation når CO₂ er høj',
+        'Overvågning af luftkvalitet i kontorer',
+        'Styring af luftrenser',
+        'Varsling om dårlig luftkvalitet'
+      ],
+      tips: [
+        'Placer sensor i åndedrætshøjde',
+        'Undgå direkte åndedræt på sensoren',
+        'Kalibrer med friske udendørs luftprøver',
+        'Overvåg både dag og nat'
+      ]
+    },
+    presence: {
+      title: 'Tilstedeværelsesensor',
+      description: 'Avanceret sensor der kan skelne mellem mennesker og dyr, og give mere præcis tilstedeværelsesdetektering.',
+      uses: [
+        'Præcis tilstedeværelsesdetektering',
+        'Automatisk lysstyring i kontorer',
+        'Sikkerhedssystemer der ignorerer dyr',
+        'Energistyring baseret på faktisk brug'
+      ],
+      tips: [
+        'Placer sensor i strategiske positioner',
+        'Undgå pladsering nær vinduer',
+        'Test med forskellige typer af bevægelse',
+        'Kalibrer sensitiviteten efter behov'
+      ]
+    }
+  };
+  
+  function updateSensorInfo(sensorType) {
+    if (!sensorType || !sensorData[sensorType]) {
+      sensorInfo.innerHTML = '<div style="text-align: center; color: #9ca3af; font-size: 16px; margin-top: 150px;">Vælg en sensor ovenfor for at læse mere</div>';
+      return;
+    }
+    
+    const sensor = sensorData[sensorType];
+    const html = `
+      <h3 style="color: #2ab0ff; font-size: 20px; margin-bottom: 16px;">${sensor.title}</h3>
+      <p style="color: #e5e9f0; line-height: 1.6; margin-bottom: 20px;">${sensor.description}</p>
+      
+      <h4 style="color: #10b981; font-size: 16px; margin-bottom: 12px;">🔧 Anvendelser:</h4>
+      <ul style="color: #cbd5e1; line-height: 1.6; margin-bottom: 20px; padding-left: 20px;">
+        ${sensor.uses.map(use => `<li>${use}</li>`).join('')}
+      </ul>
+      
+      <h4 style="color: #f59e0b; font-size: 16px; margin-bottom: 12px;">💡 Tips & Tricks:</h4>
+      <ul style="color: #cbd5e1; line-height: 1.6; padding-left: 20px;">
+        ${sensor.tips.map(tip => `<li>${tip}</li>`).join('')}
+      </ul>
+    `;
+    
+    sensorInfo.innerHTML = html;
+  }
+  
+  sensorSelect.addEventListener('change', function() {
+    updateSensorInfo(this.value);
+  });
+  
+  // Initial state
+  updateSensorInfo('');
 })();
 </script>
 
