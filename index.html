@@ -4102,9 +4102,13 @@ html {
         try {
           // Tjek om reglen matcher
           if (evaluateRule(rule)) {
-            // Udfør handlingen
-            executeAction(rule);
-            log('🎯 Regel #' + (index + 1) + ' aktiveret: ' + rule.action1, 'activate');
+            // Tjek cooldown for at undgå spam
+            if (!rule.lastExecuted || (Date.now() - rule.lastExecuted) > 5000) { // 5 sekunder cooldown
+              // Udfør handlingen
+              executeAction(rule);
+              log('🎯 Regel #' + (index + 1) + ' aktiveret: ' + rule.action1, 'activate');
+              rule.lastExecuted = Date.now(); // Gem tidspunkt for sidste kørsel
+            }
           }
         } catch (e) {
           log('❌ Fejl i regel #' + (index + 1) + ': ' + e.message, 'error');
