@@ -3733,7 +3733,7 @@ html {
   window.pending = pending; window.state = state;
   
   /* Simulation System */
-  var simulation = {
+  window.simulation = {
     enabled: false,
     speed: 1,
     realisticPatterns: true,
@@ -3796,25 +3796,25 @@ html {
   
   /* Simulation Functions */
   window.startSimulation = function() {
-    if (simulation.enabled) return;
+    if (window.simulation.enabled) return;
     
-    simulation.enabled = true;
-    simulation.startTime = new Date();
-    simulation.simulationTime = new Date();
+    window.simulation.enabled = true;
+    window.simulation.startTime = new Date();
+    window.simulation.simulationTime = new Date();
     
     // Hent indstillinger
     const speedEl = document.getElementById('simulationSpeed');
     const realisticEl = document.getElementById('realisticPatterns');
     const dayNightEl = document.getElementById('dayNightCycle');
     
-    simulation.speed = parseInt(speedEl ? speedEl.value : 1) || 1;
-    simulation.realisticPatterns = realisticEl ? realisticEl.checked : true;
-    simulation.dayNightCycle = dayNightEl ? dayNightEl.checked : true;
+    window.simulation.speed = parseInt(speedEl ? speedEl.value : 1) || 1;
+    window.simulation.realisticPatterns = realisticEl ? realisticEl.checked : true;
+    window.simulation.dayNightCycle = dayNightEl ? dayNightEl.checked : true;
     
     // Start simulation loop
-    simulation.interval = setInterval(function() {
+    window.simulation.interval = setInterval(function() {
       updateSimulation();
-    }, 1000 / simulation.speed); // Opdater hver sekund divideret med hastighed
+    }, 1000 / window.simulation.speed); // Opdater hver sekund divideret med hastighed
     
     // Opdater UI
     const enabledEl = document.getElementById('simulationEnabled');
@@ -3830,15 +3830,15 @@ html {
       statusEl.classList.add('simulation-active');
     }
     
-    log('🎮 Simulation startet med hastighed ' + simulation.speed + 'x', 'system');
+    log('🎮 Simulation startet med hastighed ' + window.simulation.speed + 'x', 'system');
   }
   
   window.stopSimulation = function() {
-    if (!simulation.enabled) return;
+    if (!window.simulation.enabled) return;
     
-    simulation.enabled = false;
-    clearInterval(simulation.interval);
-    simulation.interval = null;
+    window.simulation.enabled = false;
+    clearInterval(window.simulation.interval);
+    window.simulation.interval = null;
     
     // Opdater UI
     const enabledEl = document.getElementById('simulationEnabled');
@@ -3887,12 +3887,12 @@ html {
     pending.door = state.door;
     
     // Log ændringerne så brugeren kan se dem
-    if (simulation.enabled) {
+    if (window.simulation.enabled) {
       // Kun log hver 10. opdatering for at undgå spam
-      if (!simulation.logCounter) simulation.logCounter = 0;
-      simulation.logCounter++;
+      if (!window.simulation.logCounter) window.simulation.logCounter = 0;
+      window.simulation.logCounter++;
       
-      if (simulation.logCounter % 10 === 0) {
+      if (window.simulation.logCounter % 10 === 0) {
         log('⏱️ Simulation: Tid = ' + state.time + ', Ugedag = ' + state.weekday, 'system');
         log('📊 Sensorer: Lys = ' + state.lux + ', Fugt = ' + state.humidity + '%, Vind = ' + state.wind + ' m/s', 'system');
         log('👤 Aktivitet: PIR = ' + (state.motion ? 'Breached' : 'Safe') + ', Dør = ' + (state.door ? 'Opened' : 'Closed'), 'system');
@@ -3901,20 +3901,20 @@ html {
   }
   
   window.updateSimulation = function() {
-    if (!simulation.enabled) return;
+    if (!window.simulation.enabled) return;
     
     // Opdater simulation tid
-    var timeDiff = (Date.now() - simulation.startTime.getTime()) * simulation.speed;
-    simulation.simulationTime = new Date(simulation.startTime.getTime() + timeDiff);
+    var timeDiff = (Date.now() - window.simulation.startTime.getTime()) * window.simulation.speed;
+    window.simulation.simulationTime = new Date(window.simulation.startTime.getTime() + timeDiff);
     
     // Opdater sensor værdier baseret på tid
-    if (simulation.realisticPatterns) {
-      state.lux = simulation.getLight(simulation.simulationTime);
-      state.humidity = Math.round(simulation.getHumidity(simulation.simulationTime));
-      state.wind = Math.round(simulation.getWind(simulation.simulationTime) * 10) / 10;
+    if (window.simulation.realisticPatterns) {
+      state.lux = window.simulation.getLight(window.simulation.simulationTime);
+      state.humidity = Math.round(window.simulation.getHumidity(window.simulation.simulationTime));
+      state.wind = Math.round(window.simulation.getWind(window.simulation.simulationTime) * 10) / 10;
       
       // Automatisk alarm system (22:00-06:00)
-      var currentHour = simulation.simulationTime.getHours();
+      var currentHour = window.simulation.simulationTime.getHours();
       if (currentHour >= 22 || currentHour < 6) {
         state.alarmArmed = true;
       } else {
@@ -3923,23 +3923,23 @@ html {
       
       // Simuler menneskelig aktivitet
       if (Math.random() < 0.02) { // 2% chance hver opdatering (reduceret fra 10%)
-        state.motion = simulation.getMotion(simulation.simulationTime);
+        state.motion = window.simulation.getMotion(window.simulation.simulationTime);
         if (state.motion) log('👤 PIR sensor aktiveret (simulation)', 'sensor');
       }
       
       if (Math.random() < 0.01) { // 1% chance hver opdatering (reduceret fra 5%)
-        state.door = simulation.getDoorActivity(simulation.simulationTime);
+        state.door = window.simulation.getDoorActivity(window.simulation.simulationTime);
         if (state.door) log('🚪 Dør åbnet (simulation)', 'sensor');
       }
     }
     
     // Opdater tid og ugedag
-    var hours = simulation.simulationTime.getHours();
-    var minutes = simulation.simulationTime.getMinutes();
+    var hours = window.simulation.simulationTime.getHours();
+    var minutes = window.simulation.simulationTime.getMinutes();
     state.time = (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes;
     
     var weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    state.weekday = weekdays[simulation.simulationTime.getDay()];
+    state.weekday = weekdays[window.simulation.simulationTime.getDay()];
     
     // Opdater status display
     const timeEl = document.getElementById('simulationTime');
@@ -3947,8 +3947,8 @@ html {
     const cycleEl = document.getElementById('cycleStatus');
     
     if (timeEl) timeEl.textContent = state.time;
-    if (sensorEl) sensorEl.textContent = simulation.realisticPatterns ? 'Realistiske mønstre' : 'Normal';
-    if (cycleEl) cycleEl.textContent = simulation.dayNightCycle ? 'Dag/nat cyklus' : 'Normal';
+    if (sensorEl) sensorEl.textContent = window.simulation.realisticPatterns ? 'Realistiske mønstre' : 'Normal';
+    if (cycleEl) cycleEl.textContent = window.simulation.dayNightCycle ? 'Dag/nat cyklus' : 'Normal';
     
     // Opdater live sensor værdier i simulation fane
     updateSimulationDisplay();
@@ -6932,23 +6932,23 @@ html {
   }
   
   window.changeSimulationSpeed = function(select) {
-    if(simulation.enabled) {
+    if(window.simulation.enabled) {
       // Genstart simulation med ny hastighed
       stopSimulation();
-      simulation.speed = parseInt(select.value) || 1;
+      window.simulation.speed = parseInt(select.value) || 1;
       startSimulation();
     }
   }
   
   window.toggleRealisticPatterns = function(checkbox) {
-    if(simulation) {
-      simulation.realisticPatterns = checkbox.checked;
+    if(window.simulation) {
+      window.simulation.realisticPatterns = checkbox.checked;
     }
   }
   
   window.toggleDayNightCycle = function(checkbox) {
-    if(simulation) {
-      simulation.dayNightCycle = checkbox.checked;
+    if(window.simulation) {
+      window.simulation.dayNightCycle = checkbox.checked;
     }
   }
   
