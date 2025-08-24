@@ -6222,12 +6222,21 @@ html {
       const currentUser = getCurrentUser();
       console.log('🔍 Current user:', currentUser);
       
-               if (currentUser) {
-           console.log('🔍 Bruger fundet, kalder saveUserProgress...');
-           const completedAt = new Date().toLocaleDateString('da-DK') + ' ' + new Date().toLocaleTimeString('da-DK');
-           console.log('🔍 Data til Firebase:', { userId: currentUser.id, taskId: activeTask, taskName: taskCriteria[activeTask].name, completedAt });
-           saveUserProgress(currentUser.id, activeTask, taskCriteria[activeTask].name, completedAt, currentUser);
-         } else {
+      if (currentUser) {
+        console.log('🔍 Bruger fundet, kalder saveUserProgress...');
+        const completedAt = new Date().toLocaleDateString('da-DK') + ' ' + new Date().toLocaleTimeString('da-DK');
+        
+        // Hent brugerdata fra localStorage
+        const users = JSON.parse(localStorage.getItem('ibi_users') || '[]');
+        const userData = users.find(user => user.username === currentUser);
+        
+        if (userData) {
+          console.log('🔍 Data til Firebase:', { userId: currentUser, taskId: activeTask, taskName: taskCriteria[activeTask].name, completedAt });
+          saveUserProgress(currentUser, activeTask, taskCriteria[activeTask].name, completedAt, userData);
+        } else {
+          console.log('❌ Brugerdata ikke fundet - kan ikke gemme progress');
+        }
+      } else {
         console.log('❌ Ingen bruger fundet - kan ikke gemme progress');
       }
     }
@@ -8131,20 +8140,39 @@ html {
   }
 
            function saveToLocalStorage(userId, taskId, taskName, completedAt, currentUser) {
-           // currentUser sendes nu som parameter i stedet for at hentes igen
-           const pendingSync = JSON.parse(localStorage.getItem('pending_sync') || '[]');
-           pendingSync.push({ 
-             userId, 
-             userFirstName: currentUser?.firstName || 'Ukendt',
-             userLastName: currentUser?.lastName || 'Bruger',
-             userEmail: currentUser?.email || 'ingen@email.dk',
-             taskId, 
-             taskName, 
-             completedAt, 
-             timestamp: new Date().toISOString() 
-           });
-           localStorage.setItem('pending_sync', JSON.stringify(pendingSync));
-           console.log('Progress gemt lokalt (venter på sync)');
+           // Brug den lokale saveUserProgress funktion i stedet
+           const progressData = {
+             completedTasks: [{
+               taskId: taskId,
+               taskName: taskName,
+               completedAt: completedAt,
+               timestamp: new Date().toISOString()
+             }]
+           };
+           
+           // Gem til bruger-specifik localStorage
+           const userProgress = JSON.parse(localStorage.getItem(`user_${userId}_progress`) || '{}');
+           const updatedProgress = { ...userProgress, ...progressData };
+           
+           // Tilføj til eksisterende completedTasks hvis de findes
+           if (updatedProgress.completedTasks) {
+             updatedProgress.completedTasks.push({
+               taskId: taskId,
+               taskName: taskName,
+               completedAt: completedAt,
+               timestamp: new Date().toISOString()
+             });
+           } else {
+             updatedProgress.completedTasks = [{
+               taskId: taskId,
+               taskName: taskName,
+               completedAt: completedAt,
+               timestamp: new Date().toISOString()
+             }];
+           }
+           
+           localStorage.setItem(`user_${userId}_progress`, JSON.stringify(updatedProgress));
+           console.log('💾 Progress gemt lokalt til bruger-specifik storage');
          }
 
   async function syncPendingData() {
