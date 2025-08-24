@@ -6663,7 +6663,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const buttons = document.querySelectorAll('.mainnav button');
   console.log('🔘 Fandt knapper:', buttons.length);
   
-  function show(id){
+  // Gør show funktionen globalt tilgængelig
+  window.show = function(id){
     console.log('🎯 show() kaldt med:', id);
     ids.forEach(x => {
       const el = document.getElementById(x);
