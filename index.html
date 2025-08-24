@@ -3423,11 +3423,12 @@ html {
               <input id="dayNightCycle" type="checkbox" class="styled-checkbox" checked>
               <span class="setting-description">Simuler dag og nat med forskellige lysniveauer</span>
             </div>
-            <div class="setting-item">
-              <button id="btnStartSimulation" class="btn-primary">▶️ Start Simulation</button>
-              <button id="btnStopSimulation" class="btn-danger" disabled>⏹️ Stop Simulation</button>
-              <button id="btnResetSimulation" class="btn-secondary">🔄 Reset til normal</button>
-            </div>
+                          <div class="setting-item">
+                <button id="btnStartSimulation" class="btn-primary">▶️ Start Simulation</button>
+                <button id="btnStopSimulation" class="btn-danger" disabled>⏹️ Stop Simulation</button>
+                <button id="btnResetSimulation" class="btn-secondary">🔄 Reset til normal</button>
+                <button id="btnTestRules" class="btn-info">🎯 Test Regler</button>
+              </div>
             
             <!-- Simulation Status -->
             <div id="simulationStatus" class="simulation-status" style="display: none;">
@@ -3436,6 +3437,21 @@ html {
                 <div>⏱️ <strong>Simulation tid:</strong> <span id="simulationTime">--:--</span></div>
                 <div>📊 <strong>Sensor status:</strong> <span id="sensorStatus">Normal</span></div>
                 <div>🔄 <strong>Cyklus:</strong> <span id="cycleStatus">Normal</span></div>
+              </div>
+              
+              <!-- Live Sensor Værdier -->
+              <div style="margin-top: 16px; padding: 12px; background: rgba(15, 20, 28, 0.6); border-radius: 8px; border: 1px solid #2a3442;">
+                <h5 style="margin: 0 0 12px 0; color: #e5e9f0; font-size: 14px;">📊 Live Sensor Værdier</h5>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+                  <div><strong>⏰ Tid:</strong> <span id="liveTime" style="color: #2ab0ff;">--:--</span></div>
+                  <div><strong>📅 Ugedag:</strong> <span id="liveWeekday" style="color: #2ab0ff;">--</span></div>
+                  <div><strong>💡 Lys:</strong> <span id="liveLux" style="color: #f59e0b;">--</span></div>
+                  <div><strong>💧 Fugt:</strong> <span id="liveHumidity" style="color: #10b981;">--%</span></div>
+                  <div><strong>🌪️ Vind:</strong> <span id="liveWind" style="color: #8b5cf6;">-- m/s</span></div>
+                  <div><strong>👤 PIR:</strong> <span id="liveMotion" style="color: #ef4444;">--</span></div>
+                  <div><strong>🚪 Dør:</strong> <span id="liveDoor" style="color: #f97316;">--</span></div>
+                  <div><strong>🔒 Alarm:</strong> <span id="liveAlarm" style="color: #ec4899;">--</span></div>
+                </div>
               </div>
             </div>
           </div>
@@ -3656,9 +3672,15 @@ html {
     
     // Log ændringerne så brugeren kan se dem
     if (simulation.enabled) {
-      log('⏱️ Simulation: Tid = ' + state.time + ', Ugedag = ' + state.weekday, 'system');
-      log('📊 Sensorer: Lys = ' + state.lux + ', Fugt = ' + state.humidity + '%, Vind = ' + state.wind + ' m/s', 'system');
-      log('👤 Aktivitet: PIR = ' + (state.motion ? 'Breached' : 'Safe') + ', Dør = ' + (state.door ? 'Opened' : 'Closed'), 'system');
+      // Kun log hver 10. opdatering for at undgå spam
+      if (!simulation.logCounter) simulation.logCounter = 0;
+      simulation.logCounter++;
+      
+      if (simulation.logCounter % 10 === 0) {
+        log('⏱️ Simulation: Tid = ' + state.time + ', Ugedag = ' + state.weekday, 'system');
+        log('📊 Sensorer: Lys = ' + state.lux + ', Fugt = ' + state.humidity + '%, Vind = ' + state.wind + ' m/s', 'system');
+        log('👤 Aktivitet: PIR = ' + (state.motion ? 'Breached' : 'Safe') + ', Dør = ' + (state.door ? 'Opened' : 'Closed'), 'system');
+      }
     }
   }
   
@@ -3699,6 +3721,16 @@ html {
     $('#simulationTime').textContent = state.time;
     $('#sensorStatus').textContent = simulation.realisticPatterns ? 'Realistiske mønstre' : 'Normal';
     $('#cycleStatus').textContent = simulation.dayNightCycle ? 'Dag/nat cyklus' : 'Normal';
+    
+    // Opdater live sensor værdier
+    $('#liveTime').textContent = state.time;
+    $('#liveWeekday').textContent = state.weekday;
+    $('#liveLux').textContent = state.lux;
+    $('#liveHumidity').textContent = state.humidity + '%';
+    $('#liveWind').textContent = state.wind + ' m/s';
+    $('#liveMotion').textContent = state.motion ? 'Breached' : 'Safe';
+    $('#liveDoor').textContent = state.door ? 'Opened' : 'Closed';
+    $('#liveAlarm').textContent = state.alarmArmed ? 'Armed' : 'Disarmed';
     
     // Opdater alle displays
     updateAllDisplays();
@@ -6477,6 +6509,16 @@ html {
     if(btnResetSimulation) {
       btnResetSimulation.onclick = resetSimulation;
       console.log('✅ Reset simulation button found and configured');
+    }
+    
+    const btnTestRules = document.getElementById('btnTestRules');
+    if(btnTestRules) {
+      btnTestRules.onclick = function() {
+        log('🎯 Tester alle regler med nuværende sensor værdier...', 'system');
+        runRules();
+        log('✅ Regel test gennemført - tjek loggen for resultater', 'system');
+      };
+      console.log('✅ Test rules button found and configured');
     }
     
     // Simulation indstillinger event listeners
