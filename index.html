@@ -6266,8 +6266,8 @@ function renderWires(){
       window.db = db;
       window.auth = auth;
       
-      // Test forbindelse
-      db.collection('test').doc('test').get()
+      // Test forbindelse - brug en tilladt collection
+      db.collection('user_progress').limit(1).get()
         .then(() => console.log('✅ Firebase forbindelse virker!'))
         .catch(err => console.error('❌ Firebase forbindelse fejlede:', err));
         
