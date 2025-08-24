@@ -3790,7 +3790,7 @@ html {
   var currentLogFilter = 'all';
   
   /* Simulation Functions */
-  function startSimulation() {
+  window.startSimulation = function() {
     if (simulation.enabled) return;
     
     simulation.enabled = true;
@@ -3828,7 +3828,7 @@ html {
     log('🎮 Simulation startet med hastighed ' + simulation.speed + 'x', 'system');
   }
   
-  function stopSimulation() {
+  window.stopSimulation = function() {
     if (!simulation.enabled) return;
     
     simulation.enabled = false;
@@ -3849,7 +3849,7 @@ html {
     log('⏹️ Simulation stoppet', 'system');
   }
   
-  function resetSimulation() {
+  window.resetSimulation = function() {
     stopSimulation();
     
     // Reset til normale værdier
@@ -3895,7 +3895,7 @@ html {
     }
   }
   
-  function updateSimulation() {
+  window.updateSimulation = function() {
     if (!simulation.enabled) return;
     
     // Opdater simulation tid
@@ -3947,7 +3947,7 @@ html {
     runRules();
   }
   
-  function runRules() {
+  window.runRules = function() {
     // Kør alle aktive regler baseret på nuværende state
     if (state.rules && state.rules.length > 0) {
       state.rules.forEach(function(rule, index) {
@@ -6882,13 +6882,13 @@ html {
   }
   
   // === Nye Simulation Funktioner ===
-  function testRules() {
+  window.testRules = function() {
     log('🎯 Tester alle regler med nuværende sensor værdier...', 'system');
     runRules();
     log('✅ Regel test gennemført - tjek loggen for resultater', 'system');
   }
   
-  function goBackToSimulator() {
+  window.goBackToSimulator = function() {
     // Vis alle normale faner igen
     document.querySelector('.tabs').style.display = 'flex';
     
@@ -6910,7 +6910,7 @@ html {
     console.log('🔍 Gået tilbage til simulator');
   }
   
-  function toggleSimulation(checkbox) {
+  window.toggleSimulation = function(checkbox) {
     if(checkbox.checked) {
       startSimulation();
     } else {
@@ -6918,7 +6918,7 @@ html {
     }
   }
   
-  function changeSimulationSpeed(select) {
+  window.changeSimulationSpeed = function(select) {
     if(simulation.enabled) {
       // Genstart simulation med ny hastighed
       stopSimulation();
@@ -6926,13 +6926,13 @@ html {
     }
   }
   
-  function toggleRealisticPatterns(checkbox) {
+  window.toggleRealisticPatterns = function(checkbox) {
     if(simulation) {
       simulation.realisticPatterns = checkbox.checked;
     }
   }
   
-  function toggleDayNightCycle(checkbox) {
+  window.toggleDayNightCycle = function(checkbox) {
     if(simulation) {
       simulation.dayNightCycle = checkbox.checked;
     }
