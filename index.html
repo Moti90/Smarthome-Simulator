@@ -3136,9 +3136,9 @@ html {
                 </div>
               </div>
               
-              <!-- Verktøjer -->
+              <!-- Værktøjer -->
               <div class="ws-tools" style="margin-bottom: 12px;">
-                <h4 style="margin: 0 0 8px 0; color: #e5e9f0; font-size: 14px;">🛠️ Verktøjer</h4>
+                <h4 style="margin: 0 0 8px 0; color: #e5e9f0; font-size: 14px;">🛠️ Værktøjer</h4>
                 <div class="row" style="flex-wrap:wrap;gap:6px">
                   <button id="wsUndo" class="ws-btn ws-btn-secondary" disabled>↶ Undo</button>
                   <button id="wsRedo" class="ws-btn ws-btn-secondary" disabled>↷ Redo</button>
@@ -5360,7 +5360,13 @@ html {
       seq: 1,
       nodes: {}, // id -> {id,type,subtype,value,x,y,label}
       edges: [],  // {from, to, toPort}
-      counters: {trig:1, cond:1, act:1, rule:1}
+      counters: {trig:1, cond:1, act:1, rule:1},
+      // Undo/Redo system
+      history: [],
+      historyIndex: -1,
+      maxHistory: 20,
+      // Copy/Paste system
+      clipboard: null
     };
     function nid(){ return 'n'+(WS.seq++); }
 
@@ -5468,6 +5474,9 @@ html {
       // events
       delBtn.onclick = function(){
         // remove node + edges
+        // Save state before deleting
+        saveState();
+        
         delete WS.nodes[n.id];
         WS.edges = WS.edges.filter(function(e){ return e.from!==n.id && e.to!==n.id; });
         renderAll(); updateLinkLabels();
@@ -5498,6 +5507,9 @@ html {
           dragging=false; box.classList.remove('dragging');
           document.removeEventListener('mousemove', mmove);
           document.removeEventListener('mouseup', mup);
+          
+          // Save state after moving node
+          saveState();
         }
         moveBtn.addEventListener('mousedown', mdown);
         head.addEventListener('mousedown', function(e){ if(e.target===head) mdown(e); });
@@ -5519,10 +5531,17 @@ html {
             if(!allowEdge(linking.from, n.id, toPort)) { window.log('Ugyldig forbindelse.'); return; }
             // enforce capacity on trigger/cond1/cond2 (1 each)
             if(['trigger','cond1','cond2'].includes(toPort)){
+              // Save state before removing connection
+              saveState();
+              
               WS.edges = WS.edges.filter(function(e){ return !(e.to===n.id && e.toPort===toPort); });
             }
             WS.edges.push({from: linking.from, to: n.id, toPort: toPort});
             linking.active=false; linking.from=null;
+            
+            // Save state for undo after creating connection
+            saveState();
+            
             renderWires(); updateLinkLabels(); preview();
           });
         });
@@ -5564,12 +5583,35 @@ html {
         }
       });
     }
-function renderWires(){
+    function renderWires(){
       svg.innerHTML='';
-      WS.edges.forEach(function(e){
+      WS.edges.forEach(function(e, index){
         var a = getPortCenter(e.from, 'out');
         var b = getPortCenter(e.to, e.toPort);
-        var path = createEl('path', { d: cubic(a.x,a.y,b.x,b.y), fill:'none', stroke:'#4f7db8', 'stroke-width':'2', 'stroke-linecap':'round' }, svg);
+        var path = createEl('path', { 
+          d: cubic(a.x,a.y,b.x,b.y), 
+          fill:'none', 
+          stroke:'#4f7db8', 
+          'stroke-width':'2', 
+          'stroke-linecap':'round',
+          'data-edge-index': index,
+          'cursor': 'pointer'
+        }, svg);
+        
+        // Add click handler to remove wire
+        path.addEventListener('click', function(){
+          if(confirm('Fjern denne forbindelse?')){
+            // Save state before removing
+            saveState();
+            
+            // Remove the edge
+            WS.edges.splice(index, 1);
+            renderWires();
+            updateLinkLabels();
+            preview();
+            window.log('Forbindelse fjernet');
+          }
+        });
       });
     }
     function cubic(x1,y1,x2,y2){
@@ -5592,6 +5634,123 @@ function renderWires(){
       return true;
     }
 
+    // --- History management
+    function saveState() {
+      // Remove any states after current index
+      WS.history = WS.history.slice(0, WS.historyIndex + 1);
+      
+      // Save current state
+      var state = {
+        nodes: JSON.parse(JSON.stringify(WS.nodes)),
+        edges: JSON.parse(JSON.stringify(WS.edges)),
+        seq: WS.seq
+      };
+      
+      WS.history.push(state);
+      WS.historyIndex++;
+      
+      // Limit history size
+      if (WS.history.length > WS.maxHistory) {
+        WS.history.shift();
+        WS.historyIndex--;
+      }
+      
+      // Update button states
+      updateUndoRedoButtons();
+    }
+    
+    function updateUndoRedoButtons() {
+      var undoBtn = document.getElementById('wsUndo');
+      var redoBtn = document.getElementById('wsRedo');
+      
+      if (undoBtn) undoBtn.disabled = WS.historyIndex <= 0;
+      if (redoBtn) redoBtn.disabled = WS.historyIndex >= WS.history.length - 1;
+    }
+    
+    function undo() {
+      if (WS.historyIndex > 0) {
+        WS.historyIndex--;
+        var state = WS.history[WS.historyIndex];
+        WS.nodes = JSON.parse(JSON.stringify(state.nodes));
+        WS.edges = JSON.parse(JSON.stringify(state.edges));
+        WS.seq = state.seq;
+        renderAll();
+        updateLinkLabels();
+        updateUndoRedoButtons();
+        window.log('Undo: Gendannet tidligere tilstand');
+      }
+    }
+    
+    function redo() {
+      if (WS.historyIndex < WS.history.length - 1) {
+        WS.historyIndex++;
+        var state = WS.history[WS.historyIndex];
+        WS.nodes = JSON.parse(JSON.stringify(state.nodes));
+        WS.edges = JSON.parse(JSON.stringify(state.edges));
+        WS.seq = state.seq;
+        renderAll();
+        updateLinkLabels();
+        updateUndoRedoButtons();
+        window.log('Redo: Gendannet senere tilstand');
+      }
+    }
+    
+    // --- Copy/Paste system
+    function copySelected() {
+      // For now, copy all nodes and edges (can be enhanced to copy only selected)
+      var data = {
+        nodes: JSON.parse(JSON.stringify(WS.nodes)),
+        edges: JSON.parse(JSON.stringify(WS.edges))
+      };
+      WS.clipboard = data;
+      window.log('Kopieret wiresheet til clipboard');
+    }
+    
+    function paste() {
+      if (!WS.clipboard) {
+        window.log('Intet at indsætte - kopier først noget');
+        return;
+      }
+      
+      // Save current state before pasting
+      saveState();
+      
+      // Offset pasted nodes to avoid overlap
+      var offsetX = 50;
+      var offsetY = 50;
+      
+      var newNodes = {};
+      var nodeIdMap = {};
+      
+      // Create new nodes with offset
+      Object.keys(WS.clipboard.nodes).forEach(function(oldId) {
+        var oldNode = WS.clipboard.nodes[oldId];
+        var newNode = JSON.parse(JSON.stringify(oldNode));
+        newNode.id = nid();
+        newNode.x += offsetX;
+        newNode.y += offsetY;
+        newNodes[newNode.id] = newNode;
+        nodeIdMap[oldId] = newNode.id;
+      });
+      
+      // Create new edges with updated IDs
+      var newEdges = WS.clipboard.edges.map(function(edge) {
+        return {
+          from: nodeIdMap[edge.from] || edge.from,
+          to: nodeIdMap[edge.to] || edge.to,
+          toPort: edge.toPort
+        };
+      });
+      
+      // Add to current wiresheet
+      Object.assign(WS.nodes, newNodes);
+      WS.edges = WS.edges.concat(newEdges);
+      
+      renderAll();
+      updateLinkLabels();
+      window.log('Indsat wiresheet fra clipboard');
+    }
+    
     // --- Add nodes
     function addNode(kind, x, y){
       var n = { id:nid(), type:kind, subtype: (kind==='trig'?'always':''), value:'', x:x||40, y:y||40 };
@@ -5599,6 +5758,10 @@ function renderWires(){
       var pref = kind==='trig'?'T': kind==='cond'?'C': kind==='act'?'A':'R';
       n.label = pref + (WS.counters[kind]++);
       WS.nodes[n.id]=n;
+      
+      // Save state for undo
+      saveState();
+      
       renderAll(); updateLinkLabels();
       return n;
     }
@@ -5612,6 +5775,12 @@ function renderWires(){
     var bClear= document.getElementById('wsClear');
     var bSave = document.getElementById('wsSave');
     var bLoad = document.getElementById('wsLoad');
+    
+    // New tool buttons
+    var bUndo = document.getElementById('wsUndo');
+    var bRedo = document.getElementById('wsRedo');
+    var bCopy = document.getElementById('wsCopy');
+    var bPaste = document.getElementById('wsPaste');
 
     if(bTrig) bTrig.onclick = function(){ addNode('trig', 40, 60); };
     if(bCond) bCond.onclick = function(){ addNode('cond', 40, 180); };
@@ -5620,6 +5789,10 @@ function renderWires(){
 
     if(bClear) bClear.onclick = function(){
       if(!confirm('Ryd alle noder og forbindelser?')) return;
+      
+      // Save state before clearing
+      saveState();
+      
       WS.nodes={}; WS.edges=[]; renderAll(); updateLinkLabels(); window.log('Wiresheet ryddet.');
     };
 
@@ -5636,10 +5809,20 @@ function renderWires(){
         if(!raw){ alert('Ingen wiresheet i localStorage.'); return; }
         var obj = JSON.parse(raw||'{}');
         WS.nodes = obj.nodes||{}; WS.edges = obj.edges||[]; WS.seq = obj.seq||1;
+        
+        // Save state for undo after loading
+        saveState();
+        
         renderAll(); updateLinkLabels(); preview();
         window.log('Wiresheet hentet.');
       }catch(e){ alert('Kunne ikke læse: '+e.message); }
     };
+    
+    // New button handlers
+    if(bUndo) bUndo.onclick = undo;
+    if(bRedo) bRedo.onclick = redo;
+    if(bCopy) bCopy.onclick = copySelected;
+    if(bPaste) bPaste.onclick = paste;
 
     // --- Compile to rules
     function nodeById(id){ return WS.nodes[id]; }
@@ -5710,6 +5893,10 @@ function renderWires(){
 
     // initial
     renderAll(); updateLinkLabels();
+    
+    // Save initial state
+    saveState();
+    
     // quick palette
     addNode('trig', 60, 60);
     addNode('cond', 60, 180);
