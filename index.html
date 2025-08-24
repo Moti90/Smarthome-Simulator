@@ -1311,6 +1311,30 @@ input:focus, select:focus, textarea:focus{
   border:1px solid var(--hc-hair) !important;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.04), 0 12px 30px rgba(0,0,0,.5) !important;
 }
+
+/* Moderne Wiresheet Knapper */
+.ws-btn{background:#1a2430;border:1px solid #2a3442;color:#e5e9f0;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:12px;font-weight:500;transition:all 0.2s ease}
+.ws-btn:hover{background:#2d3b4f;border-color:#2ab0ff;transform:translateY(-1px);box-shadow:0 2px 8px rgba(42,176,255,0.3)}
+.ws-btn:active{transform:translateY(0);box-shadow:0 1px 4px rgba(42,176,255,0.2)}
+.ws-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+
+.ws-btn-primary{background:#2ab0ff;border-color:#2ab0ff;color:white}
+.ws-btn-primary:hover{background:#1a8fd9;border-color:#1a8fd9}
+
+.ws-btn-secondary{background:#4b5563;border-color:#6b7280;color:white}
+.ws-btn-secondary:hover{background:#374151;border-color:#4b5563}
+
+.ws-btn-success{background:#10b981;border-color:#10b981;color:white}
+.ws-btn-success:hover{background:#059669;border-color:#059669}
+
+.ws-btn-danger{background:#ef4444;border-color:#ef4444;color:white}
+.ws-btn-danger:hover{background:#dc2626;border-color:#dc2626}
+
+.ws-btn-info{background:#3b82f6;border-color:#3b82f6;color:white}
+.ws-btn-info:hover{background:#2563eb;border-color:#2563eb}
+
+.ws-btn-warning{background:#f59e0b;border-color:#f59e0b;color:white}
+.ws-btn-warning:hover{background:#d97706;border-color:#d97706}
 .ws-node{
   display:inline-block !important;
   min-width:210px !important;
@@ -3099,18 +3123,48 @@ html {
         <div class="card" style="width: 100%; max-width: none;">
           <h2>Flow (beta) — Wiresheet MVP</h2>
           <div class="body">
-            <div class="row" style="margin-bottom:8px;flex-wrap:wrap;gap:8px">
-              <button id="wsAddTrig">+ Trigger</button>
-              <button id="wsAddCond">+ AND</button>
-              <button id="wsAddAct">+ Action</button>
-              <button id="wsAddRule" class="info">+ Rule (samler)</button>
-              <span class="small muted" style="margin-left:auto">Tip: Træk noder rundt, klik en <span class="tag">● out</span> og derefter en <span class="tag">in ●</span> på Rule for at forbinde.</span>
-            </div>
-            <div class="row" style="margin-bottom:8px;flex-wrap:wrap;gap:8px">
-              <button id="wsBuild" class="success">Build → Tilføj regler</button>
-              <button id="wsClear" class="danger">Ryd wiresheet</button>
-              <button id="wsSave">Gem (local)</button>
-              <button id="wsLoad">Hent (local)</button>
+            <!-- Moderne Wiresheet Toolbar -->
+            <div class="ws-toolbar" style="margin-bottom: 16px; padding: 12px; background: rgba(15, 20, 28, 0.6); border-radius: 8px; border: 1px solid #2a3442;">
+              <!-- Komponent Bibliotek -->
+              <div class="ws-component-library" style="margin-bottom: 12px;">
+                <h4 style="margin: 0 0 8px 0; color: #e5e9f0; font-size: 14px;">🧩 Komponenter</h4>
+                <div class="row" style="flex-wrap:wrap;gap:6px">
+                  <button id="wsAddTrig" class="ws-btn ws-btn-primary">⚡ Trigger</button>
+                  <button id="wsAddCond" class="ws-btn ws-btn-secondary">🔗 AND</button>
+                  <button id="wsAddAct" class="ws-btn ws-btn-success">🎯 Action</button>
+                  <button id="wsAddRule" class="ws-btn ws-btn-info">📋 Rule</button>
+                </div>
+              </div>
+              
+              <!-- Verktøjer -->
+              <div class="ws-tools" style="margin-bottom: 12px;">
+                <h4 style="margin: 0 0 8px 0; color: #e5e9f0; font-size: 14px;">🛠️ Verktøjer</h4>
+                <div class="row" style="flex-wrap:wrap;gap:6px">
+                  <button id="wsUndo" class="ws-btn ws-btn-secondary" disabled>↶ Undo</button>
+                  <button id="wsRedo" class="ws-btn ws-btn-secondary" disabled>↷ Redo</button>
+                  <button id="wsCopy" class="ws-btn ws-btn-secondary">📋 Copy</button>
+                  <button id="wsPaste" class="ws-btn ws-btn-secondary">📄 Paste</button>
+                </div>
+              </div>
+              
+              <!-- Handlinger -->
+              <div class="ws-actions">
+                <h4 style="margin: 0 0 8px 0; color: #e5e9f0; font-size: 14px;">⚙️ Handlinger</h4>
+                <div class="row" style="flex-wrap:wrap;gap:6px">
+                  <button id="wsBuild" class="ws-btn ws-btn-success">🚀 Build → Tilføj regler</button>
+                  <button id="wsClear" class="ws-btn ws-btn-danger">🗑️ Ryd wiresheet</button>
+                  <button id="wsSave" class="ws-btn ws-btn-primary">💾 Gem</button>
+                  <button id="wsLoad" class="ws-btn ws-btn-secondary">📂 Hent</button>
+                  <button id="wsValidate" class="ws-btn ws-btn-warning">✅ Valider</button>
+                </div>
+              </div>
+              
+              <!-- Status -->
+              <div class="ws-status" style="margin-top: 12px; padding: 8px; background: rgba(42,176,255,0.1); border-radius: 6px; border-left: 3px solid #2ab0ff;">
+                <span class="small" style="color: #9ca3af;">
+                  💡 Tip: Træk noder rundt, klik en <span class="tag">● out</span> og derefter en <span class="tag">in ●</span> på Rule for at forbinde.
+                </span>
+              </div>
             </div>
 
             <div id="wsCanvas" class="ws-canvas" style="min-height: 700px; width: 100%;">
