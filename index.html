@@ -4234,7 +4234,7 @@ html {
       case 'lightOn':
         state.light = true;
         log('💡 Lys tændt via regel', 'activate');
-        startAutoResetTimer('light', 10000); // Auto-reset efter 10 sekunder
+        startAutoResetTimer('light', 5000); // Auto-reset efter 5 sekunder
         break;
       case 'lightOff':
         state.light = false;
@@ -4248,7 +4248,7 @@ html {
       case 'fanOn':
         state.fan = true;
         log('🌪️ Ventilator tændt via regel', 'activate');
-        startAutoResetTimer('fan', 10000); // Auto-reset efter 10 sekunder
+        startAutoResetTimer('fan', 5000); // Auto-reset efter 5 sekunder
         break;
       case 'fanOff':
         state.fan = false;
@@ -7271,7 +7271,7 @@ html {
   }
   
   // === Auto-Reset Timer System ===
-  function startAutoResetTimer(actorType, delay = 10000) { // 10 sekunder standard
+  function startAutoResetTimer(actorType, delay = 5000) { // 5 sekunder standard
     // Stop eksisterende timer hvis den findes
     if (window.simulation.autoResetTimers && window.simulation.autoResetTimers[actorType]) {
       clearTimeout(window.simulation.autoResetTimers[actorType]);
@@ -7292,15 +7292,15 @@ html {
     switch(actorType) {
       case 'light':
         state.light = false;
-        log('💡 Lampe auto-reset til OFF efter 10 sekunder', 'system');
+        log('💡 Lampe auto-reset til OFF efter 5 sekunder', 'system');
         break;
       case 'fan':
         state.fan = false;
-        log('🌪️ Ventilator auto-reset til OFF efter 10 sekunder', 'system');
+        log('🌪️ Ventilator auto-reset til OFF efter 5 sekunder', 'system');
         break;
       case 'dimmer':
         state.dimmer = 0;
-        log('💡 Dæmper auto-reset til 0% efter 10 sekunder', 'system');
+        log('💡 Dæmper auto-reset til 0% efter 5 sekunder', 'system');
         break;
     }
     
