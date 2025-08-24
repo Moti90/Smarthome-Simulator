@@ -5667,26 +5667,8 @@ function renderWires(){
   function getStoredCreds(){
     return { user: localStorage.getItem('simUser') || 'admin', pass: localStorage.getItem('simPass') || '1234' };
   }
-  async function tryLogin(u,p){ 
-    try {
-      // Først prøv Firebase Authentication
-      if (window.firebase && window.firebase.auth) {
-        const userCredential = await firebase.auth().signInWithEmailAndPassword(u + '@ibisimulator.local', p);
-        const user = userCredential.user;
-        
-        // Opdater sidste login tid i Firestore
-        await firebase.firestore().collection('users').doc(user.uid).update({
-          lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        
-        console.log('✅ Firebase login successful:', u);
-        return true;
-      }
-    } catch (error) {
-      console.log('❌ Firebase login failed, trying fallback:', error.message);
-    }
-    
-    // Fallback til localStorage hvis Firebase fejler
+  function tryLogin(u,p){ 
+    // Først tjek registrerede brugere
     const users = JSON.parse(localStorage.getItem('ibi_users') || '[]');
     const registeredUser = users.find(user => user.username === u && user.password === p);
     
@@ -5705,91 +5687,39 @@ function renderWires(){
     const c=getStoredCreds(); 
     return (u===c.user && p===c.pass); 
   }
-  async function doLogin(){
+  function doLogin(){
     console.log('🚀 doLogin function called');
     const u=document.getElementById('loginUser').value.trim();
     const p=document.getElementById('loginPass').value.trim();
     console.log('🔐 Login attempt with user:', u, 'pass length:', p.length);
     
-    // Vis loading state
-    document.getElementById('loginError').innerText='Logger ind...';
-    
-    try {
-      const loginSuccess = await tryLogin(u,p);
-      
-      if(loginSuccess){
-        console.log('Login successful!');
-        
-        // Gem brugerinfo lokalt som backup
-        localStorage.setItem('simUser', u);
-        localStorage.setItem('simPass', p);
-        console.log('🔍 localStorage simUser efter gem:', localStorage.getItem('simUser'));
-        
-        document.getElementById('loginView').style.display='none';
-        document.getElementById('mainApp').style.display='block';
-        document.querySelector('.appbar').style.display = 'block';
-        show('view-sim');
-      } else {
-        console.log('Login failed!');
-        document.getElementById('loginError').innerText='Forkert login!';
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      document.getElementById('loginError').innerText='Login fejlede: ' + error.message;
+    if(tryLogin(u,p)){
+      console.log('Login successful!');
+      console.log('🔍 Gemmer username i localStorage:', u);
+      localStorage.setItem('simUser', u);
+      localStorage.setItem('simPass', p);
+      console.log('🔍 localStorage simUser efter gem:', localStorage.getItem('simUser'));
+      document.getElementById('loginView').style.display='none';
+      document.getElementById('mainApp').style.display='block';
+      document.querySelector('.appbar').style.display = 'block';
+      show('view-sim');
+    } else {
+      console.log('Login failed!');
+      document.getElementById('loginError').innerText='Forkert login!';
     }
   }
-  async function updateCreds(){
+  function updateCreds(){
     const u=document.getElementById('setUser').value.trim();
     const p=document.getElementById('setPass').value.trim();
     if(u && p){
-      try {
-        // Prøv at oprette bruger i Firebase
-        if (window.firebase && window.firebase.auth) {
-          const userCredential = await firebase.auth().createUserWithEmailAndPassword(u + '@ibisimulator.local', p);
-          const user = userCredential.user;
-          
-          // Gem brugerdata i Firestore
-          await firebase.firestore().collection('users').doc(user.uid).set({
-            username: u,
-            email: u + '@ibisimulator.local',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-          });
-          
-          alert('✅ Bruger oprettet i Firebase: ' + u + '\nDu kan nu logge ind på tværs af enheder!');
-        } else {
-          // Fallback til localStorage hvis Firebase ikke er tilgængelig
-          localStorage.setItem('simUser', u);
-          localStorage.setItem('simPass', p);
-          alert('Login-info gemt lokalt. Næste login bruger '+u+'/'+p);
-        }
-        
-        document.getElementById('setUser').value='';
-        document.getElementById('setPass').value='';
-      } catch (error) {
-        console.error('Fejl ved oprettelse af bruger:', error);
-        
-        if (error.code === 'auth/email-already-in-use') {
-          alert('Bruger findes allerede. Prøv at logge ind i stedet.');
-        } else {
-          alert('Fejl ved oprettelse af bruger: ' + error.message);
-        }
-      }
-    } else { 
-      alert('Udfyld både brugernavn og adgangskode.'); 
-    }
+      localStorage.setItem('simUser', u);
+      localStorage.setItem('simPass', p);
+      alert('Login-info gemt. Næste login bruger '+u+'/'+p);
+      document.getElementById('setUser').value='';
+      document.getElementById('setPass').value='';
+    } else { alert('Udfyld både brugernavn og adgangskode.'); }
   }
-  async function doLogout(){
-    try {
-      // Log ud fra Firebase hvis tilgængelig
-      if (window.firebase && window.firebase.auth) {
-        await firebase.auth().signOut();
-        console.log('✅ Logged out from Firebase');
-      }
-    } catch (error) {
-      console.error('Fejl ved Firebase logout:', error);
-    }
-    
+  function doLogout(){
     document.getElementById('mainApp').style.display='none';
     document.querySelector('.appbar').style.display = 'none';
     document.getElementById('loginView').style.display='flex';
@@ -5922,7 +5852,7 @@ function renderWires(){
   }
 
   // === Elev navn funktionalitet ===
-  async function saveStudentName() {
+  function saveStudentName() {
     const firstName = document.getElementById('setFirstName').value.trim();
     const lastName = document.getElementById('setLastName').value.trim();
     const email = document.getElementById('setEmail').value.trim();
@@ -5932,74 +5862,23 @@ function renderWires(){
       return;
     }
     
+    // Gem i localStorage
     const studentName = {
       firstName: firstName,
       lastName: lastName,
       email: email || 'ingen@email.dk'
     };
     
-    try {
-      // Gem i Firebase hvis bruger er logget ind
-      if (window.firebase && window.firebase.auth && firebase.auth().currentUser) {
-        const user = firebase.auth().currentUser;
-        
-        await firebase.firestore().collection('users').doc(user.uid).update({
-          studentName: studentName,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        
-        console.log('✅ Elevnavn gemt i Firebase');
-      }
-      
-      // Gem også lokalt som backup
-      localStorage.setItem('student_name', JSON.stringify(studentName));
-      
-      // Opdater UI
-      alert(`✅ Dit navn er gemt: ${firstName} ${lastName}\nData synkroniseres på tværs af enheder!`);
-      
-      // Genindlæs navn i felterne
-      loadStudentName();
-    } catch (error) {
-      console.error('Fejl ved gem af elevnavn:', error);
-      
-      // Fallback til kun localStorage
-      localStorage.setItem('student_name', JSON.stringify(studentName));
-      alert(`✅ Dit navn er gemt lokalt: ${firstName} ${lastName}`);
-      loadStudentName();
-    }
+    localStorage.setItem('student_name', JSON.stringify(studentName));
+    
+    // Opdater UI
+    alert(`✅ Dit navn er gemt: ${firstName} ${lastName}`);
+    
+    // Genindlæs navn i felterne
+    loadStudentName();
   }
   
-  async function loadStudentName() {
-    try {
-      // Prøv at hente fra Firebase først
-      if (window.firebase && window.firebase.auth && firebase.auth().currentUser) {
-        const user = firebase.auth().currentUser;
-        const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
-        
-        if (userDoc.exists && userDoc.data().studentName) {
-          const studentName = userDoc.data().studentName;
-          
-          if (studentName.firstName) {
-            document.getElementById('setFirstName').value = studentName.firstName;
-          }
-          if (studentName.lastName) {
-            document.getElementById('setLastName').value = studentName.lastName;
-          }
-          if (studentName.email) {
-            document.getElementById('setEmail').value = studentName.email;
-          }
-          
-          // Opdater localStorage med Firebase data
-          localStorage.setItem('student_name', JSON.stringify(studentName));
-          console.log('✅ Elevnavn hentet fra Firebase');
-          return;
-        }
-      }
-    } catch (error) {
-      console.error('Fejl ved hentning fra Firebase:', error);
-    }
-    
-    // Fallback til localStorage
+  function loadStudentName() {
     const studentName = JSON.parse(localStorage.getItem('student_name') || '{}');
     
     if (studentName.firstName) {
