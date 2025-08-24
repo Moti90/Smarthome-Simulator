@@ -4065,6 +4065,20 @@ html {
           description: 'Tid = ' + state.time + ' (mellem ' + (condValue || 'ikke sat') + ')',
           explain: inRange ? null : 'Tiden skal være mellem ' + condValue
         };
+      case 'alarmArmed':
+        var armed = state.alarmArmed === true;
+        return {
+          ok: armed,
+          description: 'Alarm = ' + (state.alarmArmed ? 'Armed' : 'Disarmed') + ' (forventet: Armed)',
+          explain: armed ? null : 'Alarmen skal være Armed'
+        };
+      case 'alarmHome':
+        var home = state.alarmHome === true;
+        return {
+          ok: home,
+          description: 'Alarm = ' + (state.alarmHome ? 'Home Mode' : 'Away Mode') + ' (forventet: Home Mode)',
+          explain: home ? null : 'Alarmen skal være i Home Mode'
+        };
       case 'doorClosed':
         var closed = state.door === false;
         return {
