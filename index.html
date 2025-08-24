@@ -4014,14 +4014,57 @@ html {
     
     // Log ændringerne så brugeren kan se dem
     if (window.simulation.enabled) {
-      // Kun log hver 10. opdatering for at undgå spam
-      if (!window.simulation.logCounter) window.simulation.logCounter = 0;
-      window.simulation.logCounter++;
+      // Kun log når der er faktiske ændringer i sensor status
+      if (!window.simulation.lastSensorState) {
+        window.simulation.lastSensorState = {
+          motion: state.motion,
+          door: state.door,
+          lux: state.lux,
+          humidity: state.humidity,
+          wind: state.wind,
+          temperature: state.temperature
+        };
+      }
       
-      if (window.simulation.logCounter % 10 === 0) {
-        log('⏱️ Simulation: Tid = ' + state.time + ', Ugedag = ' + state.weekday, 'system');
-        log('📊 Sensorer: Lys = ' + state.lux + ', Fugt = ' + state.humidity + '%, Vind = ' + state.wind + ' m/s', 'system');
-        log('👤 Aktivitet: PIR = ' + (state.motion ? 'Breached' : 'Safe') + ', Dør = ' + (state.door ? 'Opened' : 'Closed'), 'system');
+      // Tjek om der er ændringer
+      var hasChanges = false;
+      if (window.simulation.lastSensorState.motion !== state.motion) {
+        log('👤 PIR Status: ' + (state.motion ? 'Breached' : 'Safe'), 'sensor');
+        hasChanges = true;
+      }
+      if (window.simulation.lastSensorState.door !== state.door) {
+        log('🚪 Dør Status: ' + (state.door ? 'Opened' : 'Closed'), 'sensor');
+        hasChanges = true;
+      }
+      
+      // Log sensor ændringer kun hvis de er betydelige
+      if (Math.abs(window.simulation.lastSensorState.lux - state.lux) > 50) {
+        log('💡 Lys ændret: ' + state.lux + ' lux', 'sensor');
+        hasChanges = true;
+      }
+      if (Math.abs(window.simulation.lastSensorState.humidity - state.humidity) > 5) {
+        log('💧 Fugt ændret: ' + state.humidity + '%', 'sensor');
+        hasChanges = true;
+      }
+      if (Math.abs(window.simulation.lastSensorState.wind - state.wind) > 1) {
+        log('🌪️ Vind ændret: ' + state.wind + ' m/s', 'sensor');
+        hasChanges = true;
+      }
+      if (Math.abs(window.simulation.lastSensorState.temperature - state.temperature) > 2) {
+        log('🌡️ Temperatur ændret: ' + state.temperature + '°C', 'sensor');
+        hasChanges = true;
+      }
+      
+      // Opdater sidste sensor state
+      if (hasChanges) {
+        window.simulation.lastSensorState = {
+          motion: state.motion,
+          door: state.door,
+          lux: state.lux,
+          humidity: state.humidity,
+          wind: state.wind,
+          temperature: state.temperature
+        };
       }
     }
   }
