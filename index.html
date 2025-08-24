@@ -3387,11 +3387,57 @@ html {
               <button id="btnResetOnboarding" class="btn-secondary">🔄 Reset onboarding</button>
               <span class="setting-description">Start forfra med onboarding guiden</span>
             </div>
-                      <div class="setting-item">
-            <button id="btnLogout" class="btn-danger">🚪 Log ud</button>
-            <span class="setting-description">Log ud og vis login-skærmen igen</span>
+            <div class="setting-item">
+              <button id="btnLogout" class="btn-danger">🚪 Log ud</button>
+              <span class="setting-description">Log ud og vis login-skærmen igen</span>
+            </div>
           </div>
 
+          <div class="divider"></div>
+
+          <!-- Simulation Mode Indstillinger -->
+          <div class="settings-section">
+            <h3>🎮 Simulation Mode</h3>
+            <div class="setting-item">
+              <label for="simulationEnabled">Aktiver simulation mode</label>
+              <input id="simulationEnabled" type="checkbox" class="styled-checkbox">
+              <span class="setting-description">Lad appen køre automatisk med realistiske sensor værdier</span>
+            </div>
+            <div class="setting-item">
+              <label for="simulationSpeed">Simulation hastighed</label>
+              <select id="simulationSpeed" class="styled-input">
+                <option value="1">1x (normal tid)</option>
+                <option value="10">10x (1 minut = 6 sekunder)</option>
+                <option value="60">60x (1 time = 1 minut)</option>
+                <option value="100">100x (1 time = 36 sekunder)</option>
+              </select>
+              <span class="setting-description">Hvor hurtigt skal tiden gå i forhold til virkeligheden</span>
+            </div>
+            <div class="setting-item">
+              <label for="realisticPatterns">Realistiske sensor mønstre</label>
+              <input id="realisticPatterns" type="checkbox" class="styled-checkbox" checked>
+              <span class="setting-description">Brug sinuskurver og realistiske mønstre for sensorer</span>
+            </div>
+            <div class="setting-item">
+              <label for="dayNightCycle">Dag/nat cyklus</label>
+              <input id="dayNightCycle" type="checkbox" class="styled-checkbox" checked>
+              <span class="setting-description">Simuler dag og nat med forskellige lysniveauer</span>
+            </div>
+            <div class="setting-item">
+              <button id="btnStartSimulation" class="btn-primary">▶️ Start Simulation</button>
+              <button id="btnStopSimulation" class="btn-danger" disabled>⏹️ Stop Simulation</button>
+              <button id="btnResetSimulation" class="btn-secondary">🔄 Reset til normal</button>
+            </div>
+            
+            <!-- Simulation Status -->
+            <div id="simulationStatus" class="simulation-status" style="display: none;">
+              <h4 style="margin: 0 0 8px 0; color: #e5e9f0;">🎮 Simulation Status</h4>
+              <div style="color: #9ca3af; font-size: 13px;">
+                <div>⏱️ <strong>Simulation tid:</strong> <span id="simulationTime">--:--</span></div>
+                <div>📊 <strong>Sensor status:</strong> <span id="sensorStatus">Normal</span></div>
+                <div>🔄 <strong>Cyklus:</strong> <span id="cycleStatus">Normal</span></div>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -3401,55 +3447,6 @@ html {
     <!-- ===== View: Lærer Dashboard ===== -->
     <section id="view-teacher" class="view">
       <div class="wrap">
-        <!-- Simulation Mode Indstillinger -->
-        <div class="card">
-          <h2>🎮 Simulation Mode</h2>
-          <div class="body">
-            <div class="settings-section">
-              <h3>⏱️ Tids Simulation</h3>
-              <div class="setting-item">
-                <label for="simulationEnabled">Aktiver simulation mode</label>
-                <input id="simulationEnabled" type="checkbox" class="styled-checkbox">
-                <span class="setting-description">Lad appen køre automatisk med realistiske sensor værdier</span>
-              </div>
-              <div class="setting-item">
-                <label for="simulationSpeed">Simulation hastighed</label>
-                <select id="simulationSpeed" class="styled-input">
-                  <option value="1">1x (normal tid)</option>
-                  <option value="10">10x (1 minut = 6 sekunder)</option>
-                  <option value="60">60x (1 time = 1 minut)</option>
-                  <option value="100">100x (1 time = 36 sekunder)</option>
-                </select>
-                <span class="setting-description">Hvor hurtigt skal tiden gå i forhold til virkeligheden</span>
-              </div>
-              <div class="setting-item">
-                <label for="realisticPatterns">Realistiske sensor mønstre</label>
-                <input id="realisticPatterns" type="checkbox" class="styled-checkbox" checked>
-                <span class="setting-description">Brug sinuskurver og realistiske mønstre for sensorer</span>
-              </div>
-              <div class="setting-item">
-                <label for="dayNightCycle">Dag/nat cyklus</label>
-                <input id="dayNightCycle" type="checkbox" class="styled-checkbox" checked>
-                <span class="setting-description">Simuler dag og nat med forskellige lysniveauer</span>
-              </div>
-              <div class="setting-item">
-                <button id="btnStartSimulation" class="btn-primary">▶️ Start Simulation</button>
-                <button id="btnStopSimulation" class="btn-danger" disabled>⏹️ Stop Simulation</button>
-                <button id="btnResetSimulation" class="btn-secondary">🔄 Reset til normal</button>
-              </div>
-              
-              <!-- Simulation Status -->
-              <div id="simulationStatus" class="simulation-status" style="display: none;">
-                <h4 style="margin: 0 0 8px 0; color: #e5e9f0;">🎮 Simulation Status</h4>
-                <div style="color: #9ca3af; font-size: 13px;">
-                  <div>⏱️ <strong>Simulation tid:</strong> <span id="simulationTime">--:--</span></div>
-                  <div>📊 <strong>Sensor status:</strong> <span id="sensorStatus">Normal</span></div>
-                  <div>🔄 <strong>Cyklus:</strong> <span id="cycleStatus">Normal</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <!-- Lærer kontroller -->
         <div class="card">
