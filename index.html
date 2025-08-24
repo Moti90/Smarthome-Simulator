@@ -3798,9 +3798,13 @@ html {
     simulation.simulationTime = new Date();
     
     // Hent indstillinger
-    simulation.speed = parseInt($('#simulationSpeed').value) || 1;
-    simulation.realisticPatterns = $('#realisticPatterns').checked;
-    simulation.dayNightCycle = $('#dayNightCycle').checked;
+    const speedEl = document.getElementById('simulationSpeed');
+    const realisticEl = document.getElementById('realisticPatterns');
+    const dayNightEl = document.getElementById('dayNightCycle');
+    
+    simulation.speed = parseInt(speedEl ? speedEl.value : 1) || 1;
+    simulation.realisticPatterns = realisticEl ? realisticEl.checked : true;
+    simulation.dayNightCycle = dayNightEl ? dayNightEl.checked : true;
     
     // Start simulation loop
     simulation.interval = setInterval(function() {
@@ -3808,11 +3812,18 @@ html {
     }, 1000 / simulation.speed); // Opdater hver sekund divideret med hastighed
     
     // Opdater UI
-    $('#simulationEnabled').checked = true;
-    $('#btnStartSimulation').disabled = true;
-    $('#btnStopSimulation').disabled = false;
-    $('#simulationStatus').style.display = 'block';
-    $('#simulationStatus').classList.add('simulation-active');
+    const enabledEl = document.getElementById('simulationEnabled');
+    const startBtn = document.getElementById('btnStartSimulation');
+    const stopBtn = document.getElementById('btnStopSimulation');
+    const statusEl = document.getElementById('simulationStatus');
+    
+    if (enabledEl) enabledEl.checked = true;
+    if (startBtn) startBtn.disabled = true;
+    if (stopBtn) stopBtn.disabled = false;
+    if (statusEl) {
+      statusEl.style.display = 'block';
+      statusEl.classList.add('simulation-active');
+    }
     
     log('🎮 Simulation startet med hastighed ' + simulation.speed + 'x', 'system');
   }
@@ -3825,10 +3836,15 @@ html {
     simulation.interval = null;
     
     // Opdater UI
-    $('#simulationEnabled').checked = false;
-    $('#btnStartSimulation').disabled = false;
-    $('#btnStopSimulation').disabled = true;
-    $('#simulationStatus').classList.remove('simulation-active');
+    const enabledEl = document.getElementById('simulationEnabled');
+    const startBtn = document.getElementById('btnStartSimulation');
+    const stopBtn = document.getElementById('btnStopSimulation');
+    const statusEl = document.getElementById('simulationStatus');
+    
+    if (enabledEl) enabledEl.checked = false;
+    if (startBtn) startBtn.disabled = false;
+    if (stopBtn) stopBtn.disabled = true;
+    if (statusEl) statusEl.classList.remove('simulation-active');
     
     log('⏹️ Simulation stoppet', 'system');
   }
@@ -3846,8 +3862,11 @@ html {
     state.door = false;
     
     // Opdater UI
-    $('#simulationStatus').style.display = 'none';
+    const statusEl = document.getElementById('simulationStatus');
+    if (statusEl) statusEl.style.display = 'none';
+    
     updateAllDisplays();
+    updateSimulationDisplay(); // Opdater også simulation dashboard
     
     log('🔄 Simulation reset til normal tilstand', 'system');
   }
@@ -3910,9 +3929,13 @@ html {
     state.weekday = weekdays[simulation.simulationTime.getDay()];
     
     // Opdater status display
-    $('#simulationTime').textContent = state.time;
-    $('#sensorStatus').textContent = simulation.realisticPatterns ? 'Realistiske mønstre' : 'Normal';
-    $('#cycleStatus').textContent = simulation.dayNightCycle ? 'Dag/nat cyklus' : 'Normal';
+    const timeEl = document.getElementById('simulationTime');
+    const sensorEl = document.getElementById('sensorStatus');
+    const cycleEl = document.getElementById('cycleStatus');
+    
+    if (timeEl) timeEl.textContent = state.time;
+    if (sensorEl) sensorEl.textContent = simulation.realisticPatterns ? 'Realistiske mønstre' : 'Normal';
+    if (cycleEl) cycleEl.textContent = simulation.dayNightCycle ? 'Dag/nat cyklus' : 'Normal';
     
     // Opdater live sensor værdier i simulation fane
     updateSimulationDisplay();
