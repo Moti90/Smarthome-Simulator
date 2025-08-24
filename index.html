@@ -361,6 +361,31 @@
       flex: 1;
     }
     
+    /* Simulation Knap Styling */
+    .btn-simulation {
+      background: linear-gradient(135deg, #8b5cf6, #a855f7);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+    }
+    
+    .btn-simulation:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+      background: linear-gradient(135deg, #7c3aed, #9333ea);
+    }
+    
+    .btn-simulation:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3);
+    }
+    
     /* Sensor Grid Layout */
     .sensor-grid {
       display: grid;
@@ -3052,7 +3077,10 @@ html {
       <div class="wrap">
         <!-- 1) Sensorer -->
         <div class="card" data-section="sensors">
-          <h2>1) Virtuelle sensorer & tilstande</h2>
+          <h2 style="display: flex; justify-content: space-between; align-items: center;">
+            <span>1) Virtuelle sensorer & tilstande</span>
+            <button id="btnSimulation" class="btn-simulation" onclick="showSimulationDashboard()">🎮 Simulation</button>
+          </h2>
           <div class="body">
             <!-- Tid & miljø -->
             <div class="section-group">
@@ -7115,6 +7143,26 @@ html {
         simLog.removeChild(simLog.firstChild);
       }
     }
+  }
+  
+  // === Simulation Dashboard Funktioner ===
+  window.showSimulationDashboard = function() {
+    // Skjul alle normale faner
+    document.querySelector('.tabs').style.display = 'none';
+    
+    // Skjul alle views
+    document.querySelectorAll('.view').forEach(view => {
+      view.style.display = 'none';
+    });
+    
+    // Vis simulation view
+    document.getElementById('view-simulation').style.display = 'block';
+    
+    // Opdater simulation display med nuværende værdier
+    updateSimulationDisplay();
+    
+    console.log('🔧 Simulation dashboard åbnet');
+    console.log('🔍 Skiftet til simulation dashboard');
   }
   
   // === Simulation Event Listeners Setup ===
