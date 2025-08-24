@@ -292,6 +292,108 @@
       border-left-color: #10b981;
     }
     
+    /* Sensor Grid Layout */
+    .sensor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .sensor-card {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sensor-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #8b5cf6, #a855f7);
+    }
+
+    .sensor-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+      border-color: #8b5cf6;
+    }
+
+    .sensor-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .sensor-title {
+      color: #e2e8f0;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .sensor-value {
+      color: #f8fafc;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      font-family: 'Courier New', monospace;
+    }
+
+    .sensor-subtitle {
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* Status Grid */
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+    }
+
+    .status-item {
+      background: rgba(15, 20, 28, 0.4);
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .status-label {
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .status-value {
+      color: #f8fafc;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* Sensor Card Variants */
+    .clock-card::before { background: linear-gradient(90deg, #3b82f6, #1d4ed8); }
+    .light-card::before { background: linear-gradient(90deg, #f59e0b, #d97706); }
+    .humidity-card::before { background: linear-gradient(90deg, #10b981, #059669); }
+    .wind-card::before { background: linear-gradient(90deg, #8b5cf6, #7c3aed); }
+    .motion-card::before { background: linear-gradient(90deg, #ef4444, #dc2626); }
+    .door-card::before { background: linear-gradient(90deg, #f97316, #ea580c); }
+    .alarm-card::before { background: linear-gradient(90deg, #ec4899, #db2777); }
+    .temp-card::before { background: linear-gradient(90deg, #06b6d4, #0891b2); }
+    
     .styled-select {
       background: rgba(15, 20, 28, 0.8);
       color: #e5e9f0;
@@ -2295,6 +2397,7 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
 #view-sim .card, #view-sim [data-card]{ border-top:3px solid #2ab0ff; }
 #view-flow .card, #view-flow [data-card]{ border-top:3px solid #10b981; }
 #view-settings .card, #view-settings [data-card]{ border-top:3px solid #fbbf24; }
+#view-simulation .card, #view-simulation [data-card]{ border-top:3px solid #8b5cf6; }
 
 /* Hide old top tabs/title if present */
 .tabs, .top-tabs, .page-title, h1.page-title-center { display:none !important; }
@@ -2380,10 +2483,11 @@ html {
       <span class="name" style="font-size: 14px; letter-spacing: 0.5px;">SMARTHOME SIMULATOR</span>
     </div>
     <nav class="mainnav">
-      <button type="button" data-target="view-sim">🏠 Simulator</button>
-      <button type="button" data-target="view-flow">🧩 Wiresheet</button>
-      <button type="button" data-target="view-learning">📚 Læring</button>
-      <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
+              <button type="button" data-target="view-sim">🏠 Simulator</button>
+        <button type="button" data-target="view-flow">🧩 Wiresheet</button>
+        <button type="button" data-target="view-learning">📚 Læring</button>
+        <button type="button" data-target="view-simulation">🎮 Simulation</button>
+        <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
       <button type="button" onclick="showQuickStart()" title="Kom godt i gang">🚀 Opgaver</button>
     </nav>
   </div>
@@ -3395,68 +3499,155 @@ html {
 
           <div class="divider"></div>
 
-          <!-- Simulation Mode Indstillinger -->
-          <div class="settings-section">
-            <h3>🎮 Simulation Mode</h3>
-            <div class="setting-item">
-              <label for="simulationEnabled">Aktiver simulation mode</label>
-              <input id="simulationEnabled" type="checkbox" class="styled-checkbox">
-              <span class="setting-description">Lad appen køre automatisk med realistiske sensor værdier</span>
-            </div>
-            <div class="setting-item">
-              <label for="simulationSpeed">Simulation hastighed</label>
-              <select id="simulationSpeed" class="styled-input">
-                <option value="1">1x (normal tid)</option>
-                <option value="10">10x (1 minut = 6 sekunder)</option>
-                <option value="60">60x (1 time = 1 minut)</option>
-                <option value="100">100x (1 time = 36 sekunder)</option>
-              </select>
-              <span class="setting-description">Hvor hurtigt skal tiden gå i forhold til virkeligheden</span>
-            </div>
-            <div class="setting-item">
-              <label for="realisticPatterns">Realistiske sensor mønstre</label>
-              <input id="realisticPatterns" type="checkbox" class="styled-checkbox" checked>
-              <span class="setting-description">Brug sinuskurver og realistiske mønstre for sensorer</span>
-            </div>
-            <div class="setting-item">
-              <label for="dayNightCycle">Dag/nat cyklus</label>
-              <input id="dayNightCycle" type="checkbox" class="styled-checkbox" checked>
-              <span class="setting-description">Simuler dag og nat med forskellige lysniveauer</span>
-            </div>
-                          <div class="setting-item">
+
+
+        </div>
+      </div>
+    </section>
+    
+    <!-- ===== View: Simulation ===== -->
+    <section id="view-simulation" class="view">
+      <div class="wrap">
+        
+        <!-- Simulation Kontrol Panel -->
+        <div class="card">
+          <h2>🎮 Simulation Kontrol</h2>
+          <div class="body">
+            <div class="settings-section">
+              <div class="setting-item">
+                <label for="simulationEnabled">Aktivér Simulation</label>
+                <input type="checkbox" id="simulationEnabled" class="styled-checkbox">
+                <span class="setting-description">Start/stop simulation mode</span>
+              </div>
+              <div class="setting-item">
+                <label for="simulationSpeed">Hastighed</label>
+                <select id="simulationSpeed" class="styled-select">
+                  <option value="1">1x (Normal)</option>
+                  <option value="10">10x (Hurtig)</option>
+                  <option value="60" selected>60x (Meget hurtig)</option>
+                  <option value="100">100x (Ekstrem)</option>
+                </select>
+                <span class="setting-description">Hvor hurtigt tiden går</span>
+              </div>
+              <div class="setting-item">
+                <label for="realisticPatterns">Realistiske Mønstre</label>
+                <input type="checkbox" id="realisticPatterns" class="styled-checkbox" checked>
+                <span class="setting-description">Brug sinus kurver for naturlige værdier</span>
+              </div>
+              <div class="setting-item">
+                <label for="dayNightCycle">Dag/Nat Cyklus</label>
+                <input type="checkbox" id="dayNightCycle" class="styled-checkbox" checked>
+                <span class="setting-description">Simuler dag og nat med forskellige lysniveauer</span>
+              </div>
+              <div class="setting-item">
                 <button id="btnStartSimulation" class="btn-primary">▶️ Start Simulation</button>
                 <button id="btnStopSimulation" class="btn-danger" disabled>⏹️ Stop Simulation</button>
                 <button id="btnResetSimulation" class="btn-secondary">🔄 Reset til normal</button>
                 <button id="btnTestRules" class="btn-info">🎯 Test Regler</button>
               </div>
-            
-            <!-- Simulation Status -->
-            <div id="simulationStatus" class="simulation-status" style="display: none;">
-              <h4 style="margin: 0 0 8px 0; color: #e5e9f0;">🎮 Simulation Status</h4>
-              <div style="color: #9ca3af; font-size: 13px;">
-                <div>⏱️ <strong>Simulation tid:</strong> <span id="simulationTime">--:--</span></div>
-                <div>📊 <strong>Sensor status:</strong> <span id="sensorStatus">Normal</span></div>
-                <div>🔄 <strong>Cyklus:</strong> <span id="cycleStatus">Normal</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Sensor Display -->
+        <div class="card">
+          <h2>📊 Live Sensor Værdier</h2>
+          <div class="body">
+            <div class="sensor-grid">
+              <!-- Digital Clock -->
+              <div class="sensor-card clock-card">
+                <div class="sensor-icon">⏰</div>
+                <div class="sensor-title">Digitalt Ur</div>
+                <div class="sensor-value" id="liveClock">--:--</div>
+                <div class="sensor-subtitle" id="liveDate">--</div>
               </div>
               
-              <!-- Live Sensor Værdier -->
-              <div style="margin-top: 16px; padding: 12px; background: rgba(15, 20, 28, 0.6); border-radius: 8px; border: 1px solid #2a3442;">
-                <h5 style="margin: 0 0 12px 0; color: #e5e9f0; font-size: 14px;">📊 Live Sensor Værdier</h5>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
-                  <div><strong>⏰ Tid:</strong> <span id="liveTime" style="color: #2ab0ff;">--:--</span></div>
-                  <div><strong>📅 Ugedag:</strong> <span id="liveWeekday" style="color: #2ab0ff;">--</span></div>
-                  <div><strong>💡 Lys:</strong> <span id="liveLux" style="color: #f59e0b;">--</span></div>
-                  <div><strong>💧 Fugt:</strong> <span id="liveHumidity" style="color: #10b981;">--%</span></div>
-                  <div><strong>🌪️ Vind:</strong> <span id="liveWind" style="color: #8b5cf6;">-- m/s</span></div>
-                  <div><strong>👤 PIR:</strong> <span id="liveMotion" style="color: #ef4444;">--</span></div>
-                  <div><strong>🚪 Dør:</strong> <span id="liveDoor" style="color: #f97316;">--</span></div>
-                  <div><strong>🔒 Alarm:</strong> <span id="liveAlarm" style="color: #ec4899;">--</span></div>
+              <!-- Light Sensor -->
+              <div class="sensor-card light-card">
+                <div class="sensor-icon">💡</div>
+                <div class="sensor-title">Lys Sensor</div>
+                <div class="sensor-value" id="liveLuxDisplay">-- lux</div>
+                <div class="sensor-subtitle" id="liveLightStatus">Normal</div>
+              </div>
+              
+              <!-- Humidity Sensor -->
+              <div class="sensor-card humidity-card">
+                <div class="sensor-icon">💧</div>
+                <div class="sensor-title">Fugt Sensor</div>
+                <div class="sensor-value" id="liveHumidityDisplay">--%</div>
+                <div class="sensor-subtitle" id="liveHumidityStatus">Normal</div>
+              </div>
+              
+              <!-- Wind Sensor -->
+              <div class="sensor-card wind-card">
+                <div class="sensor-icon">🌪️</div>
+                <div class="sensor-title">Vind Sensor</div>
+                <div class="sensor-value" id="liveWindDisplay">-- m/s</div>
+                <div class="sensor-subtitle" id="liveWindStatus">Normal</div>
+              </div>
+              
+              <!-- Motion Sensor -->
+              <div class="sensor-card motion-card">
+                <div class="sensor-icon">👤</div>
+                <div class="sensor-title">PIR Sensor</div>
+                <div class="sensor-value" id="liveMotionDisplay">Safe</div>
+                <div class="sensor-subtitle" id="liveMotionStatus">Ingen bevægelse</div>
+              </div>
+              
+              <!-- Door Sensor -->
+              <div class="sensor-card door-card">
+                <div class="sensor-icon">🚪</div>
+                <div class="sensor-title">Dør Sensor</div>
+                <div class="sensor-value" id="liveDoorDisplay">Closed</div>
+                <div class="sensor-subtitle" id="liveDoorStatus">Låst</div>
+              </div>
+              
+              <!-- Alarm System -->
+              <div class="sensor-card alarm-card">
+                <div class="sensor-icon">🔒</div>
+                <div class="sensor-title">Alarm System</div>
+                <div class="sensor-value" id="liveAlarmDisplay">Disarmed</div>
+                <div class="sensor-subtitle" id="liveAlarmStatus">Inaktiv</div>
+              </div>
+              
+              <!-- Temperature Sensor -->
+              <div class="sensor-card temp-card">
+                <div class="sensor-icon">🌡️</div>
+                <div class="sensor-title">Temperatur</div>
+                <div class="sensor-value" id="liveTempDisplay">--°C</div>
+                <div class="sensor-subtitle" id="liveTempStatus">Normal</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulation Status -->
+        <div class="card">
+          <h2>📈 Simulation Status</h2>
+          <div class="body">
+            <div id="simulationStatus" class="simulation-status">
+              <div class="status-grid">
+                <div class="status-item">
+                  <div class="status-label">⏱️ Simulation Tid</div>
+                  <div class="status-value" id="simulationTime">--:--</div>
+                </div>
+                <div class="status-item">
+                  <div class="status-label">📊 Sensor Status</div>
+                  <div class="status-value" id="sensorStatus">Normal</div>
+                </div>
+                <div class="status-item">
+                  <div class="status-label">🔄 Cyklus</div>
+                  <div class="status-value" id="cycleStatus">Normal</div>
+                </div>
+                <div class="status-item">
+                  <div class="status-label">⚡ Hastighed</div>
+                  <div class="status-value" id="speedStatus">1x</div>
                 </div>
               </div>
             </div>
           </div>
-
         </div>
+
       </div>
     </section>
     
@@ -3722,15 +3913,28 @@ html {
     $('#sensorStatus').textContent = simulation.realisticPatterns ? 'Realistiske mønstre' : 'Normal';
     $('#cycleStatus').textContent = simulation.dayNightCycle ? 'Dag/nat cyklus' : 'Normal';
     
-    // Opdater live sensor værdier
-    $('#liveTime').textContent = state.time;
-    $('#liveWeekday').textContent = state.weekday;
-    $('#liveLux').textContent = state.lux;
-    $('#liveHumidity').textContent = state.humidity + '%';
-    $('#liveWind').textContent = state.wind + ' m/s';
-    $('#liveMotion').textContent = state.motion ? 'Breached' : 'Safe';
-    $('#liveDoor').textContent = state.door ? 'Opened' : 'Closed';
-    $('#liveAlarm').textContent = state.alarmArmed ? 'Armed' : 'Disarmed';
+    // Opdater live sensor værdier i simulation fane
+    $('#liveClock').textContent = state.time;
+    $('#liveDate').textContent = state.weekday;
+    $('#liveLuxDisplay').textContent = state.lux + ' lux';
+    $('#liveHumidityDisplay').textContent = state.humidity + '%';
+    $('#liveWindDisplay').textContent = state.wind + ' m/s';
+    $('#liveMotionDisplay').textContent = state.motion ? 'Breached' : 'Safe';
+    $('#liveDoorDisplay').textContent = state.door ? 'Opened' : 'Closed';
+    $('#liveAlarmDisplay').textContent = state.alarmArmed ? 'Armed' : 'Disarmed';
+    $('#liveTempDisplay').textContent = simulation.getTemperature(simulation.simulationTime).toFixed(1) + '°C';
+    
+    // Opdater status tekster
+    $('#liveLightStatus').textContent = state.lux > 500 ? 'Lyst' : state.lux > 100 ? 'Moderat' : 'Mørkt';
+    $('#liveHumidityStatus').textContent = state.humidity > 60 ? 'Fugtigt' : state.humidity < 30 ? 'Tørt' : 'Normal';
+    $('#liveWindStatus').textContent = state.wind > 10 ? 'Stærk' : state.wind > 5 ? 'Moderat' : 'Svag';
+    $('#liveMotionStatus').textContent = state.motion ? 'Bevægelse detekteret!' : 'Ingen bevægelse';
+    $('#liveDoorStatus').textContent = state.door ? 'Åben' : 'Lukket';
+    $('#liveAlarmStatus').textContent = state.alarmArmed ? 'Aktiv' : 'Inaktiv';
+    $('#liveTempStatus').textContent = simulation.getTemperature(simulation.simulationTime) > 25 ? 'Varmt' : simulation.getTemperature(simulation.simulationTime) < 18 ? 'Koldt' : 'Normal';
+    
+    // Opdater hastighed status
+    $('#speedStatus').textContent = simulation.speed + 'x';
     
     // Opdater alle displays
     updateAllDisplays();
