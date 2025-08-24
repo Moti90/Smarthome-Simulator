@@ -3751,7 +3751,12 @@ html {
     getLight: function(time) {
       var hour = time.getHours() + time.getMinutes() / 60;
       var lightLevel = Math.max(0, Math.sin((hour - 6) * Math.PI / 12));
-      return Math.round(lightLevel * 100);
+      // Sikrer at lys er højere om dagen (mellem 6-18)
+      if (hour >= 6 && hour <= 18) {
+        return Math.round(lightLevel * 800 + 200); // 200-1000 lux om dagen
+      } else {
+        return Math.round(lightLevel * 50); // 0-50 lux om natten
+      }
     },
     
     getHumidity: function(time) {
@@ -3761,7 +3766,7 @@ html {
     
     getWind: function(time) {
       var hour = time.getHours() + time.getMinutes() / 60;
-      return 2 + 3 * Math.sin((hour - 8) * Math.PI / 8);
+      return Math.max(0, 2 + 3 * Math.sin((hour - 8) * Math.PI / 8)); // Sikrer at vind aldrig er negativ
     },
     
     // Simuler menneskelig aktivitet
@@ -3908,13 +3913,21 @@ html {
       state.humidity = Math.round(simulation.getHumidity(simulation.simulationTime));
       state.wind = Math.round(simulation.getWind(simulation.simulationTime) * 10) / 10;
       
+      // Automatisk alarm system (22:00-06:00)
+      var currentHour = simulation.simulationTime.getHours();
+      if (currentHour >= 22 || currentHour < 6) {
+        state.alarmArmed = true;
+      } else {
+        state.alarmArmed = false;
+      }
+      
       // Simuler menneskelig aktivitet
-      if (Math.random() < 0.1) { // 10% chance hver opdatering
+      if (Math.random() < 0.02) { // 2% chance hver opdatering (reduceret fra 10%)
         state.motion = simulation.getMotion(simulation.simulationTime);
         if (state.motion) log('👤 PIR sensor aktiveret (simulation)', 'sensor');
       }
       
-      if (Math.random() < 0.05) { // 5% chance hver opdatering
+      if (Math.random() < 0.01) { // 1% chance hver opdatering (reduceret fra 5%)
         state.door = simulation.getDoorActivity(simulation.simulationTime);
         if (state.door) log('🚪 Dør åbnet (simulation)', 'sensor');
       }
@@ -6922,6 +6935,7 @@ html {
     if(simulation.enabled) {
       // Genstart simulation med ny hastighed
       stopSimulation();
+      simulation.speed = parseInt(select.value) || 1;
       startSimulation();
     }
   }
