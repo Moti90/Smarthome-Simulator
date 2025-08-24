@@ -7140,13 +7140,13 @@ html {
     }
   }
 
-  function saveUserProgress(progressData) {
+  function saveUserProgressLocal(progressData) {
     const currentUser = getCurrentUser();
     if (currentUser) {
       const userProgress = JSON.parse(localStorage.getItem(`user_${currentUser}_progress`) || '{}');
       const updatedProgress = { ...userProgress, ...progressData };
       localStorage.setItem(`user_${currentUser}_progress`, JSON.stringify(updatedProgress));
-      console.log('💾 Bruger fremskridt gemt:', updatedProgress);
+      console.log('💾 Bruger fremskridt gemt lokalt:', updatedProgress);
     }
   }
 
@@ -8140,7 +8140,7 @@ html {
   }
 
            function saveToLocalStorage(userId, taskId, taskName, completedAt, currentUser) {
-           // Brug den lokale saveUserProgress funktion i stedet
+           // Brug den lokale saveUserProgressLocal funktion i stedet
            const progressData = {
              completedTasks: [{
                taskId: taskId,
