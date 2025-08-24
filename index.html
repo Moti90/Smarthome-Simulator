@@ -6149,25 +6149,7 @@ function renderWires(){
     measurementId: "G-YR3XWP3RVH"
   };
 
-  // Initialiser Firebase Firestore (kun til progress tracking)
-  function initializeFirestore() {
-    try {
-      console.log('🚀 Initialiserer Firebase Firestore...');
-      firebase.initializeApp(firebaseConfig);
-      console.log('✅ Firebase app initialiseret');
-      
-      const db = firebase.firestore();
-      console.log('✅ Firestore database klar til progress tracking');
-      
-      // Gør Firestore tilgængeligt globalt
-      window.db = db;
-      
-      return true;
-    } catch (error) {
-      console.error('❌ Firebase Firestore initialisering fejlede:', error);
-      return false;
-    }
-  }
+
 
   // Initialiser Firebase Firestore når DOM er klar
   function initializeFirestore() {
