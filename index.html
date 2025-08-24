@@ -6692,9 +6692,114 @@ html {
         // Opdater live sensor værdier med det samme
         updateSimulationDisplay();
         
-        // Sæt event listeners op for simulation knapper
-        setupSimulationEventListeners();
+        // Sæt event listeners op for simulation knapper direkte
+        console.log('🔧 Sætter simulation event listeners op...');
         
+        // Start Simulation knap
+        const btnStartSimulation = document.getElementById('btnStartSimulation');
+        if(btnStartSimulation) {
+          btnStartSimulation.onclick = startSimulation;
+          console.log('✅ Start simulation button event listener sat op');
+        }
+        
+        // Stop Simulation knap
+        const btnStopSimulation = document.getElementById('btnStopSimulation');
+        if(btnStopSimulation) {
+          btnStopSimulation.onclick = stopSimulation;
+          console.log('✅ Stop simulation button event listener sat op');
+        }
+        
+        // Reset Simulation knap
+        const btnResetSimulation = document.getElementById('btnResetSimulation');
+        if(btnResetSimulation) {
+          btnResetSimulation.onclick = resetSimulation;
+          console.log('✅ Reset simulation button event listener sat op');
+        }
+        
+        // Test Rules knap
+        const btnTestRules = document.getElementById('btnTestRules');
+        if(btnTestRules) {
+          btnTestRules.onclick = function() {
+            log('🎯 Tester alle regler med nuværende sensor værdier...', 'system');
+            runRules();
+            log('✅ Regel test gennemført - tjek loggen for resultater', 'system');
+          };
+          console.log('✅ Test rules button event listener sat op');
+        }
+        
+        // Back to Normal knap
+        const btnBackToNormal = document.getElementById('btnBackToNormal');
+        if(btnBackToNormal) {
+          btnBackToNormal.onclick = function() {
+            // Vis alle normale faner igen
+            document.querySelector('.tabs').style.display = 'flex';
+            
+            // Skjul alle views
+            document.querySelectorAll('.view').forEach(view => {
+              view.style.display = 'none';
+            });
+            
+            // Vis simulator view som standard
+            document.getElementById('view-sim').style.display = 'block';
+            document.getElementById('view-sim').classList.add('active');
+            
+            // Gendan tab aktivitet
+            document.getElementById('tabSim').classList.add('active');
+            document.getElementById('tabFlow').classList.remove('active');
+            document.getElementById('tabLearning').classList.remove('active');
+            document.getElementById('tabSettings').classList.remove('active');
+            
+            console.log('🔍 Gået tilbage til simulator');
+          };
+          console.log('✅ Back to normal button event listener sat op');
+        }
+        
+        // Simulation indstillinger
+        const simulationEnabled = document.getElementById('simulationEnabled');
+        if(simulationEnabled) {
+          simulationEnabled.onchange = function() {
+            if(this.checked) {
+              startSimulation();
+            } else {
+              stopSimulation();
+            }
+          };
+          console.log('✅ Simulation enabled checkbox event listener sat op');
+        }
+        
+        const simulationSpeed = document.getElementById('simulationSpeed');
+        if(simulationSpeed) {
+          simulationSpeed.onchange = function() {
+            if(simulation.enabled) {
+              // Genstart simulation med ny hastighed
+              stopSimulation();
+              startSimulation();
+            }
+          };
+          console.log('✅ Simulation speed selector event listener sat op');
+        }
+        
+        const realisticPatterns = document.getElementById('realisticPatterns');
+        if(realisticPatterns) {
+          realisticPatterns.onchange = function() {
+            if(simulation) {
+              simulation.realisticPatterns = this.checked;
+            }
+          };
+          console.log('✅ Realistic patterns checkbox event listener sat op');
+        }
+        
+        const dayNightCycle = document.getElementById('dayNightCycle');
+        if(dayNightCycle) {
+          dayNightCycle.onchange = function() {
+            if(simulation) {
+              simulation.dayNightCycle = this.checked;
+            }
+          };
+          console.log('✅ Day/night cycle checkbox event listener sat op');
+        }
+        
+        console.log('🔧 Alle simulation event listeners sat op');
         console.log('🔍 Skiftet til simulation dashboard');
       };
       console.log('✅ Simulation knap fundet og konfigureret');
