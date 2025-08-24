@@ -361,6 +361,17 @@
       flex: 1;
     }
     
+    /* Actor Status Styling */
+    .tag.active {
+      background: #10b981 !important;
+      color: white !important;
+    }
+    
+    .tag.inactive {
+      background: #6b7280 !important;
+      color: white !important;
+    }
+    
     /* Simulation Knap Styling */
     .btn-simulation {
       background: linear-gradient(135deg, #8b5cf6, #a855f7);
@@ -4151,6 +4162,9 @@ html {
               executeAction(rule);
               log('🎯 Regel #' + (index + 1) + ' aktiveret: ' + rule.action1, 'activate');
               rule.lastExecuted = Date.now(); // Gem tidspunkt for sidste kørsel
+              
+              // Opdater UI efter regel handling
+              updateActorDisplays();
             }
           }
         } catch (e) {
@@ -7209,6 +7223,31 @@ html {
     
     console.log('🔧 Simulation dashboard åbnet');
     console.log('🔍 Skiftet til simulation dashboard');
+  }
+  
+  // === UI Opdatering Funktioner ===
+  function updateActorDisplays() {
+    // Opdater lampe status
+    const lampStateEl = document.getElementById('lampState');
+    if (lampStateEl) {
+      lampStateEl.textContent = state.light ? 'ON' : 'OFF';
+      lampStateEl.className = 'tag ' + (state.light ? 'active' : 'inactive');
+    }
+    
+    // Opdater ventilator status
+    const fanStateEl = document.getElementById('fanState');
+    if (fanStateEl) {
+      fanStateEl.textContent = state.fan ? 'ON' : 'OFF';
+      fanStateEl.className = 'tag ' + (state.fan ? 'active' : 'inactive');
+    }
+    
+    // Opdater dæmper status (hvis den er defineret)
+    if (state.dimmer !== undefined) {
+      const dimmerStateEl = document.getElementById('dimmerState');
+      if (dimmerStateEl) {
+        dimmerStateEl.textContent = state.dimmer + '%';
+      }
+    }
   }
   
   // === Simulation Event Listeners Setup ===
