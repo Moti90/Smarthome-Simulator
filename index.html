@@ -3860,7 +3860,7 @@ html {
     
     getWind: function(time) {
       var hour = time.getHours() + time.getMinutes() / 60;
-      return Math.max(0, 2 + 3 * Math.sin((hour - 8) * Math.PI / 8)); // Sikrer at vind aldrig er negativ
+      return Math.max(0, 5 + 3 * Math.sin((hour - 8) * Math.PI / 8)); // Øget fra 2 til 5 m/s basis for realistiske danske forhold
     },
     
     // Simuler menneskelig aktivitet
