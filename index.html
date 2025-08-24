@@ -3648,24 +3648,7 @@ html {
   }
   
   function updateAllDisplays() {
-    // Opdater alle UI elementer med nuværende state værdier
-    var timeEl = document.getElementById('timeDisplay');
-    var weekdayEl = document.getElementById('weekdayDisplay');
-    var luxEl = document.getElementById('luxDisplay');
-    var humidityEl = document.getElementById('humidityDisplay');
-    var windEl = document.getElementById('windDisplay');
-    var motionEl = document.getElementById('motionDisplay');
-    var doorEl = document.getElementById('doorDisplay');
-    
-    if(timeEl) timeEl.textContent = state.time;
-    if(weekdayEl) weekdayEl.textContent = state.weekday;
-    if(luxEl) luxEl.textContent = state.lux;
-    if(humidityEl) humidityEl.textContent = state.humidity + '%';
-    if(windEl) windEl.textContent = state.wind + ' m/s';
-    if(motionEl) motionEl.textContent = state.motion ? 'Breached' : 'Safe';
-    if(doorEl) doorEl.textContent = state.door ? 'Opened' : 'Closed';
-    
-    // Opdater også pending state
+    // Opdater pending state (dette er det vigtigste)
     pending.time = state.time;
     pending.weekday = state.weekday;
     pending.lux = state.lux;
@@ -3673,6 +3656,13 @@ html {
     pending.wind = state.wind;
     pending.motion = state.motion;
     pending.door = state.door;
+    
+    // Log ændringerne så brugeren kan se dem
+    if (simulation.enabled) {
+      log('⏱️ Simulation: Tid = ' + state.time + ', Ugedag = ' + state.weekday, 'system');
+      log('📊 Sensorer: Lys = ' + state.lux + ', Fugt = ' + state.humidity + '%, Vind = ' + state.wind + ' m/s', 'system');
+      log('👤 Aktivitet: PIR = ' + (state.motion ? 'Breached' : 'Safe') + ', Dør = ' + (state.door ? 'Opened' : 'Closed'), 'system');
+    }
   }
   
   function updateSimulation() {
