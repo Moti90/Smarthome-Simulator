@@ -8484,7 +8484,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Beregn total dæmpning fra vægge
     const wallAttenuation = walls * materialAttenuation[material];
     
-    // Beregn total signalstyrke
+    // Beregn total signaltab
     let totalSignal = fspl + wallAttenuation;
     
     // Juster for mellemenhed type
@@ -8493,14 +8493,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Konverter til Z-Wave skala (-40 til -60 dBm)
-    // Jo højere total signalstyrke (dB), jo svagere er signalet
+    // Jo højere total signaltab (dB), jo svagere er signalet
     // Z-Wave godkender signaler mellem -40 dBm (bedste) og -60 dBm (minimum)
     
     // Beregn signalstyrke baseret på Z-Wave specifikationer
     // Godkendt rækkevidde: -40 til -60 dBm
     // Fra dokumentet: 20m + 2 gipsvægge = 63.23 dBm → ikke godkendt
     
-    // Konverter total signalstyrke til Z-Wave skala
+    // Konverter total signaltab til Z-Wave skala
     // Jo højere total dB værdi, jo svagere signal
     let signalStrength;
     if (totalSignal <= 50) {
@@ -8563,7 +8563,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <span style="color: #e5e9f0;">${result.wallAttenuation} dB</span>
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-          <span style="color: #cbd5e1;">Total signalstyrke:</span>
+                          <span style="color: #cbd5e1;">Total signaltab:</span>
           <span style="color: #e5e9f0;">${result.totalSignal.toFixed(2)} dB</span>
         </div>
         <div style="display: flex; justify-content: space-between;">
