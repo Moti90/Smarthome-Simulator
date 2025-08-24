@@ -6226,16 +6226,9 @@ html {
         console.log('🔍 Bruger fundet, kalder saveUserProgress...');
         const completedAt = new Date().toLocaleDateString('da-DK') + ' ' + new Date().toLocaleTimeString('da-DK');
         
-        // Hent brugerdata fra localStorage
-        const users = JSON.parse(localStorage.getItem('ibi_users') || '[]');
-        const userData = users.find(user => user.username === currentUser);
-        
-        if (userData) {
-          console.log('🔍 Data til Firebase:', { userId: currentUser, taskId: activeTask, taskName: taskCriteria[activeTask].name, completedAt });
-          saveUserProgress(currentUser, activeTask, taskCriteria[activeTask].name, completedAt, userData);
-        } else {
-          console.log('❌ Brugerdata ikke fundet - kan ikke gemme progress');
-        }
+        // currentUser er nu et objekt med .id property
+        console.log('🔍 Data til Firebase:', { userId: currentUser.id, taskId: activeTask, taskName: taskCriteria[activeTask].name, completedAt });
+        saveUserProgress(currentUser.id, activeTask, taskCriteria[activeTask].name, completedAt, currentUser);
       } else {
         console.log('❌ Ingen bruger fundet - kan ikke gemme progress');
       }
@@ -7104,9 +7097,7 @@ html {
   }
 
   // Hjælpefunktioner til brugerdata
-  function getCurrentUser() {
-    return localStorage.getItem('simUser');
-  }
+  // getCurrentUser funktionen er defineret længere nede i filen
 
   // Tjek om der allerede er brugere i systemet og opdater UI
   function checkExistingUsers() {
