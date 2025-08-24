@@ -3286,6 +3286,10 @@ html {
               <button id="btnSaveCreds" class="btn-primary">💾 Gem brugerindstillinger</button>
               <span class="setting-description">Standard er <code>admin</code> / <code>1234</code>, indtil du gemmer nye.</span>
             </div>
+            <div class="setting-item">
+              <button id="clearStorageBtn" class="btn-danger" style="display: none;">🗑️ Ryd localStorage</button>
+              <span class="setting-description">Slet alle brugere fra localStorage (vises kun efter brugeroprettelse)</span>
+            </div>
           </div>
 
           <!-- Elev navn (beta) -->
@@ -5771,6 +5775,9 @@ function renderWires(){
         
         document.getElementById('setUser').value='';
         document.getElementById('setPass').value='';
+        
+        // Vis ryd localStorage knap
+        showClearStorageButton();
       } catch (error) {
         console.error('Fejl ved oprettelse af bruger:', error);
         
@@ -5846,6 +5853,12 @@ function renderWires(){
     
     if(btnSave) btnSave.onclick = updateCreds;
     if(btnLogout) btnLogout.onclick = doLogout;
+    
+    // Clear localStorage knap
+    const clearStorageBtn = document.getElementById('clearStorageBtn');
+    if(clearStorageBtn) {
+      clearStorageBtn.onclick = clearLocalStorage;
+    }
     
     // Lærer logout knap
     const btnTeacherLogout = document.getElementById('btnTeacherLogout');
@@ -6275,6 +6288,38 @@ function renderWires(){
       }
     }, 100);
   });
+
+  // === localStorage Management ===
+  function showClearStorageButton() {
+    const clearButton = document.getElementById('clearStorageBtn');
+    if (clearButton) {
+      clearButton.style.display = 'block';
+      clearButton.onclick = clearLocalStorage;
+    }
+  }
+  
+  function clearLocalStorage() {
+    if (confirm('⚠️ Er du sikker på at du vil slette ALLE brugere fra localStorage?\n\nDette kan ikke fortrydes!')) {
+      // Slet alle bruger-relaterede data
+      localStorage.removeItem('ibi_users');
+      localStorage.removeItem('simUser');
+      localStorage.removeItem('simPass');
+      localStorage.removeItem('pending_sync');
+      localStorage.removeItem('studentNames');
+      
+      console.log('🗑️ localStorage ryddet for alle brugerdata');
+      alert('✅ Alle brugere er slettet fra localStorage!\n\nDu kan nu oprette nye brugere i Firebase.');
+      
+      // Skjul knappen igen
+      const clearButton = document.getElementById('clearStorageBtn');
+      if (clearButton) {
+        clearButton.style.display = 'none';
+      }
+      
+      // Genindlæs siden for at nulstille alt
+      location.reload();
+    }
+  }
 
   // === Cloud Database funktionalitet ===
            async function saveUserProgress(userId, taskId, taskName, completedAt, currentUser) {
