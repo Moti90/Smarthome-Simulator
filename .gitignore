@@ -1,0 +1,23 @@
+# OS genererede filer
+.DS_Store
+Thumbs.db
+
+# Editor filer
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Log filer
+*.log
+
+# Node modules (hvis du tilføjer dem senere)
+node_modules/
+
+# Backup filer
+*.backup
+*_backup_*
+
+# Temporary filer
+*.tmp
+*.temp

@@ -46,7 +46,7 @@
 
     html,body{
       font-family:Segoe UI,system-ui,-apple-system,Roboto,Ubuntu,Cantarell,Helvetica,Arial,sans-serif;
-      margin:0;background:#111;color:#e5e9f0
+      margin:0;background:#0b0f14;color:#e5e9f0
     }
 
     header{padding:12px 16px;background:#111720;border-bottom:1px solid #1f2933;display:flex;align-items:center;gap:12px;position:relative}
@@ -277,227 +277,6 @@
       font-size: 13px;
       line-height: 1.4;
     }
-    
-    /* Simulation mode styling */
-    .simulation-status {
-      padding: 12px;
-      background: rgba(42,176,255,0.1);
-      border-radius: 8px;
-      border-left: 3px solid #2ab0ff;
-      margin-top: 16px;
-    }
-    
-    .simulation-active {
-      background: rgba(16,185,129,0.1);
-      border-left-color: #10b981;
-    }
-    
-    /* Simulation Log Styling */
-    .simulation-log {
-      max-height: 300px;
-      overflow-y: auto;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      background: #f8f9fa;
-      padding: 10px;
-    }
-    
-    .log-controls {
-      margin-bottom: 15px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    
-    .log-filters {
-      margin-bottom: 15px;
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    
-    .log-filters label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    
-    .log-filters input[type="checkbox"] {
-      margin: 0;
-    }
-    
-    .log-entry {
-      display: flex;
-      gap: 10px;
-      padding: 8px;
-      margin-bottom: 5px;
-      border-radius: 4px;
-      font-family: 'Courier New', monospace;
-      font-size: 13px;
-      border-left: 3px solid #ddd;
-    }
-    
-    .log-entry.system { border-left-color: #007bff; background: #e3f2fd; }
-    .log-entry.sensor { border-left-color: #28a745; background: #e8f5e8; }
-    .log-entry.activate { border-left-color: #ffc107; background: #fff8e1; }
-    .log-entry.error { border-left-color: #dc3545; background: #f8d7da; }
-    
-    .log-time {
-      color: #666;
-      min-width: 60px;
-    }
-    
-    .log-type {
-      font-weight: bold;
-      min-width: 80px;
-      text-transform: uppercase;
-      font-size: 11px;
-    }
-    
-    .log-message {
-      flex: 1;
-    }
-    
-    /* Actor Status Styling */
-    .tag.active {
-      background: #10b981 !important;
-      color: white !important;
-    }
-    
-    .tag.inactive {
-      background: #6b7280 !important;
-      color: white !important;
-    }
-    
-    /* Simulation Knap Styling */
-    .btn-simulation {
-      background: linear-gradient(135deg, #8b5cf6, #a855f7);
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
-    }
-    
-    .btn-simulation:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
-      background: linear-gradient(135deg, #7c3aed, #9333ea);
-    }
-    
-    .btn-simulation:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3);
-    }
-    
-    /* Sensor Grid Layout */
-    .sensor-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-top: 16px;
-    }
-
-    .sensor-card {
-      background: linear-gradient(135deg, #1e293b, #0f172a);
-      border: 1px solid #334155;
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .sensor-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #8b5cf6, #a855f7);
-    }
-
-    .sensor-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
-      border-color: #8b5cf6;
-    }
-
-    .sensor-icon {
-      font-size: 32px;
-      margin-bottom: 8px;
-    }
-
-    .sensor-title {
-      color: #e2e8f0;
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .sensor-value {
-      color: #f8fafc;
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 4px;
-      font-family: 'Courier New', monospace;
-    }
-
-    .sensor-subtitle {
-      color: #94a3b8;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    /* Status Grid */
-    .status-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 16px;
-    }
-
-    .status-item {
-      background: rgba(15, 20, 28, 0.4);
-      border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 12px;
-      text-align: center;
-    }
-
-    .status-label {
-      color: #94a3b8;
-      font-size: 12px;
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-
-    .status-value {
-      color: #f8fafc;
-      font-size: 16px;
-      font-weight: 600;
-      font-family: 'Courier New', monospace;
-    }
-
-    /* Sensor Card Variants */
-    .clock-card::before { background: linear-gradient(90deg, #3b82f6, #1d4ed8); }
-    .light-card::before { background: linear-gradient(90deg, #f59e0b, #d97706); }
-    .humidity-card::before { background: linear-gradient(90deg, #10b981, #059669); }
-    .wind-card::before { background: linear-gradient(90deg, #8b5cf6, #7c3aed); }
-    .motion-card::before { background: linear-gradient(90deg, #ef4444, #dc2626); }
-    .door-card::before { background: linear-gradient(90deg, #f97316, #ea580c); }
-    .alarm-card::before { background: linear-gradient(90deg, #ec4899, #db2777); }
-    .temp-card::before { background: linear-gradient(90deg, #06b6d4, #0891b2); }
     
     .styled-select {
       background: rgba(15, 20, 28, 0.8);
@@ -834,52 +613,6 @@
   opacity: 0.7;
   font-weight: 300;
   letter-spacing: 0.5px;
-}
-
-/* Wi-Fi bølger animationer */
-.wifi-wave {
-  position: absolute;
-  top: 8%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 20%;
-  background: transparent;
-  border-top: 4px solid #00f7ff;
-  border-radius: 50%;
-  opacity: 0;
-  animation: pulse 2s infinite;
-}
-
-.wifi-wave:nth-child(2) { 
-  top: 16%; 
-  width: 80%; 
-  animation-delay: 0.4s; 
-}
-
-.wifi-wave:nth-child(3) { 
-  top: 24%; 
-  width: 100%; 
-  animation-delay: 0.8s; 
-}
-
-/* Glow animation for logo */
-@keyframes glow {
-  from { filter: drop-shadow(0 0 10px #00f7ff); }
-  to { filter: drop-shadow(0 0 30px #00f7ff); }
-}
-
-/* Pulse animation for Wi-Fi bølger */
-@keyframes pulse {
-  0% { opacity: 0; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1.2); }
-}
-
-/* Slide in animation for tekst */
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Rule Diagnosis Panel */
@@ -2548,7 +2281,6 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
 #view-sim .card, #view-sim [data-card]{ border-top:3px solid #2ab0ff; }
 #view-flow .card, #view-flow [data-card]{ border-top:3px solid #10b981; }
 #view-settings .card, #view-settings [data-card]{ border-top:3px solid #fbbf24; }
-#view-simulation .card, #view-simulation [data-card]{ border-top:3px solid #8b5cf6; }
 
 /* Hide old top tabs/title if present */
 .tabs, .top-tabs, .page-title, h1.page-title-center { display:none !important; }
@@ -2622,163 +2354,59 @@ html {
   background-size: 200px 100%;
   animation: shimmer 1.5s infinite;
 }
-
-/* SmartHome Simulator Intro Styles */
-.logo-container {
-  position: relative;
-  width: 300px;
-}
-
-.logo {
-  width: 100%;
-  filter: brightness(0) drop-shadow(0 0 0 #00f7ff); /* Starter helt mørkt */
-  animation: powerOn 3s ease-in-out forwards, glow 3s infinite alternate 3s;
-}
-
-/* Wi-Fi bølger (pulserende) */
-.wifi {
-  position: absolute;
-  top: 8%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 20%;
-  background: transparent;
-  border-top: 4px solid #00f7ff;
-  border-radius: 50%;
-  opacity: 0;
-  animation: pulse 2s infinite;
-  animation-delay: 3s; /* starter først når logoet er "tændt" */
-}
-
-.wifi:nth-child(2) { top: 16%; width: 80%; animation-delay: 3.4s; }
-.wifi:nth-child(3) { top: 24%; width: 100%; animation-delay: 3.8s; }
-
-/* Login Card */
-.login-card {
-  margin-top: 40px;
-  background: rgba(17, 23, 32, 0.9);
-  border: 1px solid rgba(0, 247, 255, 0.3);
-  border-radius: 15px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  opacity: 0;
-  animation: fadeIn 1s ease-in forwards;
-  animation-delay: 4s;
-}
-
-.login-card .body {
-  padding: 25px;
-}
-
-.login-card h3 {
-  margin: 0 0 20px 0;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.login-card input {
-  transition: all 0.3s ease;
-}
-
-.login-card input:focus {
-  border-color: #00f7ff;
-  box-shadow: 0 0 0 3px rgba(0, 247, 255, 0.1);
-  outline: none;
-}
-
-.login-card button {
-  transition: all 0.3s ease;
-}
-
-.login-card button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 247, 255, 0.3);
-}
-
-/* Signature */
-.login-signature {
-  margin-top: 20px;
-  color: #6b7280;
-  font-size: 12px;
-  opacity: 0;
-  animation: fadeIn 1s ease-in forwards;
-  animation-delay: 4.5s;
-}
-
-/* Animationer */
-@keyframes powerOn {
-  0%   { filter: brightness(0) drop-shadow(0 0 0 #00f7ff); }
-  50%  { filter: brightness(0.5) drop-shadow(0 0 10px #00f7ff); }
-  100% { filter: brightness(1) drop-shadow(0 0 20px #00f7ff); }
-}
-
-@keyframes glow {
-  0%   { filter: brightness(1) drop-shadow(0 0 20px #00f7ff); }
-  100% { filter: brightness(1.2) drop-shadow(0 0 30px #00f7ff); }
-}
-
-@keyframes pulse {
-  0%   { opacity: 0; transform: translateX(-50%) scale(0.8); }
-  50%  { opacity: 1; transform: translateX(-50%) scale(1); }
-  100% { opacity: 0; transform: translateX(-50%) scale(1.2); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
 </style>
 
 </head>
 <body>
 
-<header class="appbar" style="display: none;">
-  <div class="brand">
-    <img src="LOGO.png" alt="SMARTHOME SIMULATOR logo" height="50" style="margin-right: 10px;">
-    <span class="name" style="font-size: 14px; letter-spacing: 0.5px;">SMARTHOME SIMULATOR</span>
+<header class="appbar">
+  <div class="wrap">
+    <div class="brand">
+      <img src="LOGO.png" alt="SMARTHOME SIMULATOR logo" height="50" style="margin-right: 10px;">
+      <span class="name" style="font-size: 14px; letter-spacing: 0.5px;">SMARTHOME SIMULATOR</span>
+    </div>
+    <nav class="mainnav">
+      <button type="button" data-target="view-sim">🏠 Simulator</button>
+      <button type="button" data-target="view-flow">🧩 Wiresheet</button>
+      <button type="button" data-target="view-learning">📚 Læring</button>
+      <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
+      <button type="button" onclick="showQuickStart()" title="Kom godt i gang">🚀 Opgaver</button>
+    </nav>
   </div>
-  <nav class="mainnav">
-    <button type="button" data-target="view-sim">🏠 Simulator</button>
-    <button type="button" data-target="view-flow">🧩 Wiresheet</button>
-    <button type="button" data-target="view-learning">📚 Læring</button>
-    <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
-    <button type="button" onclick="showQuickStart()" title="Kom godt i gang">🚀 Opgaver</button>
-  </nav>
 </header>
 
-  <!-- SmartHome Simulator Intro -->
+  <!-- Login overlay -->
   <div id="loginView" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
-    <div class="logo-container">
-      <img src="LOGO.png" alt="SmartHome Simulator Logo" class="logo">
-      <!-- Wi-Fi bølger (pulserende) -->
-      <div class="wifi"></div>
-      <div class="wifi"></div>
-      <div class="wifi"></div>
+    <!-- SMARTHOME SIMULATOR Logo -->
+    <div class="login-logo">
+      <div class="logo-smarthome">
+        <img src="LOGO.png" alt="SMARTHOME SIMULATOR logo" height="250" style="margin-bottom: 35px;">
+      </div>
     </div>
-    
-    <!-- Login/Brugeroprettelse Card -->
+
+    <!-- Modern Login Card -->
     <div class="card login-card">
       <div class="body">
-        <h3 id="loginTitle" style="text-align:center; margin-bottom:20px; color:#00f7ff;">Opret din brugerkonto</h3>
-        <p id="loginSubtitle" style="text-align:center; margin-bottom:20px; color:#9ca3af; font-size:14px;">Opret en konto for at gemme dit fremskridt og opgave-resultater</p>
-        
-        <div style="margin-bottom:16px;">
-          <label style="display:block; margin-bottom:6px; color:#9ca3af; font-size:14px;">Brugernavn</label>
-          <input id="loginUser" placeholder="Indtast dit brugernavn" autocomplete="username" style="width:100%; padding:10px; border-radius:8px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e9f0;">
+        <div style="margin-bottom:24px;">
+          <label style="display:block; margin-bottom:8px; color:#9ca3af; font-size:14px;">Brugernavn</label>
+          <input id="loginUser" placeholder="Brugernavn" autocomplete="username" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3);">
         </div>
         
-        <div style="margin-bottom:20px;">
-          <label style="display:block; margin-bottom:6px; color:#9ca3af; font-size:14px;">Adgangskode</label>
-          <input id="loginPass" type="password" placeholder="Indtast din adgangskode" autocomplete="current-password" style="width:100%; padding:10px; border-radius:8px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e9f0;">
+        <div style="margin-bottom:24px;">
+          <label style="display:block; margin-bottom:8px; color:#9ca3af; font-size:14px;">Adgangskode</label>
+          <input id="loginPass" type="password" placeholder="Adgangskode" autocomplete="current-password" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3);">
         </div>
         
-        <button id="btnLogin" class="success" style="width:100%; padding:12px; font-size:16px; border-radius:10px; margin-bottom:12px;">
-          🚀 Opret konto & Start Simulator
+        <button id="btnLogin" class="success" style="width:100%; padding:12px; font-size:16px; border-radius:12px; margin-bottom:16px;">
+          🔓 Log ind
         </button>
         
-        <p id="loginError" style="color:#ef4444; text-align:center; margin-bottom:0; font-size:14px;"></p>
-      </div>
+        <button id="btnRegister" class="info" style="width:100%; padding:12px; font-size:16px; border-radius:12px; margin-bottom:16px;">
+          👤 Opret ny bruger
+        </button>
+        
+        <p id="loginError" style="color:#ef4444; text-align:center; margin-bottom:16px;"></p>
+    </div>
     </div>
     
     <!-- Signature -->
@@ -3237,10 +2865,7 @@ html {
       <div class="wrap">
         <!-- 1) Sensorer -->
         <div class="card" data-section="sensors">
-          <h2 style="display: flex; justify-content: space-between; align-items: center;">
-            <span>1) Virtuelle sensorer & tilstande</span>
-            <button id="btnSimulation" class="btn-simulation" onclick="showSimulationDashboard()">🎮 Simulation</button>
-          </h2>
+          <h2>1) Virtuelle sensorer & tilstande</h2>
           <div class="body">
             <!-- Tid & miljø -->
             <div class="section-group">
@@ -3748,196 +3373,20 @@ html {
               <button id="btnResetOnboarding" class="btn-secondary">🔄 Reset onboarding</button>
               <span class="setting-description">Start forfra med onboarding guiden</span>
             </div>
-            <div class="setting-item">
-              <button id="btnLogout" class="btn-danger">🚪 Log ud</button>
-              <span class="setting-description">Log ud og vis login-skærmen igen</span>
-            </div>
+                      <div class="setting-item">
+            <button id="btnLogout" class="btn-danger">🚪 Log ud</button>
+            <span class="setting-description">Log ud og vis login-skærmen igen</span>
           </div>
 
-          <div class="divider"></div>
-
-
-
-        </div>
-      </div>
-    </section>
-    
-    <!-- ===== View: Simulation ===== -->
-    <section id="view-simulation" class="view">
-      <div class="wrap">
-        
-        <!-- Simulation Kontrol Panel -->
-        <div class="card">
-          <h2>🎮 Simulation Kontrol</h2>
-          <div class="body">
-            <div class="settings-section">
-              <div class="setting-item">
-                <label for="simulationEnabled">Aktivér Simulation</label>
-                <input type="checkbox" id="simulationEnabled" class="styled-checkbox" onchange="toggleSimulation(this)">
-                <span class="setting-description">Start/stop simulation mode</span>
-              </div>
-              <div class="setting-item">
-                <label for="simulationSpeed">Hastighed</label>
-                <select id="simulationSpeed" class="styled-select" onchange="changeSimulationSpeed(this)">
-                  <option value="1">1x (Normal)</option>
-                  <option value="10">10x (Hurtig)</option>
-                  <option value="60" selected>60x (Meget hurtig)</option>
-                  <option value="100">100x (Ekstrem)</option>
-                </select>
-                <span class="setting-description">Hvor hurtigt tiden går</span>
-              </div>
-              <div class="setting-item">
-                <label for="realisticPatterns">Realistiske Mønstre</label>
-                <input type="checkbox" id="realisticPatterns" class="styled-checkbox" checked onchange="toggleRealisticPatterns(this)">
-                <span class="setting-description">Brug sinus kurver for naturlige værdier</span>
-              </div>
-              <div class="setting-item">
-                <label for="dayNightCycle">Dag/Nat Cyklus</label>
-                <input type="checkbox" id="dayNightCycle" class="styled-checkbox" checked onchange="toggleDayNightCycle(this)">
-                <span class="setting-description">Simuler dag og nat med forskellige lysniveauer</span>
-              </div>
-              <div class="setting-item">
-                                        <button id="btnStartSimulation" class="btn-primary" onclick="startSimulation()">▶️ Start Simulation</button>
-                <button id="btnStopSimulation" class="btn-danger" disabled onclick="stopSimulation()">⏹️ Stop Simulation</button>
-                <button id="btnResetSimulation" class="btn-secondary" onclick="resetSimulation()">🔄 Reset til normal</button>
-                <button id="btnTestRules" class="btn-info" onclick="testRules()">🎯 Test Regler</button>
-                <button id="btnBackToNormal" class="btn-secondary" onclick="goBackToSimulator()">🏠 Tilbage til Simulator</button>
-              </div>
-            </div>
           </div>
-        </div>
 
-        <!-- Live Sensor Display -->
-        <div class="card">
-          <h2>📊 Live Sensor Værdier</h2>
-          <div class="body">
-            <div class="sensor-grid">
-              <!-- Digital Clock -->
-              <div class="sensor-card clock-card">
-                <div class="sensor-icon">⏰</div>
-                <div class="sensor-title">Digitalt Ur</div>
-                <div class="sensor-value" id="liveClock">--:--</div>
-                <div class="sensor-subtitle" id="liveDate">--</div>
-              </div>
-              
-              <!-- Light Sensor -->
-              <div class="sensor-card light-card">
-                <div class="sensor-icon">💡</div>
-                <div class="sensor-title">Lys Sensor</div>
-                <div class="sensor-value" id="liveLuxDisplay">-- lux</div>
-                <div class="sensor-subtitle" id="liveLightStatus">Normal</div>
-              </div>
-              
-              <!-- Humidity Sensor -->
-              <div class="sensor-card humidity-card">
-                <div class="sensor-icon">💧</div>
-                <div class="sensor-title">Fugt Sensor</div>
-                <div class="sensor-value" id="liveHumidityDisplay">--%</div>
-                <div class="sensor-subtitle" id="liveHumidityStatus">Normal</div>
-              </div>
-              
-              <!-- Wind Sensor -->
-              <div class="sensor-card wind-card">
-                <div class="sensor-icon">🌪️</div>
-                <div class="sensor-title">Vind Sensor</div>
-                <div class="sensor-value" id="liveWindDisplay">-- m/s</div>
-                <div class="sensor-subtitle" id="liveWindStatus">Normal</div>
-              </div>
-              
-              <!-- Motion Sensor -->
-              <div class="sensor-card motion-card">
-                <div class="sensor-icon">👤</div>
-                <div class="sensor-title">PIR Sensor</div>
-                <div class="sensor-value" id="liveMotionDisplay">Safe</div>
-                <div class="sensor-subtitle" id="liveMotionStatus">Ingen bevægelse</div>
-              </div>
-              
-              <!-- Door Sensor -->
-              <div class="sensor-card door-card">
-                <div class="sensor-icon">🚪</div>
-                <div class="sensor-title">Dør Sensor</div>
-                <div class="sensor-value" id="liveDoorDisplay">Closed</div>
-                <div class="sensor-subtitle" id="liveDoorStatus">Låst</div>
-              </div>
-              
-              <!-- Alarm System -->
-              <div class="sensor-card alarm-card">
-                <div class="sensor-icon">🔒</div>
-                <div class="sensor-title">Alarm System</div>
-                <div class="sensor-value" id="liveAlarmDisplay">Disarmed</div>
-                <div class="sensor-subtitle" id="liveAlarmStatus">Inaktiv</div>
-              </div>
-              
-              <!-- Temperature Sensor -->
-              <div class="sensor-card temp-card">
-                <div class="sensor-icon">🌡️</div>
-                <div class="sensor-title">Temperatur</div>
-                <div class="sensor-value" id="liveTempDisplay">--°C</div>
-                <div class="sensor-subtitle" id="liveTempStatus">Normal</div>
-              </div>
-            </div>
-          </div>
         </div>
-
-        <!-- Simulation Status -->
-        <div class="card">
-          <h2>📈 Simulation Status</h2>
-          <div class="body">
-            <div id="simulationStatus" class="simulation-status">
-              <div class="status-grid">
-                <div class="status-item">
-                  <div class="status-label">⏱️ Simulation Tid</div>
-                  <div class="status-value" id="simulationTime">--:--</div>
-                </div>
-                <div class="status-item">
-                  <div class="status-label">📊 Sensor Status</div>
-                  <div class="status-value" id="sensorStatus">Normal</div>
-                </div>
-                <div class="status-item">
-                  <div class="status-label">🔄 Cyklus</div>
-                  <div class="status-value" id="cycleStatus">Normal</div>
-                </div>
-                <div class="status-item">
-                  <div class="status-label">⚡ Hastighed</div>
-                  <div class="status-value" id="speedStatus">1x</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Simulation Log -->
-        <div class="card">
-          <h2>📝 Simulation Log</h2>
-          <div class="body">
-            <div class="log-controls">
-              <button id="btnClearSimLog" class="btn-secondary" onclick="clearSimulationLog()">🗑️ Ryd Log</button>
-              <button id="btnExportSimLog" class="btn-info" onclick="exportSimulationLog()">💾 Eksporter Log</button>
-            </div>
-            <div class="log-filters">
-              <label><input type="checkbox" id="filterSimAll" checked onchange="filterSimulationLog('all')"> Alle</label>
-              <label><input type="checkbox" id="filterSimSystem" checked onchange="filterSimulationLog('system')"> System</label>
-              <label><input type="checkbox" id="filterSimSensor" checked onchange="filterSimulationLog('sensor')"> Sensorer</label>
-              <label><input type="checkbox" id="filterSimActivate" checked onchange="filterSimulationLog('activate')"> Aktivering</label>
-              <label><input type="checkbox" id="filterSimError" checked onchange="filterSimulationLog('error')"> Fejl</label>
-            </div>
-            <div id="simulationLog" class="simulation-log">
-              <div class="log-entry system">
-                <span class="log-time">--:--</span>
-                <span class="log-type">System</span>
-                <span class="log-message">Simulation dashboard åbnet</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
     </section>
     
     <!-- ===== View: Lærer Dashboard ===== -->
     <section id="view-teacher" class="view">
       <div class="wrap">
-
         <!-- Lærer kontroller -->
         <div class="card">
           <h2>👨‍🏫 Lærer Dashboard</h2>
@@ -4013,409 +3462,11 @@ html {
   var state   = { motion:false, door:false, lux:100, wind:2, humidity:45, time:'21:30', weekday:'Mon', globals:{}, light:false, dimmer:0, fan:false, alarmArmed:false, alarmHome:false, rules:[] };
   var pending = JSON.parse(JSON.stringify(state));
   window.pending = pending; window.state = state;
-  
-  /* Simulation System */
-  window.simulation = {
-    enabled: false,
-    speed: 1,
-    realisticPatterns: true,
-    dayNightCycle: true,
-    startTime: new Date(),
-    simulationTime: new Date(),
-    interval: null,
-    
-    // Sinuskurver for realistiske sensor mønstre
-    getTemperature: function(time) {
-      var hour = time.getHours() + time.getMinutes() / 60;
-      return 21.5 + 8.5 * Math.sin((hour - 6) * Math.PI / 12); // Øget fra 3.5 til 8.5 for større udsving
-    },
-    
-    getLight: function(time) {
-      var hour = time.getHours() + time.getMinutes() / 60;
-      var lightLevel = Math.max(0, Math.sin((hour - 6) * Math.PI / 12));
-      // Sikrer at lys er højere om dagen (mellem 6-18)
-      if (hour >= 6 && hour <= 18) {
-        return Math.round(lightLevel * 800 + 200); // 200-1000 lux om dagen
-      } else {
-        return Math.round(lightLevel * 50); // 0-50 lux om natten
-      }
-    },
-    
-    getHumidity: function(time) {
-      var hour = time.getHours() + time.getMinutes() / 60;
-      return 45 + 15 * Math.sin((hour - 12) * Math.PI / 12);
-    },
-    
-    getWind: function(time) {
-      var hour = time.getHours() + time.getMinutes() / 60;
-      return Math.max(0, 5 + 3 * Math.sin((hour - 8) * Math.PI / 8)); // Øget fra 2 til 5 m/s basis for realistiske danske forhold
-    },
-    
-    // Simuler menneskelig aktivitet
-    getMotion: function(time) {
-      var hour = time.getHours();
-      // Mest aktivitet mellem 7-9 og 17-22
-      if ((hour >= 7 && hour <= 9) || (hour >= 17 && hour <= 22)) {
-        return Math.random() < 0.3; // 30% chance for bevægelse
-      }
-      return Math.random() < 0.05; // 5% chance om natten
-    },
-    
-    getDoorActivity: function(time) {
-      var hour = time.getHours();
-      // Døre åbner mest om morgenen og aftenen
-      if ((hour >= 7 && hour <= 9) || (hour >= 17 && hour <= 19)) {
-        return Math.random() < 0.2; // 20% chance
-      }
-      return Math.random() < 0.05; // 5% chance
-    }
-  };
 
   function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   var lastLogMessage = '';
   var logEntries = [];
   var currentLogFilter = 'all';
-  
-  /* Simulation Functions */
-  window.startSimulation = function() {
-    if (window.simulation.enabled) return;
-    
-    window.simulation.enabled = true;
-    window.simulation.startTime = new Date();
-    window.simulation.simulationTime = new Date();
-    
-    // Hent indstillinger
-    const speedEl = document.getElementById('simulationSpeed');
-    const realisticEl = document.getElementById('realisticPatterns');
-    const dayNightEl = document.getElementById('dayNightCycle');
-    
-    window.simulation.speed = parseInt(speedEl ? speedEl.value : 1) || 1;
-    window.simulation.realisticPatterns = realisticEl ? realisticEl.checked : true;
-    window.simulation.dayNightCycle = dayNightEl ? dayNightEl.checked : true;
-    
-    // Start simulation loop
-    window.simulation.interval = setInterval(function() {
-      updateSimulation();
-    }, 1000 / window.simulation.speed); // Opdater hver sekund divideret med hastighed
-    
-    // Opdater UI
-    const enabledEl = document.getElementById('simulationEnabled');
-    const startBtn = document.getElementById('btnStartSimulation');
-    const stopBtn = document.getElementById('btnStopSimulation');
-    const statusEl = document.getElementById('simulationStatus');
-    
-    if (enabledEl) enabledEl.checked = true;
-    if (startBtn) startBtn.disabled = true;
-    if (stopBtn) stopBtn.disabled = false;
-    if (statusEl) {
-      statusEl.style.display = 'block';
-      statusEl.classList.add('simulation-active');
-    }
-    
-    log('🎮 Simulation startet med hastighed ' + window.simulation.speed + 'x', 'system');
-    addSimulationLogEntry('system', '🎮 Simulation startet med hastighed ' + window.simulation.speed + 'x');
-  }
-  
-  window.stopSimulation = function() {
-    if (!window.simulation.enabled) return;
-    
-    window.simulation.enabled = false;
-    clearInterval(window.simulation.interval);
-    window.simulation.interval = null;
-    
-    // Ryd alle auto-reset timere
-    if (window.simulation.autoResetTimers) {
-      Object.values(window.simulation.autoResetTimers).forEach(timer => {
-        clearTimeout(timer);
-      });
-      window.simulation.autoResetTimers = {};
-    }
-    
-    // Opdater UI
-    const enabledEl = document.getElementById('simulationEnabled');
-    const startBtn = document.getElementById('btnStartSimulation');
-    const stopBtn = document.getElementById('btnStopSimulation');
-    const statusEl = document.getElementById('simulationStatus');
-    
-    if (enabledEl) enabledEl.checked = false;
-    if (startBtn) startBtn.disabled = false;
-    if (stopBtn) stopBtn.disabled = true;
-    if (statusEl) statusEl.classList.remove('simulation-active');
-    
-    log('⏹️ Simulation stoppet', 'system');
-    addSimulationLogEntry('system', '⏹️ Simulation stoppet');
-  }
-  
-  window.resetSimulation = function() {
-    stopSimulation();
-    
-    // Reset til normale værdier
-    state.time = '21:30';
-    state.weekday = 'Mon';
-    state.lux = 100;
-    state.humidity = 45;
-    state.wind = 2;
-    state.temperature = 21.5; // Tilføjet temperatur!
-    state.motion = false;
-    state.door = false;
-    
-    // Opdater UI
-    const statusEl = document.getElementById('simulationStatus');
-    if (statusEl) statusEl.style.display = 'none';
-    
-    updateAllDisplays();
-    updateSimulationDisplay(); // Opdater også simulation dashboard
-    
-    log('🔄 Simulation reset til normal tilstand', 'system');
-    addSimulationLogEntry('system', '🔄 Simulation reset til normal tilstand');
-  }
-  
-  function updateAllDisplays() {
-    // Opdater pending state (dette er det vigtigste)
-    pending.time = state.time;
-    pending.weekday = state.weekday;
-    pending.lux = state.lux;
-    pending.humidity = state.humidity;
-    pending.wind = state.wind;
-    pending.temperature = state.temperature; // Tilføjet temperatur!
-    pending.motion = state.motion;
-    pending.door = state.door;
-    
-    // Log ændringerne så brugeren kan se dem
-    if (window.simulation.enabled) {
-      // Kun log når der er faktiske ændringer i sensor status
-      if (!window.simulation.lastSensorState) {
-        window.simulation.lastSensorState = {
-          motion: state.motion,
-          door: state.door,
-          lux: state.lux,
-          humidity: state.humidity,
-          wind: state.wind,
-          temperature: state.temperature
-        };
-      }
-      
-      // Tjek om der er ændringer
-      var hasChanges = false;
-      if (window.simulation.lastSensorState.motion !== state.motion) {
-        log('👤 PIR Status: ' + (state.motion ? 'Breached' : 'Safe'), 'sensor');
-        hasChanges = true;
-      }
-      if (window.simulation.lastSensorState.door !== state.door) {
-        log('🚪 Dør Status: ' + (state.door ? 'Opened' : 'Closed'), 'sensor');
-        hasChanges = true;
-      }
-      
-      // Log sensor ændringer kun hvis de er betydelige
-      if (Math.abs(window.simulation.lastSensorState.lux - state.lux) > 50) {
-        log('💡 Lys ændret: ' + state.lux + ' lux', 'sensor');
-        hasChanges = true;
-      }
-      if (Math.abs(window.simulation.lastSensorState.humidity - state.humidity) > 5) {
-        log('💧 Fugt ændret: ' + state.humidity + '%', 'sensor');
-        hasChanges = true;
-      }
-      if (Math.abs(window.simulation.lastSensorState.wind - state.wind) > 1) {
-        log('🌪️ Vind ændret: ' + state.wind + ' m/s', 'sensor');
-        hasChanges = true;
-      }
-      if (Math.abs(window.simulation.lastSensorState.temperature - state.temperature) > 2) {
-        log('🌡️ Temperatur ændret: ' + state.temperature + '°C', 'sensor');
-        hasChanges = true;
-      }
-      
-      // Opdater sidste sensor state
-      if (hasChanges) {
-        window.simulation.lastSensorState = {
-          motion: state.motion,
-          door: state.door,
-          lux: state.lux,
-          humidity: state.humidity,
-          wind: state.wind,
-          temperature: state.temperature
-        };
-      }
-    }
-  }
-  
-  window.updateSimulation = function() {
-    if (!window.simulation.enabled) return;
-    
-    // Opdater simulation tid
-    var timeDiff = (Date.now() - window.simulation.startTime.getTime()) * window.simulation.speed;
-    window.simulation.simulationTime = new Date(window.simulation.startTime.getTime() + timeDiff);
-    
-    // Opdater sensor værdier baseret på tid
-    if (window.simulation.realisticPatterns) {
-      state.lux = window.simulation.getLight(window.simulation.simulationTime);
-      state.humidity = Math.round(window.simulation.getHumidity(window.simulation.simulationTime));
-      state.wind = Math.round(window.simulation.getWind(window.simulation.simulationTime) * 10) / 10;
-      
-      // Opdater temperatur (tilføjet!)
-      state.temperature = Math.round(window.simulation.getTemperature(window.simulation.simulationTime) * 10) / 10;
-      
-      // Automatisk alarm system (22:00-06:00)
-      var currentHour = window.simulation.simulationTime.getHours();
-      if (currentHour >= 22 || currentHour < 6) {
-        state.alarmArmed = true;
-      } else {
-        state.alarmArmed = false;
-      }
-      
-      // Simuler menneskelig aktivitet
-      if (Math.random() < 0.005) { // 0.5% chance hver opdatering (reduceret fra 2%)
-        state.motion = window.simulation.getMotion(window.simulation.simulationTime);
-        if (state.motion) {
-          log('👤 PIR sensor aktiveret (simulation)', 'sensor');
-          addSimulationLogEntry('sensor', '👤 PIR sensor aktiveret');
-        }
-      }
-      
-      if (Math.random() < 0.002) { // 0.2% chance hver opdatering (reduceret fra 1%)
-        state.door = window.simulation.getDoorActivity(window.simulation.simulationTime);
-        if (state.door) {
-          log('🚪 Dør åbnet (simulation)', 'sensor');
-          addSimulationLogEntry('sensor', '🚪 Dør åbnet');
-        }
-      }
-    }
-    
-    // Opdater tid og ugedag
-    var hours = window.simulation.simulationTime.getHours();
-    var minutes = window.simulation.simulationTime.getMinutes();
-    state.time = (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes;
-    
-    var weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    state.weekday = weekdays[window.simulation.simulationTime.getDay()];
-    
-    // Opdater status display
-    const timeEl = document.getElementById('simulationTime');
-    const sensorEl = document.getElementById('sensorStatus');
-    const cycleEl = document.getElementById('cycleStatus');
-    
-    if (timeEl) timeEl.textContent = state.time;
-    if (sensorEl) sensorEl.textContent = window.simulation.realisticPatterns ? 'Realistiske mønstre' : 'Normal';
-    if (cycleEl) cycleEl.textContent = window.simulation.dayNightCycle ? 'Dag/nat cyklus' : 'Normal';
-    
-    // Opdater live sensor værdier i simulation fane
-    updateSimulationDisplay();
-    
-    // Opdater alle displays
-    updateAllDisplays();
-    
-    // Kør regler
-    runRules();
-  }
-  
-  window.runRules = function() {
-    // Kør alle aktive regler baseret på nuværende state
-    if (state.rules && state.rules.length > 0) {
-      state.rules.forEach(function(rule, index) {
-        try {
-          // Tjek om reglen matcher
-          if (evaluateRule(rule)) {
-            // Tjek cooldown for at undgå spam
-            if (!rule.lastExecuted || (Date.now() - rule.lastExecuted) > 5000) { // 5 sekunder cooldown
-              // Udfør handlingen
-              executeAction(rule);
-              log('🎯 Regel #' + (index + 1) + ' aktiveret: ' + rule.action1, 'activate');
-              rule.lastExecuted = Date.now(); // Gem tidspunkt for sidste kørsel
-              
-              // Opdater UI efter regel handling
-              updateActorDisplays();
-            }
-          }
-        } catch (e) {
-          log('❌ Fejl i regel #' + (index + 1) + ': ' + e.message, 'error');
-        }
-      });
-    }
-  }
-  
-  function evaluateRule(rule) {
-    // Tjek trigger
-    if (!evaluateTrigger(rule.trigger, rule.triggerValue)) {
-      return false;
-    }
-    
-    // Tjek betingelser (AND)
-    if (rule.cond1 && !evaluateCondition(rule.cond1, rule.cond1Value)) {
-      return false;
-    }
-    
-    if (rule.cond2 && !evaluateCondition(rule.cond2, rule.cond2Value)) {
-      return false;
-    }
-    
-    return true;
-  }
-  
-  function evaluateTrigger(trigger, value) {
-    switch(trigger) {
-      case 'always': return true;
-      case 'motionBreached': return state.motion === true;
-      case 'motionSafe': return state.motion === false;
-      case 'doorOpened': return state.door === true;
-      case 'timeEquals': return state.time === value;
-      case 'humidityAbove': return state.humidity >= parseFloat(value || 0);
-      case 'humidityBelow': return state.humidity <= parseFloat(value || 0);
-      case 'luxAbove': return state.lux >= parseFloat(value || 0);
-      case 'luxBelow': return state.lux <= parseFloat(value || 0);
-      default: return false;
-    }
-  }
-  
-  function evaluateCondition(condition, value) {
-    switch(condition) {
-      case 'luxBelow': return state.lux < parseFloat(value || 0);
-      case 'luxAbove': return state.lux > parseFloat(value || 0);
-      case 'humAbove': return state.humidity >= parseFloat(value || 0);
-      case 'humBelow': return state.humidity <= parseFloat(value || 0);
-      case 'windBelow': return state.wind < parseFloat(value || 0);
-      case 'weekdayIn': return (value || '').split(',').map(s => s.trim()).includes(state.weekday);
-      case 'alarmArmed': return state.alarmArmed === true;
-      case 'alarmHome': return state.alarmHome === true;
-      default: return false;
-    }
-  }
-  
-  function executeAction(rule) {
-    switch(rule.action1) {
-      case 'lightOn':
-        state.light = true;
-        log('💡 Lys tændt via regel', 'activate');
-        startAutoResetTimer('light', 5000); // Auto-reset efter 5 sekunder
-        break;
-      case 'lightOff':
-        state.light = false;
-        log('💡 Lys slukket via regel', 'activate');
-        // Stop auto-reset timer hvis den findes
-        if (window.simulation.autoResetTimers && window.simulation.autoResetTimers['light']) {
-          clearTimeout(window.simulation.autoResetTimers['light']);
-          delete window.simulation.autoResetTimers['light'];
-        }
-        break;
-      case 'fanOn':
-        state.fan = true;
-        log('🌪️ Ventilator tændt via regel', 'activate');
-        startAutoResetTimer('fan', 5000); // Auto-reset efter 5 sekunder
-        break;
-      case 'fanOff':
-        state.fan = false;
-        log('🌪️ Ventilator slukket via regel', 'activate');
-        // Stop auto-reset timer hvis den findes
-        if (window.simulation.autoResetTimers && window.simulation.autoResetTimers['fan']) {
-          clearTimeout(window.simulation.autoResetTimers['fan']);
-          delete window.simulation.autoResetTimers['fan'];
-        }
-        break;
-      case 'push':
-        log('📝 Regel log: ' + (rule.action1Value || 'Handling udført'), 'activate');
-        break;
-      default:
-        log('❓ Ukendt handling: ' + rule.action1, 'error');
-    }
-  }
   
   function log(msg, type){ 
     // Forhindre spam af samme besked
@@ -4432,7 +3483,7 @@ html {
       type: type || 'system',
       category: category,
       entity: extractEntity(msg),
-      old_value: extractNewValue(msg),
+      old_value: extractOldValue(msg),
       new_value: extractNewValue(msg)
     };
     logEntries.push(entry);
@@ -6899,122 +5950,31 @@ html {
     const p=document.getElementById('loginPass').value.trim();
     console.log('🔐 Login attempt with user:', u, 'pass length:', p.length);
     
-    if (!u || !p) {
-      document.getElementById('loginError').innerText='Udfyld både brugernavn og adgangskode.';
-      return;
-    }
+    // Vis loading state
+    document.getElementById('loginError').innerText='Logger ind...';
     
     try {
-      // Tjek om brugeren allerede eksisterer
-      const users = JSON.parse(localStorage.getItem('ibi_users') || '[]');
-      const existingUser = users.find(user => user.username === u);
+      const loginSuccess = await tryLogin(u,p);
       
-      if (!existingUser) {
-        // Vis loading state for ny bruger
-        document.getElementById('loginError').innerText='Opretter bruger og starter simulator...';
+      if(loginSuccess){
+        console.log('Login successful!');
         
-        // Opret ny bruger med initial data struktur
-        const newUser = {
-          username: u,
-          password: p,
-          createdAt: new Date().toISOString(),
-          lastLogin: new Date().toISOString(),
-          // Initial fremskridt og opgave data
-          progress: {
-            completedTasks: [],
-            currentTask: null,
-            totalScore: 0,
-            learningPath: 'beginner'
-          },
-          // Sensor og simulator data
-          simulatorData: {
-            savedConfigurations: [],
-            sensorHistory: [],
-            ruleHistory: []
-          },
-          // Læringshistorik
-          learningHistory: {
-            completedLessons: [],
-            quizResults: [],
-            lastActivity: new Date().toISOString()
-          }
-        };
+        // Gem brugerinfo lokalt som backup
+        localStorage.setItem('simUser', u);
+        localStorage.setItem('simPass', p);
+        console.log('🔍 localStorage simUser efter gem:', localStorage.getItem('simUser'));
         
-        users.push(newUser);
-        localStorage.setItem('ibi_users', JSON.stringify(users));
-        console.log('✅ Ny bruger oprettet med initial data struktur:', u);
-        
-        // Opret bruger-specifikke localStorage keys
-        localStorage.setItem(`user_${u}_progress`, JSON.stringify(newUser.progress));
-        localStorage.setItem(`user_${u}_simulator`, JSON.stringify(newUser.simulatorData));
-        localStorage.setItem(`user_${u}_learning`, JSON.stringify(newUser.learningHistory));
-        
+        document.getElementById('loginView').style.display='none';
+        document.getElementById('mainApp').style.display='block';
+        document.querySelector('.appbar').style.display = 'block';
+        show('view-sim');
       } else {
-        // Vis loading state for eksisterende bruger
-        document.getElementById('loginError').innerText='Logger ind og starter simulator...';
-        
-        // Tjek om adgangskoden matcher
-        if (existingUser.password !== p) {
-          document.getElementById('loginError').innerText='Forkert adgangskode for denne bruger.';
-          return;
-        }
-        
-        // Opdater lastLogin
-        existingUser.lastLogin = new Date().toISOString();
-        const userIndex = users.findIndex(user => user.username === u);
-        if (userIndex !== -1) {
-          users[userIndex] = existingUser;
-          localStorage.setItem('ibi_users', JSON.stringify(users));
-        }
-        console.log('✅ Eksisterende bruger logget ind:', u);
-        
-        // Indlæs bruger-specifikke data
-        const userProgress = localStorage.getItem(`user_${u}_progress`);
-        const userSimulator = localStorage.getItem(`user_${u}_simulator`);
-        const userLearning = localStorage.getItem(`user_${u}_learning`);
-        
-        if (userProgress) {
-          console.log('📊 Indlæst bruger fremskridt:', JSON.parse(userProgress));
-        }
-        if (userSimulator) {
-          console.log('🔧 Indlæst simulator data:', JSON.parse(userSimulator));
-        }
-        if (userLearning) {
-          console.log('📚 Indlæst læringshistorik:', JSON.parse(userLearning));
-        }
+        console.log('Login failed!');
+        document.getElementById('loginError').innerText='Forkert login!';
       }
-      
-      // Gem brugerinfo lokalt som backup
-      localStorage.setItem('simUser', u);
-      localStorage.setItem('simPass', p);
-      console.log('🔍 localStorage simUser efter gem:', localStorage.getItem('simUser'));
-      
-      // Tilføj fade-out effekt til intro
-      const introView = document.getElementById('loginView');
-      introView.style.transition = 'opacity 0.5s ease-out';
-      introView.style.opacity = '0';
-      
-      // Efter fade-out, skjul intro og vis hovedapp
-      setTimeout(() => {
-        introView.style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-        document.querySelector('.appbar').style.display = 'flex';
-        
-        // Tilføj fade-in effekt til hovedapp
-        const mainApp = document.getElementById('mainApp');
-        mainApp.style.opacity = '0';
-        mainApp.style.transition = 'opacity 0.5s ease-in';
-        
-        setTimeout(() => {
-          mainApp.style.opacity = '1';
-          // Vis simulator view som standard
-          show('view-sim');
-        }, 100);
-      }, 500);
-      
     } catch (error) {
       console.error('Login error:', error);
-      document.getElementById('loginError').innerText='Fejl ved login: ' + error.message;
+      document.getElementById('loginError').innerText='Login fejlede: ' + error.message;
     }
   }
   async function updateCreds(){
@@ -7053,203 +6013,92 @@ html {
   async function doLogout(){
     console.log('✅ Logger ud fra localStorage');
     
-    // Tilføj fade-out effekt til hovedapp
-    const mainApp = document.getElementById('mainApp');
-    mainApp.style.transition = 'opacity 0.5s ease-out';
-    mainApp.style.opacity = '0';
-    
-    // Efter fade-out, skjul hovedapp og vis intro
-    setTimeout(() => {
-      mainApp.style.display = 'none';
-      document.querySelector('.appbar').style.display = 'none';
-      
-      // Vis intro med fade-in effekt
-      const introView = document.getElementById('loginView');
-      introView.style.display = 'flex';
-      introView.style.opacity = '0';
-      introView.style.transition = 'opacity 0.5s ease-in';
-      
-      setTimeout(() => {
-        introView.style.opacity = '1';
-        // Opdater UI baseret på om der er eksisterende brugere
-        checkExistingUsers();
-      }, 100);
-    }, 500);
+    document.getElementById('mainApp').style.display='none';
+    document.querySelector('.appbar').style.display = 'none';
+    document.getElementById('loginView').style.display='flex';
     
     // Vis lærer login knap igen og skjul dashboard knap
-    const btnTeacherLogin = document.getElementById('btnTeacherLogin');
-    const btnTeacherTab = document.getElementById('btnTeacherTab');
-    
-    if(btnTeacherLogin) btnTeacherLogin.style.display = 'block';
-    if(btnTeacherTab) btnTeacherTab.style.display = 'none';
+    document.getElementById('btnTeacherLogin').style.display = 'block';
+    document.getElementById('btnTeacherTab').style.display = 'none';
     
     // Ryd lærer login status
+    localStorage.removeItem('teacher_logged_in');
     localStorage.removeItem('teacher_school_id');
     localStorage.removeItem('teacher_class_id');
-  }
-
-  // Start Simulator funktion (opdateret til at bruge doLogin)
-  function startSimulator() {
-    console.log('🚀 Start Simulator knap klikket - starter login proces...');
-    doLogin();
-  }
-
-  // Hjælpefunktioner til brugerdata
-  function getCurrentUser() {
-    return localStorage.getItem('simUser');
-  }
-
-  // Tjek om der allerede er brugere i systemet og opdater UI
-  function checkExistingUsers() {
-    const users = JSON.parse(localStorage.getItem('ibi_users') || '[]');
-    const hasUsers = users.length > 0;
     
-    const loginTitle = document.getElementById('loginTitle');
-    const loginSubtitle = document.getElementById('loginSubtitle');
-    const btnLogin = document.getElementById('btnLogin');
-    const loginUser = document.getElementById('loginUser');
-    const loginPass = document.getElementById('loginPass');
-    
-    if (hasUsers) {
-      // Der er allerede brugere - vis login UI
-      loginTitle.textContent = 'Log ind på din konto';
-      loginSubtitle.textContent = 'Log ind for at fortsætte hvor du slap';
-      btnLogin.textContent = '🔓 Log ind & Start Simulator';
-      loginUser.placeholder = 'Indtast dit brugernavn';
-      loginPass.placeholder = 'Indtast din adgangskode';
-      loginPass.setAttribute('autocomplete', 'current-password');
-      console.log('ℹ️ Der er allerede brugere i systemet - viser login UI');
-    } else {
-      // Ingen brugere endnu - vis brugeroprettelse UI
-      loginTitle.textContent = 'Opret din brugerkonto';
-      loginSubtitle.textContent = 'Opret en konto for at gemme dit fremskridt og opgave-resultater';
-      btnLogin.textContent = '🚀 Opret konto & Start Simulator';
-      loginUser.placeholder = 'Vælg et brugernavn';
-      loginPass.placeholder = 'Vælg en adgangskode';
-      loginPass.setAttribute('autocomplete', 'new-password');
-      console.log('ℹ️ Ingen brugere i systemet endnu - viser brugeroprettelse UI');
-    }
-  }
-
-  function saveUserProgress(progressData) {
-    const currentUser = getCurrentUser();
-    if (currentUser) {
-      const userProgress = JSON.parse(localStorage.getItem(`user_${currentUser}_progress`) || '{}');
-      const updatedProgress = { ...userProgress, ...progressData };
-      localStorage.setItem(`user_${currentUser}_progress`, JSON.stringify(updatedProgress));
-      console.log('💾 Bruger fremskridt gemt:', updatedProgress);
-    }
-  }
-
-  function saveUserSimulatorData(simulatorData) {
-    const currentUser = getCurrentUser();
-    if (currentUser) {
-      const userSimulator = JSON.parse(localStorage.getItem(`user_${currentUser}_simulator`) || '{}');
-      const updatedSimulator = { ...userSimulator, ...simulatorData };
-      localStorage.setItem(`user_${currentUser}_simulator`, JSON.stringify(updatedSimulator));
-      console.log('💾 Simulator data gemt:', updatedSimulator);
-    }
-  }
-
-  function saveUserLearningData(learningData) {
-    const currentUser = getCurrentUser();
-    if (currentUser) {
-      const userLearning = JSON.parse(localStorage.getItem(`user_${currentUser}_learning`) || '{}');
-      const updatedLearning = { ...userLearning, ...learningData };
-      localStorage.setItem(`user_${currentUser}_learning`, JSON.stringify(updatedLearning));
-      console.log('💾 Læringsdata gemt:', updatedLearning);
-    }
+    document.getElementById('loginUser').focus();
   }
   // === Login event setup ===
   function setupLoginEvents() {
     console.log('🔑 Setting up login events...');
-    
-    // Tjek om der allerede er brugere og opdater UI
-    checkExistingUsers();
-    
-    // Login knap
     const btnLogin = document.getElementById('btnLogin');
+    const lp = document.getElementById('loginPass');
+    const btnSave = document.getElementById('btnSaveCreds');
+    const btnLogout = document.getElementById('btnLogout');
+    
+    console.log('🔍 Found elements:', { 
+      btnLogin: !!btnLogin, 
+      loginPass: !!lp, 
+      btnSave: !!btnSave, 
+      btnLogout: !!btnLogout 
+    });
+    
     if(btnLogin) {
       console.log('✅ Login button found, adding click handler');
       btnLogin.onclick = doLogin;
     } else {
-      console.log('ℹ️ Login button not found (may be normal for intro view)');
+      console.error('❌ Login button not found!');
     }
     
-    // Password field Enter key handler
-    const loginPass = document.getElementById('loginPass');
-    if(loginPass) {
-      console.log('✅ Password field found, adding Enter key handler');
-      loginPass.addEventListener('keydown', e => { 
+    if(lp) {
+      console.log('Password field found, adding Enter key handler');
+      lp.addEventListener('keydown', e => { 
         if(e.key === 'Enter') {
           console.log('Enter pressed, attempting login');
           doLogin(); 
         }
       });
+    } else {
+      console.error('Password field not found!');
     }
     
-    // Logout knap (hvis den findes)
-    const btnLogout = document.getElementById('btnLogout');
+    if(btnSave) btnSave.onclick = updateCreds;
     if(btnLogout) btnLogout.onclick = doLogout;
     
     // Clear localStorage knap
     const clearStorageBtn = document.getElementById('clearStorageBtn');
     if(clearStorageBtn) {
       clearStorageBtn.onclick = clearLocalStorage;
-      console.log('✅ Clear localStorage button found and configured');
     }
     
-    // Gem brugerindstillinger knap
-    const btnSaveCreds = document.getElementById('btnSaveCreds');
-    if(btnSaveCreds) {
-      btnSaveCreds.onclick = updateCreds;
-      console.log('✅ Save credentials button found and configured');
+    // Lærer logout knap
+    const btnTeacherLogout = document.getElementById('btnTeacherLogout');
+    if(btnTeacherLogout) {
+      btnTeacherLogout.onclick = doTeacherLogout;
+    }
+    
+    // Brugerregistrering
+    const btnRegister = document.getElementById('btnRegister');
+    if(btnRegister) {
+      btnRegister.onclick = showRegisterModal;
+    }
+    
+    // Opret bruger knap
+    const btnCreateUser = document.getElementById('btnCreateUser');
+    if(btnCreateUser) {
+      btnCreateUser.onclick = createUser;
     }
     
     // Gem elev navn knap
     const btnSaveName = document.getElementById('btnSaveName');
     if(btnSaveName) {
       btnSaveName.onclick = saveStudentName;
-      console.log('✅ Save student name button found and configured');
-    }
-    
-    // Lærer logout knap (hvis den findes)
-    const btnTeacherLogout = document.getElementById('btnTeacherLogout');
-    if(btnTeacherLogout) {
-      btnTeacherLogout.onclick = doTeacherLogout;
     }
     
     // Lærer login knap
     const btnTeacherLogin = document.getElementById('btnTeacherLogin');
     if(btnTeacherLogin) {
       btnTeacherLogin.onclick = showTeacherLoginModal;
-    }
-    
-    // Simulation knap
-    const btnSimulation = document.getElementById('btnSimulation');
-    if(btnSimulation) {
-      btnSimulation.onclick = function() {
-        // Skjul alle normale faner
-        document.querySelector('.tabs').style.display = 'none';
-        
-        // Skjul alle normale views
-        document.querySelectorAll('.view').forEach(view => {
-          if (view.id !== 'view-simulation') {
-            view.style.display = 'none';
-          }
-        });
-        
-        // Vis kun simulation dashboard
-        document.getElementById('view-simulation').style.display = 'block';
-        document.getElementById('view-simulation').classList.add('active');
-        
-        // Opdater live sensor værdier med det samme
-        updateSimulationDisplay();
-        
-        console.log('🔧 Simulation dashboard åbnet');
-        console.log('🔍 Skiftet til simulation dashboard');
-      };
-      console.log('✅ Simulation knap fundet og konfigureret');
     }
     
     // Lærer dashboard knap
@@ -7280,90 +6129,6 @@ html {
       btnTeacherLoginSubmit.onclick = doTeacherLogin;
     }
     
-    // Simulation mode event listeners
-    const btnStartSimulation = document.getElementById('btnStartSimulation');
-    const btnStopSimulation = document.getElementById('btnStopSimulation');
-    const btnResetSimulation = document.getElementById('btnResetSimulation');
-    
-    if(btnStartSimulation) {
-      btnStartSimulation.onclick = startSimulation;
-      console.log('✅ Start simulation button found and configured');
-    }
-    
-    if(btnStopSimulation) {
-      btnStopSimulation.onclick = stopSimulation;
-      console.log('✅ Stop simulation button found and configured');
-    }
-    
-    if(btnResetSimulation) {
-      btnResetSimulation.onclick = resetSimulation;
-      console.log('✅ Reset simulation button found and configured');
-    }
-    
-    const btnTestRules = document.getElementById('btnTestRules');
-    if(btnTestRules) {
-      btnTestRules.onclick = function() {
-        log('🎯 Tester alle regler med nuværende sensor værdier...', 'system');
-        runRules();
-        log('✅ Regel test gennemført - tjek loggen for resultater', 'system');
-      };
-      console.log('✅ Test rules button found and configured');
-    }
-    
-    const btnBackToNormal = document.getElementById('btnBackToNormal');
-    if(btnBackToNormal) {
-      btnBackToNormal.onclick = function() {
-        // Vis alle normale faner igen
-        document.querySelector('.tabs').style.display = 'flex';
-        
-        // Skjul alle views
-        document.querySelectorAll('.view').forEach(view => {
-          view.style.display = 'none';
-        });
-        
-        // Vis simulator view som standard
-        document.getElementById('view-sim').style.display = 'block';
-        document.getElementById('view-sim').classList.add('active');
-        
-        // Gendan tab aktivitet
-        document.getElementById('tabSim').classList.add('active');
-        document.getElementById('tabFlow').classList.remove('active');
-        document.getElementById('tabLearning').classList.remove('active');
-        document.getElementById('tabSettings').classList.remove('active');
-        
-        console.log('🔍 Gået tilbage til simulator');
-      };
-      console.log('✅ Back to normal button found and configured');
-    }
-    
-    // Simulation indstillinger event listeners
-    const simulationEnabled = document.getElementById('simulationEnabled');
-    const simulationSpeed = document.getElementById('simulationSpeed');
-    const realisticPatterns = document.getElementById('realisticPatterns');
-    const dayNightCycle = document.getElementById('dayNightCycle');
-    
-    if(simulationEnabled) {
-      simulationEnabled.onchange = function() {
-        if(this.checked) {
-          startSimulation();
-        } else {
-          stopSimulation();
-        }
-      };
-      console.log('✅ Simulation enabled checkbox found and configured');
-    }
-    
-    if(simulationSpeed) {
-      simulationSpeed.onchange = function() {
-        if(simulation.enabled) {
-          // Genstart simulation med ny hastighed
-          stopSimulation();
-          startSimulation();
-        }
-      };
-      console.log('✅ Simulation speed selector found and configured');
-    }
-    
     // Lærer dashboard knapper
     const btnLoadProgress = document.getElementById('btnLoadProgress');
     if(btnLoadProgress) {
@@ -7383,380 +6148,6 @@ html {
 
     
 
-  }
-
-  // === Simulation Display Funktioner ===
-  function updateSimulationDisplay() {
-    // Opdater live sensor værdier i simulation fane
-    if (document.getElementById('liveClock')) {
-      document.getElementById('liveClock').textContent = state.time;
-      document.getElementById('liveDate').textContent = state.weekday;
-      document.getElementById('liveLuxDisplay').textContent = state.lux + ' lux';
-      document.getElementById('liveHumidityDisplay').textContent = state.humidity + '%';
-      document.getElementById('liveWindDisplay').textContent = state.wind + ' m/s';
-      document.getElementById('liveMotionDisplay').textContent = state.motion ? 'Breached' : 'Safe';
-      document.getElementById('liveDoorDisplay').textContent = state.door ? 'Opened' : 'Closed';
-      document.getElementById('liveAlarmDisplay').textContent = state.alarmArmed ? 'Armed' : 'Disarmed';
-      
-      // Vis temperatur fra state (nu opdateret i simulation)
-      if (state.temperature !== undefined) {
-        document.getElementById('liveTempDisplay').textContent = state.temperature + '°C';
-      } else {
-        document.getElementById('liveTempDisplay').textContent = '21.5°C';
-      }
-      
-      // Opdater status tekster
-      document.getElementById('liveLightStatus').textContent = state.lux > 500 ? 'Lyst' : state.lux > 100 ? 'Moderat' : 'Mørkt';
-      document.getElementById('liveHumidityStatus').textContent = state.humidity > 60 ? 'Fugtigt' : state.humidity < 30 ? 'Tørt' : 'Normal';
-      document.getElementById('liveWindStatus').textContent = state.wind > 10 ? 'Stærk' : state.wind > 5 ? 'Moderat' : 'Svag';
-      document.getElementById('liveMotionStatus').textContent = state.motion ? 'Bevægelse detekteret!' : 'Ingen bevægelse';
-      document.getElementById('liveDoorStatus').textContent = state.door ? 'Åben' : 'Lukket';
-      document.getElementById('liveAlarmStatus').textContent = state.alarmArmed ? 'Aktiv' : 'Inaktiv';
-      
-      if (window.simulation && window.simulation.getTemperature) {
-        const temp = window.simulation.getTemperature(new Date());
-        document.getElementById('liveTempStatus').textContent = temp > 25 ? 'Varmt' : temp < 18 ? 'Koldt' : 'Normal';
-      } else {
-        document.getElementById('liveTempStatus').textContent = 'Normal';
-      }
-      
-      // Opdater hastighed status
-      if (window.simulation) {
-        document.getElementById('speedStatus').textContent = (window.simulation.speed || 1) + 'x';
-      } else {
-        document.getElementById('speedStatus').textContent = '1x';
-      }
-      
-      // Opdater simulation tid og status
-      document.getElementById('simulationTime').textContent = state.time;
-      document.getElementById('sensorStatus').textContent = 'Normal';
-      document.getElementById('cycleStatus').textContent = 'Normal';
-    }
-  }
-  
-  // === Nye Simulation Funktioner ===
-  window.testRules = function() {
-    log('🎯 Tester alle regler med nuværende sensor værdier...', 'system');
-    runRules();
-    log('✅ Regel test gennemført - tjek loggen for resultater', 'system');
-  }
-  
-  window.goBackToSimulator = function() {
-    // Vis alle normale faner igen
-    document.querySelector('.tabs').style.display = 'flex';
-    
-    // Skjul alle views
-    document.querySelectorAll('.view').forEach(view => {
-      view.style.display = 'none';
-    });
-    
-    // Vis simulator view som standard
-    document.getElementById('view-sim').style.display = 'block';
-    document.getElementById('view-sim').classList.add('active');
-    
-    // Gendan tab aktivitet
-    document.getElementById('tabSim').classList.add('active');
-    document.getElementById('tabFlow').classList.remove('active');
-    document.getElementById('tabLearning').classList.remove('active');
-    document.getElementById('tabSettings').classList.remove('active');
-    
-    console.log('🔍 Gået tilbage til simulator');
-  }
-  
-  window.toggleSimulation = function(checkbox) {
-    if(checkbox.checked) {
-      startSimulation();
-    } else {
-      stopSimulation();
-    }
-  }
-  
-  window.changeSimulationSpeed = function(select) {
-    if(window.simulation.enabled) {
-      // Genstart simulation med ny hastighed
-      stopSimulation();
-      window.simulation.speed = parseInt(select.value) || 1;
-      startSimulation();
-    }
-  }
-  
-  window.toggleRealisticPatterns = function(checkbox) {
-    if(window.simulation) {
-      window.simulation.realisticPatterns = checkbox.checked;
-    }
-  }
-  
-  window.toggleDayNightCycle = function(checkbox) {
-    if(window.simulation) {
-      window.simulation.dayNightCycle = checkbox.checked;
-    }
-  }
-  
-  // === Simulation Log Funktioner ===
-  window.clearSimulationLog = function() {
-    const simLog = document.getElementById('simulationLog');
-    if (simLog) {
-      simLog.innerHTML = '<div class="log-entry system"><span class="log-time">--:--</span><span class="log-type">System</span><span class="log-message">Log ryddet</span></div>';
-    }
-  }
-  
-  window.exportSimulationLog = function() {
-    const simLog = document.getElementById('simulationLog');
-    if (simLog) {
-      const logText = simLog.innerText;
-      const blob = new Blob([logText], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'simulation-log-' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.txt';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-  }
-  
-  window.filterSimulationLog = function(type) {
-    const logEntries = document.querySelectorAll('#simulationLog .log-entry');
-    logEntries.forEach(entry => {
-      if (type === 'all' || entry.classList.contains(type)) {
-        entry.style.display = 'flex';
-      } else {
-        entry.style.display = 'none';
-      }
-    });
-  }
-  
-  // Funktion til at tilføje log entries til simulation loggen
-  window.addSimulationLogEntry = function(type, message) {
-    const simLog = document.getElementById('simulationLog');
-    if (simLog) {
-      const now = new Date();
-      const time = now.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' });
-      
-      const logEntry = document.createElement('div');
-      logEntry.className = `log-entry ${type}`;
-      logEntry.innerHTML = `
-        <span class="log-time">${time}</span>
-        <span class="log-type">${type.charAt(0).toUpperCase() + type.slice(1)}</span>
-        <span class="log-message">${message}</span>
-      `;
-      
-      simLog.appendChild(logEntry);
-      simLog.scrollTop = simLog.scrollHeight; // Scroll til bunden
-      
-      // Begræns antal log entries til 100
-      if (simLog.children.length > 100) {
-        simLog.removeChild(simLog.firstChild);
-      }
-    }
-  }
-  
-  // === Simulation Dashboard Funktioner ===
-  window.showSimulationDashboard = function() {
-    // Skjul alle normale faner
-    document.querySelector('.tabs').style.display = 'none';
-    
-    // Skjul alle views
-    document.querySelectorAll('.view').forEach(view => {
-      view.style.display = 'none';
-    });
-    
-    // Vis simulation view
-    document.getElementById('view-simulation').style.display = 'block';
-    
-    // Opdater simulation display med nuværende værdier
-    updateSimulationDisplay();
-    
-    console.log('🔧 Simulation dashboard åbnet');
-    console.log('🔍 Skiftet til simulation dashboard');
-  }
-  
-  // === UI Opdatering Funktioner ===
-  function updateActorDisplays() {
-    // Opdater lampe status
-    const lampStateEl = document.getElementById('lampState');
-    if (lampStateEl) {
-      lampStateEl.textContent = state.light ? 'ON' : 'OFF';
-      lampStateEl.className = 'tag ' + (state.light ? 'active' : 'inactive');
-    }
-    
-    // Opdater ventilator status
-    const fanStateEl = document.getElementById('fanState');
-    if (fanStateEl) {
-      fanStateEl.textContent = state.fan ? 'ON' : 'OFF';
-      fanStateEl.className = 'tag ' + (state.fan ? 'active' : 'inactive');
-    }
-    
-    // Opdater dæmper status (hvis den er defineret)
-    if (state.dimmer !== undefined) {
-      const dimmerStateEl = document.getElementById('dimmerState');
-      if (dimmerStateEl) {
-        dimmerStateEl.textContent = state.dimmer + '%';
-      }
-    }
-  }
-  
-  // === Auto-Reset Timer System ===
-  function startAutoResetTimer(actorType, delay = 5000) { // 5 sekunder standard
-    // Stop eksisterende timer hvis den findes
-    if (window.simulation.autoResetTimers && window.simulation.autoResetTimers[actorType]) {
-      clearTimeout(window.simulation.autoResetTimers[actorType]);
-    }
-    
-    // Initialiser timers objekt hvis det ikke findes
-    if (!window.simulation.autoResetTimers) {
-      window.simulation.autoResetTimers = {};
-    }
-    
-    // Start ny timer
-    window.simulation.autoResetTimers[actorType] = setTimeout(function() {
-      resetActorToDefault(actorType);
-    }, delay);
-  }
-  
-  function resetActorToDefault(actorType) {
-    switch(actorType) {
-      case 'light':
-        state.light = false;
-        log('💡 Lampe auto-reset til OFF efter 5 sekunder', 'system');
-        break;
-      case 'fan':
-        state.fan = false;
-        log('🌪️ Ventilator auto-reset til OFF efter 5 sekunder', 'system');
-        break;
-      case 'dimmer':
-        state.dimmer = 0;
-        log('💡 Dæmper auto-reset til 0% efter 5 sekunder', 'system');
-        break;
-    }
-    
-    // Opdater UI
-    updateActorDisplays();
-    
-    // Fjern timer fra listen
-    if (window.simulation.autoResetTimers) {
-      delete window.simulation.autoResetTimers[actorType];
-    }
-  }
-  
-  // === Simulation Event Listeners Setup ===
-  function setupSimulationEventListeners() {
-    console.log('🔧 Sætter simulation event listeners op...');
-    
-    // Start Simulation knap
-    const btnStartSimulation = document.getElementById('btnStartSimulation');
-    if(btnStartSimulation) {
-      btnStartSimulation.onclick = startSimulation;
-      console.log('✅ Start simulation button event listener sat op');
-    } else {
-      console.log('❌ Start simulation button ikke fundet');
-    }
-    
-    // Stop Simulation knap
-    const btnStopSimulation = document.getElementById('btnStopSimulation');
-    if(btnStopSimulation) {
-      btnStopSimulation.onclick = stopSimulation;
-      console.log('✅ Stop simulation button event listener sat op');
-    } else {
-      console.log('❌ Stop simulation button ikke fundet');
-    }
-    
-    // Reset Simulation knap
-    const btnResetSimulation = document.getElementById('btnResetSimulation');
-    if(btnResetSimulation) {
-      btnResetSimulation.onclick = resetSimulation;
-      console.log('✅ Reset simulation button event listener sat op');
-    } else {
-      console.log('❌ Reset simulation button ikke fundet');
-    }
-    
-    // Test Rules knap
-    const btnTestRules = document.getElementById('btnTestRules');
-    if(btnTestRules) {
-      btnTestRules.onclick = function() {
-        log('🎯 Tester alle regler med nuværende sensor værdier...', 'system');
-        runRules();
-        log('✅ Regel test gennemført - tjek loggen for resultater', 'system');
-      };
-      console.log('✅ Test rules button event listener sat op');
-    } else {
-      console.log('❌ Test rules button ikke fundet');
-    }
-    
-    // Back to Normal knap
-    const btnBackToNormal = document.getElementById('btnBackToNormal');
-    if(btnBackToNormal) {
-      btnBackToNormal.onclick = function() {
-        // Vis alle normale faner igen
-        document.querySelector('.tabs').style.display = 'flex';
-        
-        // Skjul alle views
-        document.querySelectorAll('.view').forEach(view => {
-          view.style.display = 'none';
-        });
-        
-        // Vis simulator view som standard
-        document.getElementById('view-sim').style.display = 'block';
-        document.getElementById('view-sim').classList.add('active');
-        
-        // Gendan tab aktivitet
-        document.getElementById('tabSim').classList.add('active');
-        document.getElementById('tabFlow').classList.remove('active');
-        document.getElementById('tabLearning').classList.remove('active');
-        document.getElementById('tabSettings').classList.remove('active');
-        
-        console.log('🔍 Gået tilbage til simulator');
-      };
-      console.log('✅ Back to normal button event listener sat op');
-    } else {
-      console.log('❌ Back to normal button ikke fundet');
-    }
-    
-    // Simulation indstillinger
-    const simulationEnabled = document.getElementById('simulationEnabled');
-    if(simulationEnabled) {
-      simulationEnabled.onchange = function() {
-        if(this.checked) {
-          startSimulation();
-        } else {
-          stopSimulation();
-        }
-      };
-      console.log('✅ Simulation enabled checkbox event listener sat op');
-    }
-    
-    const simulationSpeed = document.getElementById('simulationSpeed');
-    if(simulationSpeed) {
-      simulationSpeed.onchange = function() {
-        if(simulation.enabled) {
-          // Genstart simulation med ny hastighed
-          stopSimulation();
-          startSimulation();
-        }
-      };
-      console.log('✅ Simulation speed selector event listener sat op');
-    }
-    
-    const realisticPatterns = document.getElementById('realisticPatterns');
-    if(realisticPatterns) {
-      realisticPatterns.onchange = function() {
-        if(simulation) {
-          simulation.realisticPatterns = this.checked;
-        }
-      };
-      console.log('✅ Realistic patterns checkbox event listener sat op');
-    }
-    
-    const dayNightCycle = document.getElementById('dayNightCycle');
-    if(dayNightCycle) {
-      dayNightCycle.onchange = function() {
-        if(simulation) {
-          simulation.dayNightCycle = this.checked;
-        }
-      };
-      console.log('✅ Day/night cycle checkbox event listener sat op');
-    }
-    
-    console.log('🔧 Alle simulation event listeners sat op');
   }
 
   // === Elev navn funktionalitet ===
@@ -8493,15 +6884,6 @@ html {
     loadStudentName(); // Indlæs gemt elevnavn
   }
 
-  // Sikre at UI opdateres når siden indlæses
-  window.addEventListener('load', () => {
-    console.log('🌐 Window loaded - checking existing users...');
-    // Vent lidt for at sikre at alle elementer er klar
-    setTimeout(() => {
-      checkExistingUsers();
-    }, 100);
-  });
-
 </script>
   </div>
 
@@ -8818,7 +7200,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Beregn total dæmpning fra vægge
     const wallAttenuation = walls * materialAttenuation[material];
     
-    // Beregn total signaltab
+    // Beregn total signalstyrke
     let totalSignal = fspl + wallAttenuation;
     
     // Juster for mellemenhed type
@@ -8827,14 +7209,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Konverter til Z-Wave skala (-40 til -60 dBm)
-    // Jo højere total signaltab (dB), jo svagere er signalet
+    // Jo højere total signalstyrke (dB), jo svagere er signalet
     // Z-Wave godkender signaler mellem -40 dBm (bedste) og -60 dBm (minimum)
     
     // Beregn signalstyrke baseret på Z-Wave specifikationer
     // Godkendt rækkevidde: -40 til -60 dBm
     // Fra dokumentet: 20m + 2 gipsvægge = 63.23 dBm → ikke godkendt
     
-    // Konverter total signaltab til Z-Wave skala
+    // Konverter total signalstyrke til Z-Wave skala
     // Jo højere total dB værdi, jo svagere signal
     let signalStrength;
     if (totalSignal <= 50) {
@@ -8897,7 +7279,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <span style="color: #e5e9f0;">${result.wallAttenuation} dB</span>
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                          <span style="color: #cbd5e1;">Total signaltab:</span>
+          <span style="color: #cbd5e1;">Total signalstyrke:</span>
           <span style="color: #e5e9f0;">${result.totalSignal.toFixed(2)} dB</span>
         </div>
         <div style="display: flex; justify-content: space-between;">
