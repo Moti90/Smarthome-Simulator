@@ -3915,27 +3915,7 @@ html {
     $('#cycleStatus').textContent = simulation.dayNightCycle ? 'Dag/nat cyklus' : 'Normal';
     
     // Opdater live sensor værdier i simulation fane
-    $('#liveClock').textContent = state.time;
-    $('#liveDate').textContent = state.weekday;
-    $('#liveLuxDisplay').textContent = state.lux + ' lux';
-    $('#liveHumidityDisplay').textContent = state.humidity + '%';
-    $('#liveWindDisplay').textContent = state.wind + ' m/s';
-    $('#liveMotionDisplay').textContent = state.motion ? 'Breached' : 'Safe';
-    $('#liveDoorDisplay').textContent = state.door ? 'Opened' : 'Closed';
-    $('#liveAlarmDisplay').textContent = state.alarmArmed ? 'Armed' : 'Disarmed';
-    $('#liveTempDisplay').textContent = simulation.getTemperature(simulation.simulationTime).toFixed(1) + '°C';
-    
-    // Opdater status tekster
-    $('#liveLightStatus').textContent = state.lux > 500 ? 'Lyst' : state.lux > 100 ? 'Moderat' : 'Mørkt';
-    $('#liveHumidityStatus').textContent = state.humidity > 60 ? 'Fugtigt' : state.humidity < 30 ? 'Tørt' : 'Normal';
-    $('#liveWindStatus').textContent = state.wind > 10 ? 'Stærk' : state.wind > 5 ? 'Moderat' : 'Svag';
-    $('#liveMotionStatus').textContent = state.motion ? 'Bevægelse detekteret!' : 'Ingen bevægelse';
-    $('#liveDoorStatus').textContent = state.door ? 'Åben' : 'Lukket';
-    $('#liveAlarmStatus').textContent = state.alarmArmed ? 'Aktiv' : 'Inaktiv';
-    $('#liveTempStatus').textContent = simulation.getTemperature(simulation.simulationTime) > 25 ? 'Varmt' : simulation.getTemperature(simulation.simulationTime) < 18 ? 'Koldt' : 'Normal';
-    
-    // Opdater hastighed status
-    $('#speedStatus').textContent = simulation.speed + 'x';
+    updateSimulationDisplay();
     
     // Opdater alle displays
     updateAllDisplays();
@@ -6686,6 +6666,9 @@ html {
         document.getElementById('view-simulation').style.display = 'block';
         document.getElementById('view-simulation').classList.add('active');
         
+        // Opdater live sensor værdier med det samme
+        updateSimulationDisplay();
+        
         console.log('🔍 Skiftet til simulation dashboard');
       };
       console.log('✅ Simulation knap fundet og konfigureret');
@@ -6755,13 +6738,20 @@ html {
         // Vis alle normale faner igen
         document.querySelector('.tabs').style.display = 'flex';
         
-        // Skjul simulation view
-        document.getElementById('view-simulation').style.display = 'none';
-        document.getElementById('view-simulation').classList.remove('active');
+        // Skjul alle views
+        document.querySelectorAll('.view').forEach(view => {
+          view.style.display = 'none';
+        });
         
         // Vis simulator view som standard
         document.getElementById('view-sim').style.display = 'block';
         document.getElementById('view-sim').classList.add('active');
+        
+        // Gendan tab aktivitet
+        document.getElementById('tabSim').classList.add('active');
+        document.getElementById('tabFlow').classList.remove('active');
+        document.getElementById('tabLearning').classList.remove('active');
+        document.getElementById('tabSettings').classList.remove('active');
         
         console.log('🔍 Gået tilbage til simulator');
       };
@@ -6815,6 +6805,56 @@ html {
 
     
 
+  }
+
+  // === Simulation Display Funktioner ===
+  function updateSimulationDisplay() {
+    // Opdater live sensor værdier i simulation fane
+    if (document.getElementById('liveClock')) {
+      document.getElementById('liveClock').textContent = state.time;
+      document.getElementById('liveDate').textContent = state.weekday;
+      document.getElementById('liveLuxDisplay').textContent = state.lux + ' lux';
+      document.getElementById('liveHumidityDisplay').textContent = state.humidity + '%';
+      document.getElementById('liveWindDisplay').textContent = state.wind + ' m/s';
+      document.getElementById('liveMotionDisplay').textContent = state.motion ? 'Breached' : 'Safe';
+      document.getElementById('liveDoorDisplay').textContent = state.door ? 'Opened' : 'Closed';
+      document.getElementById('liveAlarmDisplay').textContent = state.alarmArmed ? 'Armed' : 'Disarmed';
+      
+      // Beregn temperatur hvis simulation objekt eksisterer
+      if (window.simulation && window.simulation.getTemperature) {
+        const temp = window.simulation.getTemperature(new Date());
+        document.getElementById('liveTempDisplay').textContent = temp.toFixed(1) + '°C';
+      } else {
+        document.getElementById('liveTempDisplay').textContent = '21.5°C';
+      }
+      
+      // Opdater status tekster
+      document.getElementById('liveLightStatus').textContent = state.lux > 500 ? 'Lyst' : state.lux > 100 ? 'Moderat' : 'Mørkt';
+      document.getElementById('liveHumidityStatus').textContent = state.humidity > 60 ? 'Fugtigt' : state.humidity < 30 ? 'Tørt' : 'Normal';
+      document.getElementById('liveWindStatus').textContent = state.wind > 10 ? 'Stærk' : state.wind > 5 ? 'Moderat' : 'Svag';
+      document.getElementById('liveMotionStatus').textContent = state.motion ? 'Bevægelse detekteret!' : 'Ingen bevægelse';
+      document.getElementById('liveDoorStatus').textContent = state.door ? 'Åben' : 'Lukket';
+      document.getElementById('liveAlarmStatus').textContent = state.alarmArmed ? 'Aktiv' : 'Inaktiv';
+      
+      if (window.simulation && window.simulation.getTemperature) {
+        const temp = window.simulation.getTemperature(new Date());
+        document.getElementById('liveTempStatus').textContent = temp > 25 ? 'Varmt' : temp < 18 ? 'Koldt' : 'Normal';
+      } else {
+        document.getElementById('liveTempStatus').textContent = 'Normal';
+      }
+      
+      // Opdater hastighed status
+      if (window.simulation) {
+        document.getElementById('speedStatus').textContent = (window.simulation.speed || 1) + 'x';
+      } else {
+        document.getElementById('speedStatus').textContent = '1x';
+      }
+      
+      // Opdater simulation tid og status
+      document.getElementById('simulationTime').textContent = state.time;
+      document.getElementById('sensorStatus').textContent = 'Normal';
+      document.getElementById('cycleStatus').textContent = 'Normal';
+    }
   }
 
   // === Elev navn funktionalitet ===
