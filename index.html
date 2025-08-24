@@ -6917,6 +6917,7 @@ html {
         
         // Opret ny bruger med initial data struktur
         const newUser = {
+          id: u, // Tilføj .id property
           username: u,
           password: p,
           createdAt: new Date().toISOString(),
@@ -6961,8 +6962,13 @@ html {
           return;
         }
         
-        // Opdater lastLogin
+        // Opdater lastLogin og sikre at .id property eksisterer
         existingUser.lastLogin = new Date().toISOString();
+        if (!existingUser.id) {
+          existingUser.id = u; // Tilføj .id hvis den mangler
+          console.log('🔧 Tilføjet .id property til eksisterende bruger:', u);
+        }
+        
         const userIndex = users.findIndex(user => user.username === u);
         if (userIndex !== -1) {
           users[userIndex] = existingUser;
@@ -8202,6 +8208,12 @@ html {
   // === Lærer Dashboard funktionalitet ===
   async function getClassProgress(schoolId = 'default', classId = 'default') {
     try {
+      // Tjek om Firebase er tilgængelig
+      if (!window.db) {
+        console.log('ℹ️ Firebase ikke tilgængelig - returnerer tom array');
+        return [];
+      }
+      
       const snapshot = await window.db.collection('user_progress')
         .where('schoolId', '==', schoolId)
         .where('classId', '==', classId)
@@ -8222,6 +8234,13 @@ html {
 
   async function exportClassData(schoolId = 'default', classId = 'default') {
     const progress = await getClassProgress(schoolId, classId);
+    
+    // Tjek om der er data at eksportere
+    if (!progress || progress.length === 0) {
+      console.log('ℹ️ Ingen data at eksportere');
+      alert('Ingen data at eksportere endnu');
+      return;
+    }
     
     // Opret CSV data
     const csvData = [
