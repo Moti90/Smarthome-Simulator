@@ -278,6 +278,20 @@
       line-height: 1.4;
     }
     
+    /* Simulation mode styling */
+    .simulation-status {
+      padding: 12px;
+      background: rgba(42,176,255,0.1);
+      border-radius: 8px;
+      border-left: 3px solid #2ab0ff;
+      margin-top: 16px;
+    }
+    
+    .simulation-active {
+      background: rgba(16,185,129,0.1);
+      border-left-color: #10b981;
+    }
+    
     .styled-select {
       background: rgba(15, 20, 28, 0.8);
       color: #e5e9f0;
@@ -3387,6 +3401,56 @@ html {
     <!-- ===== View: Lærer Dashboard ===== -->
     <section id="view-teacher" class="view">
       <div class="wrap">
+        <!-- Simulation Mode Indstillinger -->
+        <div class="card">
+          <h2>🎮 Simulation Mode</h2>
+          <div class="body">
+            <div class="settings-section">
+              <h3>⏱️ Tids Simulation</h3>
+              <div class="setting-item">
+                <label for="simulationEnabled">Aktiver simulation mode</label>
+                <input id="simulationEnabled" type="checkbox" class="styled-checkbox">
+                <span class="setting-description">Lad appen køre automatisk med realistiske sensor værdier</span>
+              </div>
+              <div class="setting-item">
+                <label for="simulationSpeed">Simulation hastighed</label>
+                <select id="simulationSpeed" class="styled-input">
+                  <option value="1">1x (normal tid)</option>
+                  <option value="10">10x (1 minut = 6 sekunder)</option>
+                  <option value="60">60x (1 time = 1 minut)</option>
+                  <option value="100">100x (1 time = 36 sekunder)</option>
+                </select>
+                <span class="setting-description">Hvor hurtigt skal tiden gå i forhold til virkeligheden</span>
+              </div>
+              <div class="setting-item">
+                <label for="realisticPatterns">Realistiske sensor mønstre</label>
+                <input id="realisticPatterns" type="checkbox" class="styled-checkbox" checked>
+                <span class="setting-description">Brug sinuskurver og realistiske mønstre for sensorer</span>
+              </div>
+              <div class="setting-item">
+                <label for="dayNightCycle">Dag/nat cyklus</label>
+                <input id="dayNightCycle" type="checkbox" class="styled-checkbox" checked>
+                <span class="setting-description">Simuler dag og nat med forskellige lysniveauer</span>
+              </div>
+              <div class="setting-item">
+                <button id="btnStartSimulation" class="btn-primary">▶️ Start Simulation</button>
+                <button id="btnStopSimulation" class="btn-danger" disabled>⏹️ Stop Simulation</button>
+                <button id="btnResetSimulation" class="btn-secondary">🔄 Reset til normal</button>
+              </div>
+              
+              <!-- Simulation Status -->
+              <div id="simulationStatus" class="simulation-status" style="display: none;">
+                <h4 style="margin: 0 0 8px 0; color: #e5e9f0;">🎮 Simulation Status</h4>
+                <div style="color: #9ca3af; font-size: 13px;">
+                  <div>⏱️ <strong>Simulation tid:</strong> <span id="simulationTime">--:--</span></div>
+                  <div>📊 <strong>Sensor status:</strong> <span id="sensorStatus">Normal</span></div>
+                  <div>🔄 <strong>Cyklus:</strong> <span id="cycleStatus">Normal</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Lærer kontroller -->
         <div class="card">
           <h2>👨‍🏫 Lærer Dashboard</h2>
@@ -3462,11 +3526,290 @@ html {
   var state   = { motion:false, door:false, lux:100, wind:2, humidity:45, time:'21:30', weekday:'Mon', globals:{}, light:false, dimmer:0, fan:false, alarmArmed:false, alarmHome:false, rules:[] };
   var pending = JSON.parse(JSON.stringify(state));
   window.pending = pending; window.state = state;
+  
+  /* Simulation System */
+  var simulation = {
+    enabled: false,
+    speed: 1,
+    realisticPatterns: true,
+    dayNightCycle: true,
+    startTime: new Date(),
+    simulationTime: new Date(),
+    interval: null,
+    
+    // Sinuskurver for realistiske sensor mønstre
+    getTemperature: function(time) {
+      var hour = time.getHours() + time.getMinutes() / 60;
+      return 21.5 + 3.5 * Math.sin((hour - 6) * Math.PI / 12);
+    },
+    
+    getLight: function(time) {
+      var hour = time.getHours() + time.getMinutes() / 60;
+      var lightLevel = Math.max(0, Math.sin((hour - 6) * Math.PI / 12));
+      return Math.round(lightLevel * 100);
+    },
+    
+    getHumidity: function(time) {
+      var hour = time.getHours() + time.getMinutes() / 60;
+      return 45 + 15 * Math.sin((hour - 12) * Math.PI / 12);
+    },
+    
+    getWind: function(time) {
+      var hour = time.getHours() + time.getMinutes() / 60;
+      return 2 + 3 * Math.sin((hour - 8) * Math.PI / 8);
+    },
+    
+    // Simuler menneskelig aktivitet
+    getMotion: function(time) {
+      var hour = time.getHours();
+      // Mest aktivitet mellem 7-9 og 17-22
+      if ((hour >= 7 && hour <= 9) || (hour >= 17 && hour <= 22)) {
+        return Math.random() < 0.3; // 30% chance for bevægelse
+      }
+      return Math.random() < 0.05; // 5% chance om natten
+    },
+    
+    getDoorActivity: function(time) {
+      var hour = time.getHours();
+      // Døre åbner mest om morgenen og aftenen
+      if ((hour >= 7 && hour <= 9) || (hour >= 17 && hour <= 19)) {
+        return Math.random() < 0.2; // 20% chance
+      }
+      return Math.random() < 0.05; // 5% chance
+    }
+  };
 
   function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   var lastLogMessage = '';
   var logEntries = [];
   var currentLogFilter = 'all';
+  
+  /* Simulation Functions */
+  function startSimulation() {
+    if (simulation.enabled) return;
+    
+    simulation.enabled = true;
+    simulation.startTime = new Date();
+    simulation.simulationTime = new Date();
+    
+    // Hent indstillinger
+    simulation.speed = parseInt($('#simulationSpeed').value) || 1;
+    simulation.realisticPatterns = $('#realisticPatterns').checked;
+    simulation.dayNightCycle = $('#dayNightCycle').checked;
+    
+    // Start simulation loop
+    simulation.interval = setInterval(function() {
+      updateSimulation();
+    }, 1000 / simulation.speed); // Opdater hver sekund divideret med hastighed
+    
+    // Opdater UI
+    $('#simulationEnabled').checked = true;
+    $('#btnStartSimulation').disabled = true;
+    $('#btnStopSimulation').disabled = false;
+    $('#simulationStatus').style.display = 'block';
+    $('#simulationStatus').classList.add('simulation-active');
+    
+    log('🎮 Simulation startet med hastighed ' + simulation.speed + 'x', 'system');
+  }
+  
+  function stopSimulation() {
+    if (!simulation.enabled) return;
+    
+    simulation.enabled = false;
+    clearInterval(simulation.interval);
+    simulation.interval = null;
+    
+    // Opdater UI
+    $('#simulationEnabled').checked = false;
+    $('#btnStartSimulation').disabled = false;
+    $('#btnStopSimulation').disabled = true;
+    $('#simulationStatus').classList.remove('simulation-active');
+    
+    log('⏹️ Simulation stoppet', 'system');
+  }
+  
+  function resetSimulation() {
+    stopSimulation();
+    
+    // Reset til normale værdier
+    state.time = '21:30';
+    state.weekday = 'Mon';
+    state.lux = 100;
+    state.humidity = 45;
+    state.wind = 2;
+    state.motion = false;
+    state.door = false;
+    
+    // Opdater UI
+    $('#simulationStatus').style.display = 'none';
+    updateAllDisplays();
+    
+    log('🔄 Simulation reset til normal tilstand', 'system');
+  }
+  
+  function updateAllDisplays() {
+    // Opdater alle UI elementer med nuværende state værdier
+    var timeEl = document.getElementById('timeDisplay');
+    var weekdayEl = document.getElementById('weekdayDisplay');
+    var luxEl = document.getElementById('luxDisplay');
+    var humidityEl = document.getElementById('humidityDisplay');
+    var windEl = document.getElementById('windDisplay');
+    var motionEl = document.getElementById('motionDisplay');
+    var doorEl = document.getElementById('doorDisplay');
+    
+    if(timeEl) timeEl.textContent = state.time;
+    if(weekdayEl) weekdayEl.textContent = state.weekday;
+    if(luxEl) luxEl.textContent = state.lux;
+    if(humidityEl) humidityEl.textContent = state.humidity + '%';
+    if(windEl) windEl.textContent = state.wind + ' m/s';
+    if(motionEl) motionEl.textContent = state.motion ? 'Breached' : 'Safe';
+    if(doorEl) doorEl.textContent = state.door ? 'Opened' : 'Closed';
+    
+    // Opdater også pending state
+    pending.time = state.time;
+    pending.weekday = state.weekday;
+    pending.lux = state.lux;
+    pending.humidity = state.humidity;
+    pending.wind = state.wind;
+    pending.motion = state.motion;
+    pending.door = state.door;
+  }
+  
+  function updateSimulation() {
+    if (!simulation.enabled) return;
+    
+    // Opdater simulation tid
+    var timeDiff = (Date.now() - simulation.startTime.getTime()) * simulation.speed;
+    simulation.simulationTime = new Date(simulation.startTime.getTime() + timeDiff);
+    
+    // Opdater sensor værdier baseret på tid
+    if (simulation.realisticPatterns) {
+      state.lux = simulation.getLight(simulation.simulationTime);
+      state.humidity = Math.round(simulation.getHumidity(simulation.simulationTime));
+      state.wind = Math.round(simulation.getWind(simulation.simulationTime) * 10) / 10;
+      
+      // Simuler menneskelig aktivitet
+      if (Math.random() < 0.1) { // 10% chance hver opdatering
+        state.motion = simulation.getMotion(simulation.simulationTime);
+        if (state.motion) log('👤 PIR sensor aktiveret (simulation)', 'sensor');
+      }
+      
+      if (Math.random() < 0.05) { // 5% chance hver opdatering
+        state.door = simulation.getDoorActivity(simulation.simulationTime);
+        if (state.door) log('🚪 Dør åbnet (simulation)', 'sensor');
+      }
+    }
+    
+    // Opdater tid og ugedag
+    var hours = simulation.simulationTime.getHours();
+    var minutes = simulation.simulationTime.getMinutes();
+    state.time = (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes;
+    
+    var weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    state.weekday = weekdays[simulation.simulationTime.getDay()];
+    
+    // Opdater status display
+    $('#simulationTime').textContent = state.time;
+    $('#sensorStatus').textContent = simulation.realisticPatterns ? 'Realistiske mønstre' : 'Normal';
+    $('#cycleStatus').textContent = simulation.dayNightCycle ? 'Dag/nat cyklus' : 'Normal';
+    
+    // Opdater alle displays
+    updateAllDisplays();
+    
+    // Kør regler
+    runRules();
+  }
+  
+  function runRules() {
+    // Kør alle aktive regler baseret på nuværende state
+    if (state.rules && state.rules.length > 0) {
+      state.rules.forEach(function(rule, index) {
+        try {
+          // Tjek om reglen matcher
+          if (evaluateRule(rule)) {
+            // Udfør handlingen
+            executeAction(rule);
+            log('🎯 Regel #' + (index + 1) + ' aktiveret: ' + rule.action1, 'activate');
+          }
+        } catch (e) {
+          log('❌ Fejl i regel #' + (index + 1) + ': ' + e.message, 'error');
+        }
+      });
+    }
+  }
+  
+  function evaluateRule(rule) {
+    // Tjek trigger
+    if (!evaluateTrigger(rule.trigger, rule.triggerValue)) {
+      return false;
+    }
+    
+    // Tjek betingelser (AND)
+    if (rule.cond1 && !evaluateCondition(rule.cond1, rule.cond1Value)) {
+      return false;
+    }
+    
+    if (rule.cond2 && !evaluateCondition(rule.cond2, rule.cond2Value)) {
+      return false;
+    }
+    
+    return true;
+  }
+  
+  function evaluateTrigger(trigger, value) {
+    switch(trigger) {
+      case 'always': return true;
+      case 'motionBreached': return state.motion === true;
+      case 'motionSafe': return state.motion === false;
+      case 'doorOpened': return state.door === true;
+      case 'timeEquals': return state.time === value;
+      case 'humidityAbove': return state.humidity >= parseFloat(value || 0);
+      case 'humidityBelow': return state.humidity <= parseFloat(value || 0);
+      case 'luxAbove': return state.lux >= parseFloat(value || 0);
+      case 'luxBelow': return state.lux <= parseFloat(value || 0);
+      default: return false;
+    }
+  }
+  
+  function evaluateCondition(condition, value) {
+    switch(condition) {
+      case 'luxBelow': return state.lux < parseFloat(value || 0);
+      case 'luxAbove': return state.lux > parseFloat(value || 0);
+      case 'humAbove': return state.humidity >= parseFloat(value || 0);
+      case 'humBelow': return state.humidity <= parseFloat(value || 0);
+      case 'windBelow': return state.wind < parseFloat(value || 0);
+      case 'weekdayIn': return (value || '').split(',').map(s => s.trim()).includes(state.weekday);
+      case 'alarmArmed': return state.alarmArmed === true;
+      case 'alarmHome': return state.alarmHome === true;
+      default: return false;
+    }
+  }
+  
+  function executeAction(rule) {
+    switch(rule.action1) {
+      case 'lightOn':
+        state.light = true;
+        log('💡 Lys tændt via regel', 'activate');
+        break;
+      case 'lightOff':
+        state.light = false;
+        log('💡 Lys slukket via regel', 'activate');
+        break;
+      case 'fanOn':
+        state.fan = true;
+        log('🌪️ Ventilator tændt via regel', 'activate');
+        break;
+      case 'fanOff':
+        state.fan = false;
+        log('🌪️ Ventilator slukket via regel', 'activate');
+        break;
+      case 'push':
+        log('📝 Regel log: ' + (rule.action1Value || 'Handling udført'), 'activate');
+        break;
+      default:
+        log('❓ Ukendt handling: ' + rule.action1, 'error');
+    }
+  }
   
   function log(msg, type){ 
     // Forhindre spam af samme besked
@@ -3483,7 +3826,7 @@ html {
       type: type || 'system',
       category: category,
       entity: extractEntity(msg),
-      old_value: extractOldValue(msg),
+      old_value: extractNewValue(msg),
       new_value: extractNewValue(msg)
     };
     logEntries.push(entry);
@@ -6127,6 +6470,54 @@ html {
     const btnTeacherLoginSubmit = document.getElementById('btnTeacherLoginSubmit');
     if(btnTeacherLoginSubmit) {
       btnTeacherLoginSubmit.onclick = doTeacherLogin;
+    }
+    
+    // Simulation mode event listeners
+    const btnStartSimulation = document.getElementById('btnStartSimulation');
+    const btnStopSimulation = document.getElementById('btnStopSimulation');
+    const btnResetSimulation = document.getElementById('btnResetSimulation');
+    
+    if(btnStartSimulation) {
+      btnStartSimulation.onclick = startSimulation;
+      console.log('✅ Start simulation button found and configured');
+    }
+    
+    if(btnStopSimulation) {
+      btnStopSimulation.onclick = stopSimulation;
+      console.log('✅ Stop simulation button found and configured');
+    }
+    
+    if(btnResetSimulation) {
+      btnResetSimulation.onclick = resetSimulation;
+      console.log('✅ Reset simulation button found and configured');
+    }
+    
+    // Simulation indstillinger event listeners
+    const simulationEnabled = document.getElementById('simulationEnabled');
+    const simulationSpeed = document.getElementById('simulationSpeed');
+    const realisticPatterns = document.getElementById('realisticPatterns');
+    const dayNightCycle = document.getElementById('dayNightCycle');
+    
+    if(simulationEnabled) {
+      simulationEnabled.onchange = function() {
+        if(this.checked) {
+          startSimulation();
+        } else {
+          stopSimulation();
+        }
+      };
+      console.log('✅ Simulation enabled checkbox found and configured');
+    }
+    
+    if(simulationSpeed) {
+      simulationSpeed.onchange = function() {
+        if(simulation.enabled) {
+          // Genstart simulation med ny hastighed
+          stopSimulation();
+          startSimulation();
+        }
+      };
+      console.log('✅ Simulation speed selector found and configured');
     }
     
     // Lærer dashboard knapper
