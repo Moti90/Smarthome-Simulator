@@ -292,6 +292,75 @@
       border-left-color: #10b981;
     }
     
+    /* Simulation Log Styling */
+    .simulation-log {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #f8f9fa;
+      padding: 10px;
+    }
+    
+    .log-controls {
+      margin-bottom: 15px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .log-filters {
+      margin-bottom: 15px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .log-filters label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    
+    .log-filters input[type="checkbox"] {
+      margin: 0;
+    }
+    
+    .log-entry {
+      display: flex;
+      gap: 10px;
+      padding: 8px;
+      margin-bottom: 5px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      border-left: 3px solid #ddd;
+    }
+    
+    .log-entry.system { border-left-color: #007bff; background: #e3f2fd; }
+    .log-entry.sensor { border-left-color: #28a745; background: #e8f5e8; }
+    .log-entry.activate { border-left-color: #ffc107; background: #fff8e1; }
+    .log-entry.error { border-left-color: #dc3545; background: #f8d7da; }
+    
+    .log-time {
+      color: #666;
+      min-width: 60px;
+    }
+    
+    .log-type {
+      font-weight: bold;
+      min-width: 80px;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    
+    .log-message {
+      flex: 1;
+    }
+    
     /* Sensor Grid Layout */
     .sensor-grid {
       display: grid;
@@ -3649,6 +3718,31 @@ html {
           </div>
         </div>
 
+        <!-- Simulation Log -->
+        <div class="card">
+          <h2>📝 Simulation Log</h2>
+          <div class="body">
+            <div class="log-controls">
+              <button id="btnClearSimLog" class="btn-secondary" onclick="clearSimulationLog()">🗑️ Ryd Log</button>
+              <button id="btnExportSimLog" class="btn-info" onclick="exportSimulationLog()">💾 Eksporter Log</button>
+            </div>
+            <div class="log-filters">
+              <label><input type="checkbox" id="filterSimAll" checked onchange="filterSimulationLog('all')"> Alle</label>
+              <label><input type="checkbox" id="filterSimSystem" checked onchange="filterSimulationLog('system')"> System</label>
+              <label><input type="checkbox" id="filterSimSensor" checked onchange="filterSimulationLog('sensor')"> Sensorer</label>
+              <label><input type="checkbox" id="filterSimActivate" checked onchange="filterSimulationLog('activate')"> Aktivering</label>
+              <label><input type="checkbox" id="filterSimError" checked onchange="filterSimulationLog('error')"> Fejl</label>
+            </div>
+            <div id="simulationLog" class="simulation-log">
+              <div class="log-entry system">
+                <span class="log-time">--:--</span>
+                <span class="log-type">System</span>
+                <span class="log-message">Simulation dashboard åbnet</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
     
@@ -3831,6 +3925,7 @@ html {
     }
     
     log('🎮 Simulation startet med hastighed ' + window.simulation.speed + 'x', 'system');
+    addSimulationLogEntry('system', '🎮 Simulation startet med hastighed ' + window.simulation.speed + 'x');
   }
   
   window.stopSimulation = function() {
@@ -3852,6 +3947,7 @@ html {
     if (statusEl) statusEl.classList.remove('simulation-active');
     
     log('⏹️ Simulation stoppet', 'system');
+    addSimulationLogEntry('system', '⏹️ Simulation stoppet');
   }
   
   window.resetSimulation = function() {
@@ -3863,6 +3959,7 @@ html {
     state.lux = 100;
     state.humidity = 45;
     state.wind = 2;
+    state.temperature = 21.5; // Tilføjet temperatur!
     state.motion = false;
     state.door = false;
     
@@ -3874,6 +3971,7 @@ html {
     updateSimulationDisplay(); // Opdater også simulation dashboard
     
     log('🔄 Simulation reset til normal tilstand', 'system');
+    addSimulationLogEntry('system', '🔄 Simulation reset til normal tilstand');
   }
   
   function updateAllDisplays() {
@@ -3883,6 +3981,7 @@ html {
     pending.lux = state.lux;
     pending.humidity = state.humidity;
     pending.wind = state.wind;
+    pending.temperature = state.temperature; // Tilføjet temperatur!
     pending.motion = state.motion;
     pending.door = state.door;
     
@@ -3913,6 +4012,9 @@ html {
       state.humidity = Math.round(window.simulation.getHumidity(window.simulation.simulationTime));
       state.wind = Math.round(window.simulation.getWind(window.simulation.simulationTime) * 10) / 10;
       
+      // Opdater temperatur (tilføjet!)
+      state.temperature = Math.round(window.simulation.getTemperature(window.simulation.simulationTime) * 10) / 10;
+      
       // Automatisk alarm system (22:00-06:00)
       var currentHour = window.simulation.simulationTime.getHours();
       if (currentHour >= 22 || currentHour < 6) {
@@ -3924,12 +4026,18 @@ html {
       // Simuler menneskelig aktivitet
       if (Math.random() < 0.02) { // 2% chance hver opdatering (reduceret fra 10%)
         state.motion = window.simulation.getMotion(window.simulation.simulationTime);
-        if (state.motion) log('👤 PIR sensor aktiveret (simulation)', 'sensor');
+        if (state.motion) {
+          log('👤 PIR sensor aktiveret (simulation)', 'sensor');
+          addSimulationLogEntry('sensor', '👤 PIR sensor aktiveret');
+        }
       }
       
       if (Math.random() < 0.01) { // 1% chance hver opdatering (reduceret fra 5%)
         state.door = window.simulation.getDoorActivity(window.simulation.simulationTime);
-        if (state.door) log('🚪 Dør åbnet (simulation)', 'sensor');
+        if (state.door) {
+          log('🚪 Dør åbnet (simulation)', 'sensor');
+          addSimulationLogEntry('sensor', '🚪 Dør åbnet');
+        }
       }
     }
     
@@ -6857,10 +6965,9 @@ html {
       document.getElementById('liveDoorDisplay').textContent = state.door ? 'Opened' : 'Closed';
       document.getElementById('liveAlarmDisplay').textContent = state.alarmArmed ? 'Armed' : 'Disarmed';
       
-      // Beregn temperatur hvis simulation objekt eksisterer
-      if (window.simulation && window.simulation.getTemperature) {
-        const temp = window.simulation.getTemperature(new Date());
-        document.getElementById('liveTempDisplay').textContent = temp.toFixed(1) + '°C';
+      // Vis temperatur fra state (nu opdateret i simulation)
+      if (state.temperature !== undefined) {
+        document.getElementById('liveTempDisplay').textContent = state.temperature + '°C';
       } else {
         document.getElementById('liveTempDisplay').textContent = '21.5°C';
       }
@@ -6949,6 +7056,64 @@ html {
   window.toggleDayNightCycle = function(checkbox) {
     if(window.simulation) {
       window.simulation.dayNightCycle = checkbox.checked;
+    }
+  }
+  
+  // === Simulation Log Funktioner ===
+  window.clearSimulationLog = function() {
+    const simLog = document.getElementById('simulationLog');
+    if (simLog) {
+      simLog.innerHTML = '<div class="log-entry system"><span class="log-time">--:--</span><span class="log-type">System</span><span class="log-message">Log ryddet</span></div>';
+    }
+  }
+  
+  window.exportSimulationLog = function() {
+    const simLog = document.getElementById('simulationLog');
+    if (simLog) {
+      const logText = simLog.innerText;
+      const blob = new Blob([logText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'simulation-log-' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  }
+  
+  window.filterSimulationLog = function(type) {
+    const logEntries = document.querySelectorAll('#simulationLog .log-entry');
+    logEntries.forEach(entry => {
+      if (type === 'all' || entry.classList.contains(type)) {
+        entry.style.display = 'flex';
+      } else {
+        entry.style.display = 'none';
+      }
+    });
+  }
+  
+  // Funktion til at tilføje log entries til simulation loggen
+  window.addSimulationLogEntry = function(type, message) {
+    const simLog = document.getElementById('simulationLog');
+    if (simLog) {
+      const now = new Date();
+      const time = now.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' });
+      
+      const logEntry = document.createElement('div');
+      logEntry.className = `log-entry ${type}`;
+      logEntry.innerHTML = `
+        <span class="log-time">${time}</span>
+        <span class="log-type">${type.charAt(0).toUpperCase() + type.slice(1)}</span>
+        <span class="log-message">${message}</span>
+      `;
+      
+      simLog.appendChild(logEntry);
+      simLog.scrollTop = simLog.scrollHeight; // Scroll til bunden
+      
+      // Begræns antal log entries til 100
+      if (simLog.children.length > 100) {
+        simLog.removeChild(simLog.firstChild);
+      }
     }
   }
   
