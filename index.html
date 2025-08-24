@@ -2486,9 +2486,8 @@ html {
               <button type="button" data-target="view-sim">🏠 Simulator</button>
         <button type="button" data-target="view-flow">🧩 Wiresheet</button>
         <button type="button" data-target="view-learning">📚 Læring</button>
-        <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
-        <button type="button" data-target="view-simulation">🎮 Simulation</button>
-      <button type="button" onclick="showQuickStart()" title="Kom godt i gang">🚀 Opgaver</button>
+                <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
+        <button type="button" onclick="showQuickStart()" title="Kom godt i gang">🚀 Opgaver</button>
     </nav>
   </div>
 </header>
@@ -2954,6 +2953,7 @@ html {
     <div class="brand"><h1 class="goldtext"> Simulator  </h1></div>
     <div class="top-left">
       <button id="btnTeacherLogin" class="btn-secondary" style="margin-right: 12px; background: #4a5568 !important; color: white !important; border: 1px solid #2d3748 !important; padding: 6px 12px !important; border-radius: 6px !important; font-weight: 500 !important; font-size: 12px !important; box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important; z-index: 9999 !important; position: relative !important; display: block !important;">👨‍🏫 Lærer</button>
+      <button id="btnSimulation" class="btn-secondary" style="margin-right: 12px; background: #8b5cf6 !important; color: white !important; border: 1px solid #7c3aed !important; padding: 6px 12px !important; border-radius: 6px !important; font-weight: 500 !important; font-size: 12px !important; box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important; z-index: 9999 !important; position: relative !important; display: block !important;">🎮 Simulation</button>
       <button id="btnTeacherTab" class="btn-secondary" style="margin-right: 12px; background: #059669 !important; color: white !important; border: 1px solid #047857 !important; padding: 6px 12px !important; border-radius: 6px !important; font-weight: 500 !important; font-size: 12px !important; box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important; z-index: 9999 !important; position: relative !important; display: none !important;">📊 Dashboard</button>
     </div>
     <div class="top-right">
@@ -3540,10 +3540,11 @@ html {
                 <span class="setting-description">Simuler dag og nat med forskellige lysniveauer</span>
               </div>
               <div class="setting-item">
-                <button id="btnStartSimulation" class="btn-primary">▶️ Start Simulation</button>
-                <button id="btnStopSimulation" class="btn-danger" disabled>⏹️ Stop Simulation</button>
-                <button id="btnResetSimulation" class="btn-secondary">🔄 Reset til normal</button>
-                <button id="btnTestRules" class="btn-info">🎯 Test Regler</button>
+                        <button id="btnStartSimulation" class="btn-primary">▶️ Start Simulation</button>
+        <button id="btnStopSimulation" class="btn-danger" disabled>⏹️ Stop Simulation</button>
+        <button id="btnResetSimulation" class="btn-secondary">🔄 Reset til normal</button>
+        <button id="btnTestRules" class="btn-info">🎯 Test Regler</button>
+        <button id="btnBackToNormal" class="btn-secondary">🏠 Tilbage til Simulator</button>
               </div>
             </div>
           </div>
@@ -6667,6 +6668,29 @@ html {
       btnTeacherLogin.onclick = showTeacherLoginModal;
     }
     
+    // Simulation knap
+    const btnSimulation = document.getElementById('btnSimulation');
+    if(btnSimulation) {
+      btnSimulation.onclick = function() {
+        // Skjul alle normale faner
+        document.querySelector('.tabs').style.display = 'none';
+        
+        // Skjul alle normale views
+        document.querySelectorAll('.view').forEach(view => {
+          if (view.id !== 'view-simulation') {
+            view.style.display = 'none';
+          }
+        });
+        
+        // Vis kun simulation dashboard
+        document.getElementById('view-simulation').style.display = 'block';
+        document.getElementById('view-simulation').classList.add('active');
+        
+        console.log('🔍 Skiftet til simulation dashboard');
+      };
+      console.log('✅ Simulation knap fundet og konfigureret');
+    }
+    
     // Lærer dashboard knap
     const btnTeacherTab = document.getElementById('btnTeacherTab');
     if(btnTeacherTab) {
@@ -6723,6 +6747,25 @@ html {
         log('✅ Regel test gennemført - tjek loggen for resultater', 'system');
       };
       console.log('✅ Test rules button found and configured');
+    }
+    
+    const btnBackToNormal = document.getElementById('btnBackToNormal');
+    if(btnBackToNormal) {
+      btnBackToNormal.onclick = function() {
+        // Vis alle normale faner igen
+        document.querySelector('.tabs').style.display = 'flex';
+        
+        // Skjul simulation view
+        document.getElementById('view-simulation').style.display = 'none';
+        document.getElementById('view-simulation').classList.remove('active');
+        
+        // Vis simulator view som standard
+        document.getElementById('view-sim').style.display = 'block';
+        document.getElementById('view-sim').classList.add('active');
+        
+        console.log('🔍 Gået tilbage til simulator');
+      };
+      console.log('✅ Back to normal button found and configured');
     }
     
     // Simulation indstillinger event listeners
