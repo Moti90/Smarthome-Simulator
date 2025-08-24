@@ -3973,6 +3973,14 @@ html {
     clearInterval(window.simulation.interval);
     window.simulation.interval = null;
     
+    // Ryd alle auto-reset timere
+    if (window.simulation.autoResetTimers) {
+      Object.values(window.simulation.autoResetTimers).forEach(timer => {
+        clearTimeout(timer);
+      });
+      window.simulation.autoResetTimers = {};
+    }
+    
     // Opdater UI
     const enabledEl = document.getElementById('simulationEnabled');
     const startBtn = document.getElementById('btnStartSimulation');
@@ -4226,18 +4234,30 @@ html {
       case 'lightOn':
         state.light = true;
         log('💡 Lys tændt via regel', 'activate');
+        startAutoResetTimer('light', 10000); // Auto-reset efter 10 sekunder
         break;
       case 'lightOff':
         state.light = false;
         log('💡 Lys slukket via regel', 'activate');
+        // Stop auto-reset timer hvis den findes
+        if (window.simulation.autoResetTimers && window.simulation.autoResetTimers['light']) {
+          clearTimeout(window.simulation.autoResetTimers['light']);
+          delete window.simulation.autoResetTimers['light'];
+        }
         break;
       case 'fanOn':
         state.fan = true;
         log('🌪️ Ventilator tændt via regel', 'activate');
+        startAutoResetTimer('fan', 10000); // Auto-reset efter 10 sekunder
         break;
       case 'fanOff':
         state.fan = false;
         log('🌪️ Ventilator slukket via regel', 'activate');
+        // Stop auto-reset timer hvis den findes
+        if (window.simulation.autoResetTimers && window.simulation.autoResetTimers['fan']) {
+          clearTimeout(window.simulation.autoResetTimers['fan']);
+          delete window.simulation.autoResetTimers['fan'];
+        }
         break;
       case 'push':
         log('📝 Regel log: ' + (rule.action1Value || 'Handling udført'), 'activate');
@@ -7247,6 +7267,49 @@ html {
       if (dimmerStateEl) {
         dimmerStateEl.textContent = state.dimmer + '%';
       }
+    }
+  }
+  
+  // === Auto-Reset Timer System ===
+  function startAutoResetTimer(actorType, delay = 10000) { // 10 sekunder standard
+    // Stop eksisterende timer hvis den findes
+    if (window.simulation.autoResetTimers && window.simulation.autoResetTimers[actorType]) {
+      clearTimeout(window.simulation.autoResetTimers[actorType]);
+    }
+    
+    // Initialiser timers objekt hvis det ikke findes
+    if (!window.simulation.autoResetTimers) {
+      window.simulation.autoResetTimers = {};
+    }
+    
+    // Start ny timer
+    window.simulation.autoResetTimers[actorType] = setTimeout(function() {
+      resetActorToDefault(actorType);
+    }, delay);
+  }
+  
+  function resetActorToDefault(actorType) {
+    switch(actorType) {
+      case 'light':
+        state.light = false;
+        log('💡 Lampe auto-reset til OFF efter 10 sekunder', 'system');
+        break;
+      case 'fan':
+        state.fan = false;
+        log('🌪️ Ventilator auto-reset til OFF efter 10 sekunder', 'system');
+        break;
+      case 'dimmer':
+        state.dimmer = 0;
+        log('💡 Dæmper auto-reset til 0% efter 10 sekunder', 'system');
+        break;
+    }
+    
+    // Opdater UI
+    updateActorDisplays();
+    
+    // Fjern timer fra listen
+    if (window.simulation.autoResetTimers) {
+      delete window.simulation.autoResetTimers[actorType];
     }
   }
   
