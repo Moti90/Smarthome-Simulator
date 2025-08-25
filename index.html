@@ -7451,20 +7451,35 @@ html {
     // Vis alle normale faner igen
     document.querySelector('.tabs').style.display = 'flex';
     
-    // Skjul alle views
-    document.querySelectorAll('.view').forEach(view => {
-      view.style.display = 'none';
-    });
-    
-    // Vis simulator view som standard
-    document.getElementById('view-sim').style.display = 'block';
-    document.getElementById('view-sim').classList.add('active');
-    
-    // Gendan tab aktivitet
-    document.getElementById('tabSim').classList.add('active');
-    document.getElementById('tabFlow').classList.remove('active');
-    document.getElementById('tabLearning').classList.remove('active');
-    document.getElementById('tabSettings').classList.remove('active');
+    // Brug den samme show() funktion som tab-knapperne
+    if (window.show) {
+      window.show('view-sim');
+    } else {
+      // Fallback hvis show() ikke er tilgængelig
+      // Skjul alle views
+      document.querySelectorAll('.view').forEach(view => {
+        view.style.display = 'none';
+        view.classList.remove('active');
+      });
+      
+      // Vis simulator view som standard
+      const simView = document.getElementById('view-sim');
+      if (simView) {
+        simView.style.display = 'block';
+        simView.classList.add('active');
+      }
+      
+      // Gendan tab aktivitet
+      const tabSim = document.getElementById('tabSim');
+      const tabFlow = document.getElementById('tabFlow');
+      const tabLearning = document.getElementById('tabLearning');
+      const tabSettings = document.getElementById('tabSettings');
+      
+      if (tabSim) tabSim.classList.add('active');
+      if (tabFlow) tabFlow.classList.remove('active');
+      if (tabLearning) tabLearning.classList.remove('active');
+      if (tabSettings) tabSettings.classList.remove('active');
+    }
     
     console.log('🔍 Gået tilbage til simulator');
   }
@@ -8559,8 +8574,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const el = document.getElementById(x);
       if(el){ 
         console.log(`📄 Element ${x}:`, el);
+        // Sæt active klasse
         el.classList.toggle('active', x===id);
-        console.log(`✅ ${x} active klasse:`, el.classList.contains('active'));
+        // Håndter display style
+        if (x === id) {
+          el.style.display = 'block';
+        } else {
+          el.style.display = 'none';
+        }
+        console.log(`✅ ${x} active klasse:`, el.classList.contains('active'), 'display:', el.style.display);
       } else {
         console.log(`❌ Element ${x} ikke fundet!`);
       }
