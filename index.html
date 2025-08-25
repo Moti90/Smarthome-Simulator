@@ -3485,7 +3485,21 @@ html {
   </div>
 </div>
 
-            <textarea id="luaOut" spellcheck="false" placeholder="Åbn menuen 'LUA ▾' og vælg 'Generér LUA'." style="height: 260px;"></textarea>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px;">
+              <div>
+                <label style="display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 500; font-size: 14px;">📋 ERKLÆRINGER (Venstre panel i HC3)</label>
+                <textarea id="luaOutLeft" spellcheck="false" placeholder="Conditions og triggers kommer her..." style="height: 200px; width: 100%; resize: vertical;"></textarea>
+                <button onclick="copyLeftPanel()" style="margin-top: 8px; padding: 6px 12px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-size: 12px; cursor: pointer;">📋 Kopier venstre panel</button>
+              </div>
+              <div>
+                <label style="display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 500; font-size: 14px;">⚡ HANDLINGER (Højre panel i HC3)</label>
+                <textarea id="luaOutRight" spellcheck="false" placeholder="Actions og regler kommer her..." style="height: 200px; width: 100%; resize: vertical;"></textarea>
+                <button onclick="copyRightPanel()" style="margin-top: 8px; padding: 6px 12px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-size: 12px; cursor: pointer;">📋 Kopier højre panel</button>
+              </div>
+            </div>
+            
+            <!-- Behold den gamle luaOut for bagudkompatibilitet -->
+            <textarea id="luaOut" spellcheck="false" style="display: none;"></textarea>
           </div>
         </div>
       </div>
@@ -5477,17 +5491,113 @@ html {
     var condSet={}, condList=[]; for(var j=0;j<rules.length;j++){ var c=condForTrigger(rules[j]); if(c&&!condSet[c]){condSet[c]=1; condList.push(c);} }
     if(condList.length===0){ condList.push('{}'); }
     var decl=['{','  conditions = {','    ' + condList.join(',\\n    '),'  },','  operator = "any"','}'].join('\n');
-    return ['-- === ERKLÆRINGER (venstre panel i HC3) ===',decl,'','-- === HANDLINGER (højre panel i HC3) ===',actionsLua].join('\\n\\n');
+    
+    // Fyld de to separate tekstbokse
+    var leftPanel = ['-- === ERKLÆRINGER (venstre panel i HC3) ===', decl].join('\n\n');
+    var rightPanel = ['-- === HANDLINGER (højre panel i HC3) ===', actionsLua].join('\n\n');
+    
+    // Opdater de separate tekstbokse
+    var leftTextarea = document.getElementById('luaOutLeft');
+    var rightTextarea = document.getElementById('luaOutRight');
+    if (leftTextarea) leftTextarea.value = leftPanel;
+    if (rightTextarea) rightTextarea.value = rightPanel;
+    
+    // Behold bagudkompatibilitet med den gamle luaOut
+    var combinedOutput = [leftPanel, '', rightPanel].join('\n\n');
+    return combinedOutput;
   }
   $('#btnGenLua').onclick=function(){ luaOut.value = buildLua(); log('LUA genereret.'); menu.classList.remove('open'); };
-  $('#btnCopyLua').onclick=function(){ try{ luaOut.focus(); luaOut.select(); document.execCommand('copy'); log('LUA kopieret.'); }catch(e){ alert('Kunne ikke kopiere: '+e.message);} menu.classList.remove('open'); };
+  $('#btnCopyLua').onclick=function(){ 
+    try{ 
+      // Kopier fra venstre panel (conditions)
+      var leftTextarea = document.getElementById('luaOutLeft');
+      var rightTextarea = document.getElementById('luaOutRight');
+      
+      if (leftTextarea && rightTextarea && leftTextarea.value && rightTextarea.value) {
+        // Kopier begge paneler
+        var combinedText = leftTextarea.value + '\n\n' + rightTextarea.value;
+        navigator.clipboard.writeText(combinedText).then(function() {
+          log('LUA kopieret (begge paneler).');
+        }).catch(function() {
+          // Fallback til gammel metode
+          luaOut.focus(); 
+          luaOut.select(); 
+          document.execCommand('copy'); 
+          log('LUA kopieret (fallback).');
+        });
+      } else {
+        // Fallback til gammel metode hvis de nye tekstbokse ikke findes
+        luaOut.focus(); 
+        luaOut.select(); 
+        document.execCommand('copy'); 
+        log('LUA kopieret (fallback).');
+      }
+    }catch(e){ 
+      alert('Kunne ikke kopiere: '+e.message);
+    }
+    menu.classList.remove('open'); 
+  };
   $('#btnSaveLua').onclick=async function(){
     try{
-      var code=luaOut.value||''; if(!code){ alert('Generér LUA først.'); return; }
+      // Prøv at få kode fra de nye tekstbokse først
+      var leftTextarea = document.getElementById('luaOutLeft');
+      var rightTextarea = document.getElementById('luaOutRight');
+      
+      var code = '';
+      if (leftTextarea && rightTextarea && leftTextarea.value && rightTextarea.value) {
+        // Brug de separate paneler
+        code = leftTextarea.value + '\n\n' + rightTextarea.value;
+      } else {
+        // Fallback til gammel metode
+        code = luaOut.value || '';
+      }
+      
+      if(!code){ alert('Generér LUA først.'); return; }
       var p = await window.api.saveText('hc3_scene.lua', code);
       if(p){ log('LUA gemt: '+p); alert('LUA gemt: '+p); }
     }catch(e){ alert('Kunne ikke gemme LUA: '+e.message);}
     menu.classList.remove('open');
+  };
+  
+  // Funktioner til at kopiere hver panel separat
+  window.copyLeftPanel = function() {
+    try {
+      var leftTextarea = document.getElementById('luaOutLeft');
+      if (leftTextarea && leftTextarea.value) {
+        navigator.clipboard.writeText(leftTextarea.value).then(function() {
+          log('Venstre panel kopieret.');
+        }).catch(function() {
+          leftTextarea.focus();
+          leftTextarea.select();
+          document.execCommand('copy');
+          log('Venstre panel kopieret (fallback).');
+        });
+      } else {
+        alert('Intet at kopiere. Generér LUA først.');
+      }
+    } catch(e) {
+      alert('Kunne ikke kopiere: ' + e.message);
+    }
+  };
+  
+  window.copyRightPanel = function() {
+    try {
+      var rightTextarea = document.getElementById('luaOutRight');
+      if (rightTextarea && rightTextarea.value) {
+        navigator.clipboard.writeText(rightTextarea.value).then(function() {
+          log('Højre panel kopieret.');
+        }).catch(function() {
+          rightTextarea.focus();
+          rightTextarea.select();
+          document.execCommand('copy');
+          log('Højre panel kopieret (fallback).');
+        });
+      } else {
+        alert('Intet at kopiere. Generér LUA først.');
+      }
+    } catch(e) {
+      alert('Kunne ikke kopiere: ' + e.message);
+    }
   };
 
   /* Bootstrap-eksempel */
