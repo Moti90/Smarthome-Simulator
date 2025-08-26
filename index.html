@@ -2871,8 +2871,8 @@ html {
   
   <!-- Welcome Screen -->
   <div id="onboardingWelcome" class="onboarding-welcome" style="display:none;">
-            <h2>🎉 Velkommen til SMARTHOME SIMULATOR!</h2>
-    <p>Lær at bygge smart home automation med denne interaktive simulator. Du kan teste regler, generere LUA-kode og se hvordan det hele fungerer sammen.</p>
+            <h2>🎉 Velkommen til SmartHome Simulator!</h2>
+    <p>Lær at bygge smart home automation med denne interaktive simulator. Du kan teste regler, generere LUA-kode til Fibaro HC3 og se hvordan det hele fungerer sammen.</p>
     
     <div class="features">
       <div class="feature">
@@ -2881,15 +2881,23 @@ html {
       </div>
       <div class="feature">
         <div class="icon">🧩</div>
-        <span>Visual Flow Editor</span>
+        <span>Visual Flow Editor (Wiresheet)</span>
       </div>
       <div class="feature">
         <div class="icon">⚡</div>
-        <span>LUA-kode generering</span>
+        <span>LUA-kode generering til HC3</span>
+      </div>
+      <div class="feature">
+        <div class="icon">🚀</div>
+        <span>Praktiske opgaver & øvelser</span>
       </div>
       <div class="feature">
         <div class="icon">📚</div>
-        <span>Opgavebank & øvelser</span>
+        <span>Læringsmateriale & guides</span>
+      </div>
+      <div class="feature">
+        <div class="icon">⚙️</div>
+        <span>Tilpasningsmuligheder</span>
       </div>
     </div>
     
@@ -5624,7 +5632,7 @@ html {
   (function(){
     var onboardingSteps = [
       {
-        title: 'Velkommen til Simulator',
+        title: 'Velkommen til SmartHome Simulator',
         content: 'Her kan du simulere sensorer og se hvordan de påvirker dine regler. Prøv at gå til "Z-Wave sensorer" sektionen og tilføj en PIR-sensor.',
         target: '#zwAdd',
         position: 'bottom'
@@ -5654,15 +5662,27 @@ html {
         position: 'top'
       },
       {
-        title: 'LUA generering',
-        content: 'Åbn LUA-menuen og vælg "Generér LUA" for at få kode du kan bruge i Home Center 3. Koden vises i tekstområdet nedenfor.',
+        title: 'LUA generering for HC3',
+        content: 'Åbn LUA-menuen og vælg "Generér LUA" for at få kode til Fibaro Home Center 3. Koden deles op i to paneler: "ERKLÆRINGER" (venstre) og "HANDLINGER" (højre) for nemmere kopiering til HC3.',
         target: '#luaBtn',
         position: 'bottom'
       },
       {
         title: 'Wiresheet Editor',
-        content: 'Prøv Wiresheet-fanen (i midten) for en visuel måde at bygge regler på. Træk noder rundt og forbind dem for at skabe komplekse automationer.',
+        content: 'Prøv Wiresheet-fanen for en visuel måde at bygge regler på. Træk noder rundt og forbind dem for at skabe komplekse automationer. Toolbar\'et er blevet optimeret for bedre brugeroplevelse.',
         target: '#tabFlow',
+        position: 'bottom'
+      },
+      {
+        title: 'Opgaver & Læring',
+        content: 'Besøg "Opgaver" fanen for at få praktiske øvelser og "Læring" fanen for at udforske avancerede koncepter.',
+        target: '[onclick="showQuickStart()"]',
+        position: 'bottom'
+      },
+      {
+        title: 'Indstillinger',
+        content: 'I Indstillinger kan du tilpasse tema, nulstille onboarding og administrere din brugerkonto.',
+        target: '[data-target="view-settings"]',
         position: 'bottom'
       }
     ];
@@ -5842,7 +5862,7 @@ html {
 
       document.getElementById('onboardingOverlay').style.display = 'none';
       onboardingActive = false;
-      localStorage.setItem('onboarding_completed', 'true');
+      localStorage.setItem('smarthome_simulator.onboarding_completed', 'true');
     }
 
     function startOnboarding() {
@@ -6415,7 +6435,7 @@ html {
     window.getCurrentUser = getCurrentUser;
 
     // Check if first time user
-    if (!localStorage.getItem('onboarding_completed')) {
+    if (!localStorage.getItem('smarthome_simulator.onboarding_completed')) {
       setTimeout(function() {
         document.getElementById('onboardingWelcome').style.display = 'block';
       }, 1000);
@@ -8576,7 +8596,7 @@ html {
       btnResetOnboarding.onclick = () => {
         if(confirm('Er du sikker på, at du vil starte forfra med onboarding? Dette vil nulstille alle onboarding trin.')) {
           // Slet alle onboarding-relaterede data
-          localStorage.removeItem('onboarding_completed');
+          localStorage.removeItem('smarthome_simulator.onboarding_completed');
           localStorage.removeItem('completed_tasks');
           localStorage.removeItem('task_help_visible');
           localStorage.removeItem('smarthome_simulator.onboarding');
