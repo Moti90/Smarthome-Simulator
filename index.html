@@ -1584,6 +1584,16 @@ select option:disabled {
   --gold-glow:rgba(255,215,0,.3); --gold-bright:#fff200;
   --silver-text:#ffffff; --silver-muted:#f0f0f0;
 }
+
+/* === CRIMSON THEME === */
+:root{
+  --crimson-bg:#0d0d0d; --crimson-panel:#1a1a1a; --crimson-head:#0f0f0f;
+  --crimson-hair:rgba(220,20,60,.4); --crimson-hair-2:rgba(220,20,60,.6);
+  --crimson-text:#ffffff; --crimson-muted:#e0e0e0;
+  --crimson-primary:#dc143c; --crimson-secondary:#ff1744; --crimson-accent:#b71c1c;
+  --crimson-glow:rgba(220,20,60,.3); --crimson-bright:#ff4081;
+  --crimson-silver-text:#ffffff; --crimson-silver-muted:#f0f0f0;
+}
 html,body{ background:var(--hc-bg) !important; color:var(--hc-text) !important; }
 
 header{ background:linear-gradient(180deg,var(--hc-head),#0a0d12) !important; border-bottom:1px solid var(--hc-hair) !important; }
@@ -2853,6 +2863,228 @@ body.gold-theme .difficulty.hard {
   color: #000 !important;
 }
 
+/* === CRIMSON THEME STYLES === */
+body.crimson-theme {
+  background: linear-gradient(135deg, var(--crimson-bg) 0%, #000000 100%) !important;
+  color: var(--crimson-silver-text) !important;
+}
+
+body.crimson-theme header {
+  background: linear-gradient(180deg, var(--crimson-head), #000000) !important;
+  border-bottom: 2px solid var(--crimson-primary) !important;
+  box-shadow: 0 4px 20px var(--crimson-glow) !important;
+}
+
+body.crimson-theme .brand .goldtext {
+  color: var(--crimson-bright) !important;
+  text-shadow: 0 2px 4px #000, 0 0 20px var(--crimson-primary), 0 0 30px var(--crimson-primary) !important;
+  font-weight: 900 !important;
+}
+
+body.crimson-theme .tabs button {
+  background: linear-gradient(180deg, #2a2a2a, #1a1a1a) !important;
+  border: 2px solid var(--crimson-primary) !important;
+  color: var(--crimson-primary) !important;
+  border-radius: 12px !important;
+  padding: 8px 16px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 4px 15px var(--crimson-glow) !important;
+}
+
+body.crimson-theme .tabs button:hover {
+  background: linear-gradient(180deg, #3a3a3a, #2a2a2a) !important;
+  border-color: var(--crimson-bright) !important;
+  color: var(--crimson-bright) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px var(--crimson-glow) !important;
+}
+
+body.crimson-theme .tabs button.active {
+  background: linear-gradient(180deg, var(--crimson-primary), var(--crimson-secondary)) !important;
+  box-shadow: 0 10px 25px var(--crimson-glow), inset 0 -2px 0 var(--crimson-primary) !important;
+  border-color: var(--crimson-bright) !important;
+  color: #000 !important;
+  transform: translateY(-1px);
+  font-weight: 700 !important;
+}
+
+body.crimson-theme .card {
+  background: linear-gradient(180deg, #1a1a1a, #0f0f0f) !important;
+  border: 3px solid var(--crimson-primary) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 14px 36px rgba(0,0,0,.55), 0 0 30px var(--crimson-glow), inset 0 1px 0 var(--crimson-primary) !important;
+  overflow: hidden;
+  position: relative;
+}
+
+body.crimson-theme .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 48px rgba(0,0,0,.65), 0 0 40px var(--crimson-glow), inset 0 1px 0 var(--crimson-bright) !important;
+  border-color: var(--crimson-bright) !important;
+}
+
+body.crimson-theme .card h2 {
+  background: linear-gradient(180deg, var(--crimson-primary), var(--crimson-secondary)) !important;
+  border-bottom: 2px solid var(--crimson-primary) !important;
+  letter-spacing: .3px !important;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px 16px;
+  margin: 0;
+  color: #000 !important;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.3) !important;
+}
+
+body.crimson-theme .card .body {
+  padding: 16px 18px 18px 18px;
+}
+
+/* Section colored top bars for crimson theme */
+body.crimson-theme #view-sim .card[data-section="sensors"] { border-top: 3px solid var(--crimson-primary) !important; }
+body.crimson-theme #view-sim .card[data-section="rules"] { border-top: 3px solid var(--crimson-secondary) !important; }
+body.crimson-theme #view-sim .card[data-section="log"] { border-top: 3px solid var(--crimson-accent) !important; }
+
+body.crimson-theme button {
+  background: linear-gradient(180deg, #2a2a2a, #1a1a1a) !important;
+  border: 2px solid var(--crimson-primary) !important;
+  color: var(--crimson-primary) !important;
+  border-radius: 9px !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,.5), 0 0 15px var(--crimson-glow), inset 0 1px 0 var(--crimson-primary) !important;
+  position: relative;
+  overflow: hidden;
+  font-weight: 600 !important;
+}
+
+body.crimson-theme button:hover {
+  filter: brightness(1.2) !important;
+  transform: translateY(-1px) !important;
+  border-color: var(--crimson-bright) !important;
+  color: var(--crimson-bright) !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,.5), 0 0 25px var(--crimson-glow), inset 0 1px 0 var(--crimson-bright) !important;
+}
+
+body.crimson-theme button:active {
+  transform: translateY(0) !important;
+  transition-duration: 0.1s;
+}
+
+body.crimson-theme .success {
+  background: linear-gradient(180deg, var(--crimson-primary), var(--crimson-secondary)) !important;
+  border-color: var(--crimson-primary) !important;
+  color: #000 !important;
+  font-weight: 700 !important;
+}
+
+body.crimson-theme .danger {
+  background: linear-gradient(180deg, #ff6b6b, #ff5252) !important;
+  border-color: #ff6b6b !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+}
+
+body.crimson-theme .info {
+  background: linear-gradient(180deg, var(--crimson-secondary), var(--crimson-accent)) !important;
+  border-color: var(--crimson-secondary) !important;
+  color: #000 !important;
+  font-weight: 700 !important;
+}
+
+body.crimson-theme input[type="text"], 
+body.crimson-theme input[type="number"], 
+body.crimson-theme input[type="password"], 
+body.crimson-theme select, 
+body.crimson-theme input[type="time"], 
+body.crimson-theme textarea {
+  background: linear-gradient(180deg, #1a1a1a, #0f0f0f) !important;
+  border: 2px solid var(--crimson-primary) !important;
+  color: var(--crimson-silver-text) !important;
+  border-radius: 10px !important;
+  padding: 10px 14px !important;
+  font-size: 13px !important;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.3), 0 0 10px var(--crimson-glow) !important;
+}
+
+body.crimson-theme input:hover, 
+body.crimson-theme select:hover, 
+body.crimson-theme textarea:hover {
+  border-color: var(--crimson-bright) !important;
+  background: linear-gradient(180deg, #2a2a2a, #1f1f1f) !important;
+  box-shadow: 0 0 15px var(--crimson-glow) !important;
+}
+
+body.crimson-theme input:focus, 
+body.crimson-theme select:focus, 
+body.crimson-theme textarea:focus {
+  outline: none !important;
+  border-color: var(--crimson-bright) !important;
+  box-shadow: 0 0 0 3px var(--crimson-glow), 0 0 20px var(--crimson-glow), inset 0 2px 4px rgba(0,0,0,.25) !important;
+  background: linear-gradient(180deg, #2f2f2f, #242424) !important;
+}
+
+body.crimson-theme .tag {
+  background: #1f1f1f !important;
+  border-color: rgba(220,20,60,.35) !important;
+  color: var(--crimson-primary) !important;
+}
+
+body.crimson-theme #view-sim, 
+body.crimson-theme #view-flow, 
+body.crimson-theme #view-settings {
+  background: radial-gradient(900px 500px at 110% -10%, rgba(220,20,60,.10) 0%, transparent 65%),
+              linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%) !important;
+  border-radius: 14px !important;
+}
+
+body.crimson-theme .ws-canvas {
+  background: radial-gradient(600px 400px at 30% -10%, rgba(220,20,60,.08) 0%, transparent 60%),
+              linear-gradient(180deg, #1f1f1f, #1a1a1a) !important;
+  border: 1px solid var(--crimson-hair) !important;
+  box-shadow: inset 0 1px 0 rgba(220,20,60,.04), 0 12px 30px rgba(0,0,0,.5) !important;
+}
+
+body.crimson-theme .ws-node {
+  background: linear-gradient(180deg, #2a2a2a, #1f1f1f) !important;
+  border: 1px solid var(--crimson-hair-2) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 14px 30px rgba(0,0,0,.55), inset 0 1px 0 rgba(220,20,60,.04) !important;
+}
+
+body.crimson-theme .ws-head {
+  background: linear-gradient(180deg, #333333, #2a2a2a) !important;
+  border-bottom: 1px solid var(--crimson-hair) !important;
+  font-size: 12px !important;
+  border-radius: 14px 14px 0 0 !important;
+  color: var(--crimson-primary) !important;
+}
+
+/* Task cards in crimson theme */
+body.crimson-theme .task-card {
+  background: linear-gradient(180deg, #2a2a2a, #1f1f1f) !important;
+  border: 1px solid var(--crimson-hair) !important;
+  color: var(--crimson-silver-text) !important;
+}
+
+body.crimson-theme .task-card:hover {
+  border-color: var(--crimson-primary) !important;
+  box-shadow: 0 8px 25px rgba(220,20,60,0.2) !important;
+}
+
+body.crimson-theme .difficulty.easy {
+  background: var(--crimson-primary) !important;
+  color: #000 !important;
+}
+
+body.crimson-theme .difficulty.medium {
+  background: var(--crimson-secondary) !important;
+  color: #000 !important;
+}
+
+body.crimson-theme .difficulty.hard {
+  background: var(--crimson-accent) !important;
+  color: #000 !important;
+}
+
 /* Login background image + translucent card === */
 </style>
 
@@ -4119,6 +4351,7 @@ html {
                 <option value="dark">Mørkt tema</option>
                 <option value="powerful">Contrast Theme</option>
                 <option value="gold">Yellow</option>
+                <option value="crimson">Crimson</option>
               </select>
               <span class="setting-description">Vælg mellem mørkt eller contrast tema. Yellow tema låses op når alle nemme opgaver er gennemført.</span>
             </div>
@@ -9085,6 +9318,15 @@ html {
     document.getElementById('teacherSchoolId').value = schoolId;
     document.getElementById('teacherClassId').value = classId;
     
+    // Hvis vi kører lokalt, vis lokale data
+    if (isLocalEnvironment) {
+      console.log('🏠 Kører lokalt - viser lokale data');
+      const localProgress = getLocalProgress();
+      displayTeacherProgress(localProgress);
+      updateTeacherStats(localProgress);
+      return;
+    }
+    
     // Indlæs data fra Firebase
     console.log('🔍 Kalder getClassProgress...');
     getClassProgress(schoolId, classId).then(progress => {
@@ -9233,11 +9475,31 @@ html {
     measurementId: "G-YR3XWP3RVH"
   };
 
+  // Tjek om vi kører lokalt (file:// eller localhost)
+  const isLocalEnvironment = window.location.protocol === 'file:' || 
+                           window.location.hostname === 'localhost' || 
+                           window.location.hostname === '127.0.0.1';
+
+  // Log miljø status
+  if (isLocalEnvironment) {
+    console.log('🏠 Kører lokalt - Firebase er deaktiveret for at undgå fejl');
+    console.log('💡 Opgave fremskridt gemmes kun lokalt i browser');
+  } else {
+    console.log('🌐 Kører online - Firebase er aktiveret for progress tracking');
+  }
+
 
 
   // Initialiser Firebase Firestore når DOM er klar
   function initializeFirestore() {
     try {
+      // Hvis vi kører lokalt, deaktiver Firebase for at undgå fejl
+      if (isLocalEnvironment) {
+        console.log('🏠 Kører lokalt - deaktiverer Firebase for at undgå fejl');
+        window.db = null;
+        return false;
+      }
+      
       console.log('🔍 Firebase Firestore object tilgængelig:', typeof firebase);
       
       if (typeof firebase === 'undefined') {
@@ -9271,6 +9533,12 @@ html {
 
   // Vent på at DOM og Firebase SDK er klar
   document.addEventListener('DOMContentLoaded', function() {
+    // Hvis vi kører lokalt, skip Firebase initialisering
+    if (isLocalEnvironment) {
+      console.log('🏠 Kører lokalt - skipper Firebase initialisering');
+      return;
+    }
+    
     // Prøv at initialisere Firestore med 100ms forsinkelse
     setTimeout(() => {
       if (!initializeFirestore()) {
@@ -9316,6 +9584,13 @@ html {
            async function saveUserProgress(userId, taskId, taskName, completedAt, currentUser) {
            try {
              console.log('🚀 saveUserProgress kaldt med data:', { userId, taskId, taskName, completedAt, currentUser });
+      
+      // Hvis vi kører lokalt, brug kun localStorage
+      if (isLocalEnvironment) {
+        console.log('🏠 Kører lokalt - bruger kun localStorage');
+        saveToLocalStorage(userId, taskId, taskName, completedAt, currentUser);
+        return true;
+      }
       
       if (!window.db) {
         console.error('❌ Firebase database ikke tilgængelig - window.db er undefined');
@@ -9387,6 +9662,12 @@ html {
          }
 
   async function syncPendingData() {
+    // Hvis vi kører lokalt, skip sync
+    if (isLocalEnvironment) {
+      console.log('🏠 Kører lokalt - skipper Firebase sync');
+      return;
+    }
+    
     if (!navigator.onLine) return;
     
     const pendingSync = JSON.parse(localStorage.getItem('pending_sync') || '[]');
@@ -9422,6 +9703,12 @@ html {
   // === Lærer Dashboard funktionalitet ===
   async function getClassProgress(schoolId = 'default', classId = 'default') {
     try {
+      // Hvis vi kører lokalt, returner tom array
+      if (isLocalEnvironment) {
+        console.log('🏠 Kører lokalt - returnerer tom array for klassedata');
+        return [];
+      }
+      
       // Tjek om Firebase er tilgængelig
       if (!window.db) {
         console.log('ℹ️ Firebase ikke tilgængelig - returnerer tom array');
@@ -9447,6 +9734,13 @@ html {
   }
 
   async function exportClassData(schoolId = 'default', classId = 'default') {
+    // Hvis vi kører lokalt, vis besked
+    if (isLocalEnvironment) {
+      console.log('🏠 Kører lokalt - kan ikke eksportere klassedata');
+      alert('Klassedata kan kun eksporteres når applikationen kører online');
+      return;
+    }
+    
     const progress = await getClassProgress(schoolId, classId);
     
     // Tjek om der er data at eksportere
@@ -9742,6 +10036,7 @@ html {
       
       // Fjern guld tema klasse
       document.body.classList.remove('gold-theme');
+      document.body.classList.remove('crimson-theme');
       
     } else if(theme === 'powerful') {
          // Contrast Theme - bruger de specificerede hex koder
@@ -9755,10 +10050,17 @@ html {
          
          // Fjern guld tema klasse
          document.body.classList.remove('gold-theme');
+         document.body.classList.remove('crimson-theme');
       
     } else if(theme === 'gold') {
       // Guld & Sølv tema - tilføj body klasse
       document.body.classList.add('gold-theme');
+      document.body.classList.remove('crimson-theme');
+      
+    } else if(theme === 'crimson') {
+      // Crimson tema - tilføj body klasse
+      document.body.classList.add('crimson-theme');
+      document.body.classList.remove('gold-theme');
       
     } else {
       // Auto - følg system preference
