@@ -3887,10 +3887,9 @@ html {
       <div class="wrap">
         <!-- 1) Sensorer -->
         <div class="card" data-section="sensors">
-          <h2 style="display: flex; justify-content: space-between; align-items: center;">
-            <span>1) Virtuelle sensorer & tilstande</span>
-            <button id="btnSimulation" class="btn-simulation" onclick="showSimulationDashboard()">🎮 Simulation</button>
-          </h2>
+                  <h2 style="display: flex; justify-content: space-between; align-items: center;">
+          <span>1) Virtuelle sensorer & tilstande</span>
+        </h2>
           <div class="body">
             <!-- Tid & miljø -->
             <div class="section-group">
@@ -5054,177 +5053,7 @@ html {
         </div>
     </section>
     
-    <!-- ===== View: Simulation ===== -->
-    <section id="view-simulation" class="view">
-      <div class="wrap">
-        
-        <!-- Simulation Kontrol Panel -->
-        <div class="card">
-          <h2>🎮 Simulation Kontrol</h2>
-          <div class="body">
-            <div class="settings-section">
-              <div class="setting-item">
-                <label for="simulationEnabled">Aktivér Simulation</label>
-                <input type="checkbox" id="simulationEnabled" class="styled-checkbox" onchange="toggleSimulation(this)">
-                <span class="setting-description">Start/stop simulation mode</span>
-              </div>
-              <div class="setting-item">
-                <label for="simulationSpeed">Hastighed</label>
-                <select id="simulationSpeed" class="styled-select" onchange="changeSimulationSpeed(this)">
-                  <option value="1">1x (Normal)</option>
-                  <option value="10">10x (Hurtig)</option>
-                  <option value="60" selected>60x (Meget hurtig)</option>
-                  <option value="100">100x (Ekstrem)</option>
-                </select>
-                <span class="setting-description">Hvor hurtigt tiden går</span>
-              </div>
-              <div class="setting-item">
-                <label for="realisticPatterns">Realistiske Mønstre</label>
-                <input type="checkbox" id="realisticPatterns" class="styled-checkbox" checked onchange="toggleRealisticPatterns(this)">
-                <span class="setting-description">Brug sinus kurver for naturlige værdier</span>
-              </div>
-              <div class="setting-item">
-                <label for="dayNightCycle">Dag/Nat Cyklus</label>
-                <input type="checkbox" id="dayNightCycle" class="styled-checkbox" checked onchange="toggleDayNightCycle(this)">
-                <span class="setting-description">Simuler dag og nat med forskellige lysniveauer</span>
-              </div>
-              <div class="setting-item">
-                                        <button id="btnStartSimulation" class="btn-primary" onclick="startSimulation()">▶️ Start Simulation</button>
-                <button id="btnStopSimulation" class="btn-danger" disabled onclick="stopSimulation()">⏹️ Stop Simulation</button>
-                <button id="btnResetSimulation" class="btn-secondary" onclick="resetSimulation()">🔄 Reset til normal</button>
-                <button id="btnTestRules" class="btn-info" onclick="testRules()">🎯 Test Regler</button>
-                <button id="btnBackToNormal" class="btn-secondary" onclick="goBackToSimulator()">🏠 Tilbage til Simulator</button>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <!-- Live Sensor Display -->
-        <div class="card">
-          <h2>📊 Live Sensor Værdier</h2>
-          <div class="body">
-            <div class="sensor-grid">
-              <!-- Digital Clock -->
-              <div class="sensor-card clock-card">
-                <div class="sensor-icon">⏰</div>
-                <div class="sensor-title">Digitalt Ur</div>
-                <div class="sensor-value" id="liveClock">--:--</div>
-                <div class="sensor-subtitle" id="liveDate">--</div>
-              </div>
-              
-              <!-- Light Sensor -->
-              <div class="sensor-card light-card">
-                <div class="sensor-icon">💡</div>
-                <div class="sensor-title">Lys Sensor</div>
-                <div class="sensor-value" id="liveLuxDisplay">-- lux</div>
-                <div class="sensor-subtitle" id="liveLightStatus">Normal</div>
-              </div>
-              
-              <!-- Humidity Sensor -->
-              <div class="sensor-card humidity-card">
-                <div class="sensor-icon">💧</div>
-                <div class="sensor-title">Fugt Sensor</div>
-                <div class="sensor-value" id="liveHumidityDisplay">--%</div>
-                <div class="sensor-subtitle" id="liveHumidityStatus">Normal</div>
-              </div>
-              
-              <!-- Wind Sensor -->
-              <div class="sensor-card wind-card">
-                <div class="sensor-icon">🌪️</div>
-                <div class="sensor-title">Vind Sensor</div>
-                <div class="sensor-value" id="liveWindDisplay">-- m/s</div>
-                <div class="sensor-subtitle" id="liveWindStatus">Normal</div>
-              </div>
-              
-              <!-- Motion Sensor -->
-              <div class="sensor-card motion-card">
-                <div class="sensor-icon">👤</div>
-                <div class="sensor-title">PIR Sensor</div>
-                <div class="sensor-value" id="liveMotionDisplay">Safe</div>
-                <div class="sensor-subtitle" id="liveMotionStatus">Ingen bevægelse</div>
-              </div>
-              
-              <!-- Door Sensor -->
-              <div class="sensor-card door-card">
-                <div class="sensor-icon">🚪</div>
-                <div class="sensor-title">Dør Sensor</div>
-                <div class="sensor-value" id="liveDoorDisplay">Closed</div>
-                <div class="sensor-subtitle" id="liveDoorStatus">Låst</div>
-              </div>
-              
-              <!-- Alarm System -->
-              <div class="sensor-card alarm-card">
-                <div class="sensor-icon">🔒</div>
-                <div class="sensor-title">Alarm System</div>
-                <div class="sensor-value" id="liveAlarmDisplay">Disarmed</div>
-                <div class="sensor-subtitle" id="liveAlarmStatus">Inaktiv</div>
-              </div>
-              
-              <!-- Temperature Sensor -->
-              <div class="sensor-card temp-card">
-                <div class="sensor-icon">🌡️</div>
-                <div class="sensor-title">Temperatur</div>
-                <div class="sensor-value" id="liveTempDisplay">--°C</div>
-                <div class="sensor-subtitle" id="liveTempStatus">Normal</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Simulation Status -->
-        <div class="card">
-          <h2>📈 Simulation Status</h2>
-          <div class="body">
-            <div id="simulationStatus" class="simulation-status">
-              <div class="status-grid">
-                <div class="status-item">
-                  <div class="status-label">⏱️ Simulation Tid</div>
-                  <div class="status-value" id="simulationTime">--:--</div>
-                </div>
-                <div class="status-item">
-                  <div class="status-label">📊 Sensor Status</div>
-                  <div class="status-value" id="sensorStatus">Normal</div>
-                </div>
-                <div class="status-item">
-                  <div class="status-label">🔄 Cyklus</div>
-                  <div class="status-value" id="cycleStatus">Normal</div>
-                </div>
-                <div class="status-item">
-                  <div class="status-label">⚡ Hastighed</div>
-                  <div class="status-value" id="speedStatus">1x</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Simulation Log -->
-        <div class="card">
-          <h2>📝 Simulation Log</h2>
-          <div class="body">
-            <div class="log-controls">
-              <button id="btnClearSimLog" class="btn-secondary" onclick="clearSimulationLog()">🗑️ Ryd Log</button>
-              <button id="btnExportSimLog" class="btn-info" onclick="exportSimulationLog()">💾 Eksporter Log</button>
-            </div>
-            <div class="log-filters">
-              <label><input type="checkbox" id="filterSimAll" checked onchange="filterSimulationLog('all')"> Alle</label>
-              <label><input type="checkbox" id="filterSimSystem" checked onchange="filterSimulationLog('system')"> System</label>
-              <label><input type="checkbox" id="filterSimSensor" checked onchange="filterSimulationLog('sensor')"> Sensorer</label>
-              <label><input type="checkbox" id="filterSimActivate" checked onchange="filterSimulationLog('activate')"> Aktivering</label>
-              <label><input type="checkbox" id="filterSimError" checked onchange="filterSimulationLog('error')"> Fejl</label>
-            </div>
-            <div id="simulationLog" class="simulation-log">
-              <div class="log-entry system">
-                <span class="log-time">--:--</span>
-                <span class="log-type">System</span>
-                <span class="log-message">Simulation dashboard åbnet</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
     
     <!-- ===== View: Lærer Dashboard ===== -->
     <section id="view-teacher" class="view">
@@ -5306,62 +5135,7 @@ html {
   var pending = JSON.parse(JSON.stringify(state));
   window.pending = pending; window.state = state;
   
-  /* Simulation System */
-  window.simulation = {
-    enabled: false,
-    speed: 1,
-    realisticPatterns: true,
-    dayNightCycle: true,
-    startTime: new Date(),
-    simulationTime: new Date(),
-    interval: null,
-    
-    // Sinuskurver for realistiske sensor mønstre
-    getTemperature: function(time) {
-      var hour = time.getHours() + time.getMinutes() / 60;
-      return 21.5 + 8.5 * Math.sin((hour - 6) * Math.PI / 12); // Øget fra 3.5 til 8.5 for større udsving
-    },
-    
-    getLight: function(time) {
-      var hour = time.getHours() + time.getMinutes() / 60;
-      var lightLevel = Math.max(0, Math.sin((hour - 6) * Math.PI / 12));
-      // Sikrer at lys er højere om dagen (mellem 6-18)
-      if (hour >= 6 && hour <= 18) {
-        return Math.round(lightLevel * 800 + 200); // 200-1000 lux om dagen
-      } else {
-        return Math.round(lightLevel * 50); // 0-50 lux om natten
-      }
-    },
-    
-    getHumidity: function(time) {
-      var hour = time.getHours() + time.getMinutes() / 60;
-      return 45 + 15 * Math.sin((hour - 12) * Math.PI / 12);
-    },
-    
-    getWind: function(time) {
-      var hour = time.getHours() + time.getMinutes() / 60;
-      return Math.max(0, 5 + 3 * Math.sin((hour - 8) * Math.PI / 8)); // Øget fra 2 til 5 m/s basis for realistiske danske forhold
-    },
-    
-    // Simuler menneskelig aktivitet
-    getMotion: function(time) {
-      var hour = time.getHours();
-      // Mest aktivitet mellem 7-9 og 17-22
-      if ((hour >= 7 && hour <= 9) || (hour >= 17 && hour <= 22)) {
-        return Math.random() < 0.3; // 30% chance for bevægelse
-      }
-      return Math.random() < 0.05; // 5% chance om natten
-    },
-    
-    getDoorActivity: function(time) {
-      var hour = time.getHours();
-      // Døre åbner mest om morgenen og aftenen
-      if ((hour >= 7 && hour <= 9) || (hour >= 17 && hour <= 19)) {
-        return Math.random() < 0.2; // 20% chance
-      }
-      return Math.random() < 0.05; // 5% chance
-    }
-  };
+
 
   function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   var lastLogMessage = '';
@@ -9467,9 +9241,9 @@ html {
   // Firebase konfiguration (kun til progress tracking)
   const firebaseConfig = {
     apiKey: "AIzaSyCdXnszAUJfkC5uyv9n-kVE2Whv_0vZfLk",
-    authDomain: "smarthome-simulator-f6ebe.firebaseapp.com",
-    projectId: "smarthome-simulator-f6ebe",
-    storageBucket: "smarthome-simulator-f6ebe.firebasestorage.app",
+    authDomain: "ibi-simulator-f6ebe.firebaseapp.com",
+    projectId: "ibi-simulator-f6ebe",
+    storageBucket: "ibi-simulator-f6ebe.firebasestorage.app",
     messagingSenderId: "929875729041",
     appId: "1:929875729041:web:d53f21685b20d63fb73d30",
     measurementId: "G-YR3XWP3RVH"
@@ -9480,12 +9254,56 @@ html {
                            window.location.hostname === 'localhost' || 
                            window.location.hostname === '127.0.0.1';
 
+  // Tjek om Firebase er tilgængelig og fungerer
+  let isFirebaseAvailable = false;
+  let firebaseErrorCount = 0;
+  const MAX_FIREBASE_ERRORS = 3;
+
   // Log miljø status
   if (isLocalEnvironment) {
     console.log('🏠 Kører lokalt - Firebase er deaktiveret for at undgå fejl');
     console.log('💡 Opgave fremskridt gemmes kun lokalt i browser');
   } else {
     console.log('🌐 Kører online - Firebase er aktiveret for progress tracking');
+  }
+
+  // Funktion til at tjekke Firebase status
+  function checkFirebaseStatus() {
+    if (isLocalEnvironment) return false;
+    
+    // Hvis vi har haft for mange fejl, deaktiver Firebase
+    if (firebaseErrorCount >= MAX_FIREBASE_ERRORS) {
+      console.log('⚠️ For mange Firebase fejl - deaktiverer Firebase og bruger kun localStorage');
+      isFirebaseAvailable = false;
+      return false;
+    }
+    
+    return isFirebaseAvailable;
+  }
+
+  // Funktion til at registrere Firebase fejl
+  function registerFirebaseError(error) {
+    firebaseErrorCount++;
+    console.log(`❌ Firebase fejl #${firebaseErrorCount}/${MAX_FIREBASE_ERRORS}`);
+    
+    // Log detaljerede fejl oplysninger
+    if (error) {
+      console.log('🔍 Fejl type:', error.code || 'ukendt');
+      console.log('🔍 Fejl besked:', error.message || 'ingen besked');
+      console.log('🔍 Fejl detaljer:', error);
+      
+      // Hvis det er permission-denied, tjek regler
+      if (error.code === 'permission-denied') {
+        console.log('🚫 Permission denied - tjek Firebase sikkerhedsregler');
+        console.log('💡 Gå til Firebase Console → Firestore → Rules');
+        console.log('💡 Sørg for at user_progress collection har tilladelse');
+      }
+    }
+    
+    if (firebaseErrorCount >= MAX_FIREBASE_ERRORS) {
+      console.log('🚫 Firebase deaktiveret på grund af gentagne fejl');
+      isFirebaseAvailable = false;
+    }
   }
 
 
@@ -9516,6 +9334,9 @@ html {
       
       // Gør Firestore tilgængeligt globalt
       window.db = db;
+      
+      // Marker Firebase som tilgængelig
+      isFirebaseAvailable = true;
       
       // Firestore er klar til progress tracking
       console.log('✅ Firestore er klar til progress tracking!');
@@ -9585,9 +9406,9 @@ html {
            try {
              console.log('🚀 saveUserProgress kaldt med data:', { userId, taskId, taskName, completedAt, currentUser });
       
-      // Hvis vi kører lokalt, brug kun localStorage
-      if (isLocalEnvironment) {
-        console.log('🏠 Kører lokalt - bruger kun localStorage');
+      // Hvis vi kører lokalt eller Firebase er deaktiveret, brug kun localStorage
+      if (isLocalEnvironment || !checkFirebaseStatus()) {
+        console.log('🏠 Kører lokalt eller Firebase deaktiveret - bruger kun localStorage');
         saveToLocalStorage(userId, taskId, taskName, completedAt, currentUser);
         return true;
       }
@@ -9602,23 +9423,27 @@ html {
       
       console.log('🔍 Firebase database tilgængelig, forsøger at gemme...');
       
-               await window.db.collection('user_progress').add({
-           userId: userId,
-           userFirstName: currentUser.firstName || 'Ukendt',
-           userLastName: currentUser.lastName || 'Bruger',
-           userEmail: currentUser.email || 'ingen@email.dk',
-           taskId: taskId,
-           taskName: taskName,
-           completedAt: completedAt,
-           timestamp: new Date().toISOString(),
-           schoolId: 'default', // Kan tilpasses senere
-           classId: 'default'   // Kan tilpasses senere
-         });
+                       await window.db.collection('user_progress').add({
+          userId: userId,
+          userFirstName: currentUser.firstName || 'Ukendt',
+          userLastName: currentUser.lastName || 'Bruger',
+          userEmail: currentUser.email || 'ingen@email.dk',
+          taskId: taskId,
+          taskName: taskName,
+          completedAt: completedAt,
+          timestamp: new Date().toISOString(),
+          schoolId: 'default', // Kan tilpasses senere
+          classId: 'default'   // Kan tilpasses senere
+        });
       console.log('✅ Progress gemt i cloud database');
       return true;
     } catch (error) {
       console.error('❌ Fejl ved gem af progress:', error);
       console.log('🔍 Fejl detaljer:', error.message, error.stack);
+      
+      // Registrer Firebase fejl
+      registerFirebaseError(error);
+      
       // Fallback til localStorage hvis cloud fejler
       saveToLocalStorage(userId, taskId, taskName, completedAt, currentUser);
       return false;
@@ -9703,9 +9528,9 @@ html {
   // === Lærer Dashboard funktionalitet ===
   async function getClassProgress(schoolId = 'default', classId = 'default') {
     try {
-      // Hvis vi kører lokalt, returner tom array
-      if (isLocalEnvironment) {
-        console.log('🏠 Kører lokalt - returnerer tom array for klassedata');
+      // Hvis vi kører lokalt eller Firebase er deaktiveret, returner tom array
+      if (isLocalEnvironment || !checkFirebaseStatus()) {
+        console.log('🏠 Kører lokalt eller Firebase deaktiveret - returnerer tom array for klassedata');
         return [];
       }
       
@@ -9729,6 +9554,10 @@ html {
       return progress;
     } catch (error) {
       console.error('Fejl ved hent af klassedata:', error);
+      
+      // Registrer Firebase fejl
+      registerFirebaseError();
+      
       return [];
     }
   }
