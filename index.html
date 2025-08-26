@@ -1365,6 +1365,100 @@
   border-bottom:1px solid var(--city-hair);
 }
 
+/* Task Grid Layout */
+.task-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.difficulty-section {
+  margin-bottom: 20px;
+}
+
+.task-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.task-card {
+  background: linear-gradient(180deg, #1e293b, #334155);
+  border: 1px solid #475569;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  border-color: #60a5fa;
+}
+
+.task-card:active {
+  transform: translateY(0);
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.task-card h4 {
+  color: #e5e9f0;
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.task-card p {
+  color: #9ca3af;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.task-details-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.task-details-header h2 {
+  margin: 0;
+}
+
+/* Difficulty badges */
+.difficulty {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.difficulty.easy {
+  background: #10b981;
+  color: white;
+}
+
+.difficulty.medium {
+  background: #f59e0b;
+  color: white;
+}
+
+.difficulty.hard {
+  background: #ef4444;
+  color: white;
+}
+
 
 /* === Dark dropdowns (match city theme) === */
 select {
@@ -3804,32 +3898,379 @@ html {
     <!-- ===== View: Opgaver ===== -->
     <section id="view-tasks" class="view">
       <div class="wrap">
+        
+        <!-- Opgave Oversigt -->
         <div class="card">
-          <h2>🚀 Kom godt i gang</h2>
+          <h2>🚀 Vælg en opgave</h2>
           <div class="body">
+            <p style="margin-bottom: 20px; color: #9ca3af;">Klik på en opgave for at se detaljer og starte øvelsen.</p>
             
-            <div class="task" id="task-ganglys">
-              <span class="difficulty easy">Let</span>
-              <span class="task-completed" style="display:none;">✅</span>
-              <h3>Ganglys Basic</h3>
-              <div class="case-description">
-                <h4>📋 Case: Automatisk ganglys</h4>
-                <p>Du arbejder på et kontor hvor gangene ofte er tomme om aftenen. For at spare energi og sikre sikkerhed, skal du implementere et automatisk ganglys der tænder når der er bevægelse.</p>
-                <p><strong>Læringsmål:</strong> Forstå grundlæggende trigger-action logik og hvordan PIR-sensorer fungerer.</p>
+            <div class="task-grid">
+              <!-- Let niveau -->
+              <div class="difficulty-section">
+                <h3 style="color: #10b981; margin-bottom: 12px;">🟢 Let niveau</h3>
+                <div class="task-cards">
+                  <div class="task-card" onclick="showTaskDetails('ganglys')">
+                    <div class="task-header">
+                      <span class="difficulty easy">Let</span>
+                      <span class="task-completed" style="display:none;">✅</span>
+                    </div>
+                    <h4>Ganglys Basic</h4>
+                    <p>Automatisk ganglys der tænder ved bevægelse</p>
+                  </div>
+                  
+                  <div class="task-card" onclick="showTaskDetails('schedule')">
+                    <div class="task-header">
+                      <span class="difficulty easy">Let</span>
+                      <span class="task-completed" style="display:none;">✅</span>
+                    </div>
+                    <h4>Tidsstyring</h4>
+                    <p>Automatisk tidsstyring af lys</p>
+                  </div>
+                </div>
               </div>
-              <div class="steps">
-                <ol>
-                  <li>Gå til "Simulator" fanen</li>
-                  <li>Klik "Sæt: Breached" under PIR</li>
-                  <li>Klik "Aktivér ændringer"</li>
-                  <li>Gå til "Regler" sektionen</li>
-                  <li>Vælg "IF PIR bliver Breached" som trigger</li>
-                  <li>Vælg "THEN Lys → Tænd" som action</li>
-                  <li>Klik "Tilføj regel"</li>
-                  <li>Klik "Kør regler (RUN)"</li>
-                </ol>
+              
+              <!-- Mellem niveau -->
+              <div class="difficulty-section">
+                <h3 style="color: #f59e0b; margin-bottom: 12px;">🟡 Mellem niveau</h3>
+                <div class="task-cards">
+                  <div class="task-card" onclick="showTaskDetails('doorlight')">
+                    <div class="task-header">
+                      <span class="difficulty medium">Mellem</span>
+                      <span class="task-completed" style="display:none;">✅</span>
+                    </div>
+                    <h4>Dørlys med tidsbegrænsning</h4>
+                    <p>Natligt dørlys kun mellem 22:00-06:00</p>
+                  </div>
+                  
+                  <div class="task-card" onclick="showTaskDetails('security')">
+                    <div class="task-header">
+                      <span class="difficulty medium">Mellem</span>
+                      <span class="task-completed" style="display:none;">✅</span>
+                    </div>
+                    <h4>Sikkerhedsalarm</h4>
+                    <p>Bevægelsesalarm om natten</p>
+                  </div>
+                  
+                  <div class="task-card" onclick="showTaskDetails('comfort')">
+                    <div class="task-header">
+                      <span class="difficulty medium">Mellem</span>
+                      <span class="task-completed" style="display:none;">✅</span>
+                    </div>
+                    <h4>Komfortstyring</h4>
+                    <p>Automatisk komfort baseret på miljø</p>
+                  </div>
+                  
+                  <div class="task-card" onclick="showTaskDetails('ventilation')">
+                    <div class="task-header">
+                      <span class="difficulty medium">Mellem</span>
+                      <span class="task-completed" style="display:none;">✅</span>
+                    </div>
+                    <h4>Intelligent ventilation</h4>
+                    <p>Ventilation baseret på fugtighed og bevægelse</p>
+                  </div>
+                  
+                  <div class="task-card" onclick="showTaskDetails('global')">
+                    <div class="task-header">
+                      <span class="difficulty medium">Mellem</span>
+                      <span class="task-completed" style="display:none;">✅</span>
+                    </div>
+                    <h4>Global variabel styring</h4>
+                    <p>System tilstande med globale variabler</p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Svær niveau -->
+              <div class="difficulty-section">
+                <h3 style="color: #ef4444; margin-bottom: 12px;">🔴 Svær niveau</h3>
+                <div class="task-cards">
+                  <div class="task-card" onclick="showTaskDetails('bathroom')">
+                    <div class="task-header">
+                      <span class="difficulty hard">Svær</span>
+                      <span class="task-completed" style="display:none;">✅</span>
+                    </div>
+                    <h4>Badventilator med fugtighed</h4>
+                    <p>Intelligent badventilator med miljøsensorer</p>
+                  </div>
+                  
+                  <div class="task-card" onclick="showTaskDetails('energy')">
+                    <div class="task-header">
+                      <span class="difficulty hard">Svær</span>
+                      <span class="task-completed" style="display:none;">✅</span>
+                    </div>
+                    <h4>Energistyring</h4>
+                    <p>Smart energibesparelse med multiple betingelser</p>
+                  </div>
+                  
+                  <div class="task-card" onclick="showTaskDetails('alarm')">
+                    <div class="task-header">
+                      <span class="difficulty hard">Svær</span>
+                      <span class="task-completed" style="display:none;">✅</span>
+                    </div>
+                    <h4>Avanceret alarm</h4>
+                    <p>Multi-zone sikkerhed med tidsbaserede regler</p>
+                  </div>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
+        
+        <!-- Opgave Detaljer (skjult som standard) -->
+        <div id="task-details" class="card" style="display: none;">
+          <div class="task-details-header">
+            <button onclick="hideTaskDetails()" class="btn-secondary" style="margin-right: 12px;">← Tilbage til oversigt</button>
+            <h2 id="task-details-title">Opgave detaljer</h2>
+          </div>
+          <div class="body" id="task-details-content">
+            <!-- Indholdet indsættes dynamisk -->
+          </div>
+        </div>
+        
+        <!-- Alle opgave detaljer (skjult) -->
+        <div style="display: none;">
+          <div class="task" id="task-ganglys">
+            <span class="difficulty easy">Let</span>
+            <span class="task-completed" style="display:none;">✅</span>
+            <h3>Ganglys Basic</h3>
+            <div class="case-description">
+              <h4>📋 Case: Automatisk ganglys</h4>
+              <p>Du arbejder på et kontor hvor gangene ofte er tomme om aftenen. For at spare energi og sikre sikkerhed, skal du implementere et automatisk ganglys der tænder når der er bevægelse.</p>
+              <p><strong>Læringsmål:</strong> Forstå grundlæggende trigger-action logik og hvordan PIR-sensorer fungerer.</p>
+            </div>
+            <div class="steps">
+              <ol>
+                <li>Gå til "Simulator" fanen</li>
+                <li>Klik "Sæt: Breached" under PIR</li>
+                <li>Klik "Aktivér ændringer"</li>
+                <li>Gå til "Regler" sektionen</li>
+                <li>Vælg "IF PIR bliver Breached" som trigger</li>
+                <li>Vælg "THEN Lys → Tænd" som action</li>
+                <li>Klik "Tilføj regel"</li>
+                <li>Klik "Kør regler (RUN)"</li>
+              </ol>
+            </div>
+          </div>
+          
+          <div class="task" id="task-schedule">
+            <span class="difficulty easy">Let</span>
+            <span class="task-completed" style="display:none;">✅</span>
+            <h3>Tidsstyring</h3>
+            <div class="case-description">
+              <h4>📋 Case: Automatisk tidsstyring</h4>
+              <p>Du skal implementere en simpel tidsstyring der tænder lys på bestemte tidspunkter om morgenen og slukker dem om aftenen.</p>
+              <p><strong>Læringsmål:</strong> Forstå tidsbaserede triggers og hvordan man bruger dem til daglig automation.</p>
+            </div>
+            <div class="steps">
+              <ol>
+                <li>Gå til "Z-Wave sensorer" sektionen</li>
+                <li>Sæt klokkeslæt til 07:00</li>
+                <li>Klik "Aktivér ændringer"</li>
+                <li>Gå til "Regler" sektionen</li>
+                <li>Vælg "IF Time = 07:00" som trigger</li>
+                <li>Vælg "THEN Lys → On" som action</li>
+                <li>Klik "Tilføj regel"</li>
+                <li>Test ved at ændre tiden til 07:00</li>
+              </ol>
+            </div>
+          </div>
+          
+          <div class="task" id="task-doorlight">
+            <span class="difficulty medium">Mellem</span>
+            <span class="task-completed" style="display:none;">✅</span>
+            <h3>Dørlys med tidsbegrænsning</h3>
+            <div class="case-description">
+              <h4>📋 Case: Natligt dørlys</h4>
+              <p>En familie har problemer med at finde vej i mørket om natten når de skal til toilettet. De vil have et lys der automatisk tænder når døren åbnes, men kun mellem 22:00 og 06:00 for at spare energi.</p>
+              <p><strong>Læringsmål:</strong> Kombinere sensor-triggers med tidsbetingelser og forstå AND-logik.</p>
+            </div>
+            <div class="steps">
+              <ol>
+                <li>Gå til "Z-Wave sensorer" sektionen</li>
+                <li>Vælg "Dør-/vindueskontakt" fra dropdown</li>
+                <li>Sæt værdi til "Opened"</li>
+                <li>Klik "Sæt (buffer)"</li>
+                <li>Klik "Aktivér ændringer"</li>
+                <li>Gå til "Regler" sektionen</li>
+                <li>Vælg "IF Dørkontakt ændres til Opened" som trigger</li>
+                <li>Tilføj AND: "Tid mellem" med "22:00-06:00"</li>
+                <li>Vælg "THEN Lys → Tænd" som action</li>
+                <li>Tilføj regel og test</li>
+              </ol>
+            </div>
+          </div>
+          
+          <div class="task" id="task-security">
+            <span class="difficulty medium">Mellem</span>
+            <span class="task-completed" style="display:none;">✅</span>
+            <h3>Sikkerhedsalarm</h3>
+            <div class="case-description">
+              <h4>📋 Case: Hjemmesikkerhed</h4>
+              <p>En familie vil have et sikkerhedssystem der aktiverer en alarm når der er bevægelse om natten, men kun når de ikke er hjemme (døren er lukket).</p>
+              <p><strong>Læringsmål:</strong> Implementere sikkerhedslogik med multiple sensorer og forstå hvordan man kombinerer forskellige sensorer.</p>
+            </div>
+            <div class="steps">
+              <ol>
+                <li>Gå til "Z-Wave sensorer" sektionen</li>
+                <li>Vælg "PIR (bevægelse)" fra dropdown og sæt til "Breached"</li>
+                <li>Vælg "Dør-/vindueskontakt" fra dropdown og sæt til "Closed"</li>
+                <li>Klik "Sæt (buffer)" for begge sensorer</li>
+                <li>Klik "Aktivér ændringer"</li>
+                <li>Gå til "Regler" sektionen</li>
+                <li>Vælg "IF PIR bliver Breached" som trigger</li>
+                <li>Tilføj AND: "Dørkontakt = Closed"</li>
+                <li>Tilføj AND: "Tid mellem" med "22:00-06:00"</li>
+                <li>Vælg "THEN Push (log)" som action</li>
+                <li>Tilføj regel og test</li>
+              </ol>
+            </div>
+          </div>
+          
+          <div class="task" id="task-comfort">
+            <span class="difficulty medium">Mellem</span>
+            <span class="task-completed" style="display:none;">✅</span>
+            <h3>Komfortstyring</h3>
+            <div class="case-description">
+              <h4>📋 Case: Automatisk komfort</h4>
+              <p>Et kontor har problemer med at holde den rette temperatur og luftkvalitet. Du skal implementere et system der automatisk justerer ventilation og lys baseret på temperatur og fugtighed.</p>
+              <p><strong>Læringsmål:</strong> Arbejde med multiple actions og forstå hvordan man optimerer for komfort.</p>
+            </div>
+            <div class="steps">
+              <ol>
+                <li>Gå til "Z-Wave sensorer" sektionen</li>
+                <li>Sæt temperatur til 25°C og fugtighed til 70%</li>
+                <li>Klik "Aktivér ændringer"</li>
+                <li>Gå til "Regler" sektionen</li>
+                <li>Vælg "IF Temperatur ≥ 25" som trigger</li>
+                <li>Tilføj AND: "Fugtighed ≥ 70"</li>
+                <li>Vælg "THEN Ventilator → On" som action</li>
+                <li>Tilføj AND action: "Dimmer → 50%"</li>
+                <li>Klik "Tilføj regel" og test</li>
+              </ol>
+            </div>
+          </div>
+          
+          <div class="task" id="task-ventilation">
+            <span class="difficulty medium">Mellem</span>
+            <span class="task-completed" style="display:none;">✅</span>
+            <h3>Intelligent ventilation</h3>
+            <div class="case-description">
+              <h4>📋 Case: Energibesparende ventilation</h4>
+              <p>Et køkken har problemer med luftkvalitet efter madlavning. Du skal implementere en ventilator der starter baseret på fugtighed og temperatur, men kun når der er bevægelse i rummet.</p>
+              <p><strong>Læringsmål:</strong> Kombinere miljøsensorer med bevægelsessensorer for intelligent automation.</p>
+            </div>
+            <div class="steps">
+              <ol>
+                <li>Gå til "Z-Wave sensorer" sektionen</li>
+                <li>Sæt fugtighed til 80% og temperatur til 28°C</li>
+                <li>Sæt PIR til "Breached"</li>
+                <li>Klik "Aktivér ændringer"</li>
+                <li>Gå til "Regler" sektionen</li>
+                <li>Vælg "IF Fugtighed ≥ 75" som trigger</li>
+                <li>Tilføj AND: "Temperatur ≥ 25"</li>
+                <li>Tilføj AND: "PIR = Breached"</li>
+                <li>Vælg "THEN Ventilator → On" som action</li>
+                <li>Klik "Tilføj regel" og test</li>
+              </ol>
+            </div>
+          </div>
+          
+          <div class="task" id="task-global">
+            <span class="difficulty medium">Mellem</span>
+            <span class="task-completed" style="display:none;">✅</span>
+            <h3>Global variabel styring</h3>
+            <div class="case-description">
+              <h4>📋 Case: System tilstand</h4>
+              <p>Du skal implementere et system der bruger globale variabler til at styre forskellige tilstande i hjemmet, som "away mode" eller "night mode".</p>
+              <p><strong>Læringsmål:</strong> Forstå globale variabler og hvordan man bruger dem til at koordinere automationer.</p>
+            </div>
+            <div class="steps">
+              <ol>
+                <li>Gå til "Regler" sektionen</li>
+                <li>Vælg "IF Global name=value" som trigger med værdi "mode=away"</li>
+                <li>Vælg "THEN Set Global" som action med værdi "lights=off"</li>
+                <li>Klik "Tilføj regel"</li>
+              </ol>
+            </div>
+          </div>
+          
+          <div class="task" id="task-bathroom">
+            <span class="difficulty hard">Svær</span>
+            <span class="task-completed" style="display:none;">✅</span>
+            <h3>Badventilator med fugtighed</h3>
+            <div class="case-description">
+              <h4>📋 Case: Intelligent badventilator</h4>
+              <p>Et badeværelse har problemer med skimmel på grund af høj fugtighed efter bad. Du skal implementere en ventilator der automatisk starter når fugtigheden er høj, men kun når der ikke er nogen i rummet (lavt lys).</p>
+              <p><strong>Læringsmål:</strong> Arbejde med numeriske sensorer, kombinere multiple betingelser og forstå miljøbaseret automation.</p>
+            </div>
+            <div class="steps">
+              <ol>
+                <li>Gå til "Z-Wave sensorer" sektionen</li>
+                <li>Vælg "Fugtighed (%)" fra dropdown</li>
+                <li>Sæt værdi til 75</li>
+                <li>Klik "Sæt (buffer)"</li>
+                <li>Klik "Aktivér ændringer"</li>
+                <li>Gå til "Regler" sektionen</li>
+                <li>Vælg "IF Fugtighed ≥ (værdi)" som trigger med værdi 75</li>
+                <li>Tilføj AND: "Lys (lux) <" med værdi 50</li>
+                <li>Vælg "THEN Ventilator → On" som action</li>
+                <li>Klik "Tilføj regel"</li>
+              </ol>
+            </div>
+          </div>
+          
+          <div class="task" id="task-energy">
+            <span class="difficulty hard">Svær</span>
+            <span class="task-completed" style="display:none;">✅</span>
+            <h3>Energistyring</h3>
+            <div class="case-description">
+              <h4>📋 Case: Smart energibesparelse</h4>
+              <p>Et hjem vil reducere energiforbruget ved at automatisk slukke unødvendige enheder når der ikke er nogen hjemme, og justere lys baseret på naturligt lys.</p>
+              <p><strong>Læringsmål:</strong> Implementere kompleks energistyring med multiple betingelser og actions.</p>
+            </div>
+            <div class="steps">
+              <ol>
+                <li>Gå til "Z-Wave sensorer" sektionen</li>
+                <li>Sæt PIR til "Safe" (ingen bevægelse)</li>
+                <li>Sæt lys til 200 lux (dagslys)</li>
+                <li>Klik "Aktivér ændringer"</li>
+                <li>Gå til "Regler" sektionen</li>
+                <li>Vælg "IF PIR = Safe" som trigger</li>
+                <li>Tilføj AND: "Lys ≥ 100" (dagslys)</li>
+                <li>Tilføj AND: "Tid mellem" med "08:00-18:00"</li>
+                <li>Vælg "THEN Lys → Off" som action</li>
+                <li>Tilføj AND action: "Dimmer → 0%"</li>
+                <li>Klik "Tilføj regel" og test</li>
+              </ol>
+            </div>
+          </div>
+          
+          <div class="task" id="task-alarm">
+            <span class="difficulty hard">Svær</span>
+            <span class="task-completed" style="display:none;">✅</span>
+            <h3>Avanceret alarm</h3>
+            <div class="case-description">
+              <h4>📋 Case: Multi-zone sikkerhed</h4>
+              <p>Et stort hjem har brug for et avanceret sikkerhedssystem der kan håndtere forskellige zoner og reagere forskelligt baseret på tidspunkt og zone.</p>
+              <p><strong>Læringsmål:</strong> Implementere kompleks sikkerhedslogik med multiple zoner og tidsbaserede regler.</p>
+            </div>
+            <div class="steps">
+              <ol>
+                <li>Gå til "Z-Wave sensorer" sektionen</li>
+                <li>Sæt PIR til "Breached" og dør til "Opened"</li>
+                <li>Sæt klokkeslæt til 23:30</li>
+                <li>Klik "Aktivér ændringer"</li>
+                <li>Gå til "Regler" sektionen</li>
+                <li>Vælg "IF PIR bliver Breached" som trigger</li>
+                <li>Tilføj AND: "Dørkontakt = Opened"</li>
+                <li>Tilføj AND: "Tid mellem" med "22:00-06:00"</li>
+                <li>Vælg "THEN Push (log)" som action</li>
+                <li>Tilføj AND action: "Lys → On" (advarsel)</li>
+                <li>Klik "Tilføj regel" og test</li>
+              </ol>
+            </div>
+          </div>
             
             <div class="task" id="task-doorlight">
               <span class="difficulty medium">Mellem</span>
@@ -6506,9 +6947,38 @@ html {
       }
     };
 
+        function showTaskDetails(taskType) {
+      // Skjul oversigten
+      document.querySelector('.task-grid').parentElement.parentElement.style.display = 'none';
+      
+      // Vis detaljerne
+      document.getElementById('task-details').style.display = 'block';
+      
+      // Find opgave indholdet
+      var taskElement = document.getElementById('task-' + taskType);
+      if (taskElement) {
+        var title = taskElement.querySelector('h3').textContent;
+        var content = taskElement.innerHTML;
+        
+        document.getElementById('task-details-title').textContent = title;
+        document.getElementById('task-details-content').innerHTML = content;
+        
+        // Start opgaven
+        startTask(taskType);
+      }
+    }
+    
+    function hideTaskDetails() {
+      // Vis oversigten igen
+      document.querySelector('.task-grid').parentElement.parentElement.style.display = 'block';
+      
+      // Skjul detaljerne
+      document.getElementById('task-details').style.display = 'none';
+    }
+    
     function startTask(taskType) {
 
-      activeTask = taskType;
+        activeTask = taskType;
       
       // Show task validation panel
       showTaskValidation(taskType);
@@ -6701,6 +7171,8 @@ html {
     window.nextOnboardingStep = nextOnboardingStep;
     window.pauseOnboarding = pauseOnboarding;
     
+    window.showTaskDetails = showTaskDetails;
+    window.hideTaskDetails = hideTaskDetails;
     window.startTask = startTask;
     window.closeTaskValidation = closeTaskValidation;
     window.toggleTaskHelp = toggleTaskHelp;
