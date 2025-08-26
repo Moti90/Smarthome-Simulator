@@ -3503,7 +3503,7 @@ html {
           </div>
         </div>
       </div>
-      <div class="footer small">Beta v1 (WebView2 • SPA med faner @Rasmus Jakobsen)</div>
+      <div class="footer small">SmartHome Simulator v2.0 (WebView2 • SPA med faner @Rasmus Jakobsen)</div>
     </section>
 
     <!-- ===== View: Flow (beta) ===== -->
@@ -4578,7 +4578,7 @@ html {
     // Create and download CSV file
     var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     var link = document.createElement('a');
-    var fileName = 'ibi_simulator_log_' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.csv';
+          var fileName = 'smarthome_simulator_log_' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.csv';
     
     if (link.download !== undefined) {
       var url = URL.createObjectURL(blob);
@@ -5466,7 +5466,7 @@ html {
       body.push(parts.join('\n'));
     }
     var actionsLua=[
-      '-- Scene genereret (v1.7.3)',
+      '-- Scene genereret af SmartHome Simulator (v2.0)',
       '-- RET ENHEDS-ID\'er HERUNDER:',
       'local LIGHT_ID, DIMMER_ID, FAN_ID = 123, 123, 456',
       'local MOTION_ID, DOOR_ID = 111, 112',
@@ -5618,7 +5618,7 @@ html {
     
 
     
-    log('v1.7.3 (WebView2 • SPA) klar.'); 
+    log('SmartHome Simulator v2.0 (WebView2 • SPA) klar.'); 
   })();
 
   // === ONBOARDING SYSTEM ===
@@ -6996,7 +6996,7 @@ html {
       const userIndex = users.findIndex(user => user.username === u);
       if (userIndex !== -1) {
         users[userIndex] = registeredUser;
-        localStorage.setItem('ibi_users', JSON.stringify(users));
+        localStorage.setItem('smarthome_simulator_users', JSON.stringify(users));
       }
       return true;
     }
@@ -7018,7 +7018,7 @@ html {
     
     try {
       // Tjek om brugeren allerede eksisterer
-      const users = JSON.parse(localStorage.getItem('ibi_users') || '[]');
+      const users = JSON.parse(localStorage.getItem('smarthome_simulator_users') || '[]');
       const existingUser = users.find(user => user.username === u);
       
       if (!existingUser) {
@@ -7054,7 +7054,7 @@ html {
         };
         
         users.push(newUser);
-        localStorage.setItem('ibi_users', JSON.stringify(users));
+        localStorage.setItem('smarthome_simulator_users', JSON.stringify(users));
         console.log('✅ Ny bruger oprettet med initial data struktur:', u);
         
         // Opret bruger-specifikke localStorage keys
@@ -7081,8 +7081,8 @@ html {
         
         const userIndex = users.findIndex(user => user.username === u);
         if (userIndex !== -1) {
-          users[userIndex] = existingUser;
-          localStorage.setItem('ibi_users', JSON.stringify(users));
+                  users[userIndex] = existingUser;
+        localStorage.setItem('smarthome_simulator_users', JSON.stringify(users));
         }
         console.log('✅ Eksisterende bruger logget ind:', u);
         
@@ -7144,7 +7144,7 @@ html {
         console.log('🔍 Opretter bruger i localStorage...');
         
         // Gem brugerdata lokalt
-        const users = JSON.parse(localStorage.getItem('ibi_users') || '[]');
+        const users = JSON.parse(localStorage.getItem('smarthome_simulator_users') || '[]');
         users.push({
           username: u,
           password: p,
@@ -8136,9 +8136,9 @@ html {
   // Firebase konfiguration (kun til progress tracking)
   const firebaseConfig = {
     apiKey: "AIzaSyCdXnszAUJfkC5uyv9n-kVE2Whv_0vZfLk",
-    authDomain: "ibi-simulator-f6ebe.firebaseapp.com",
-    projectId: "ibi-simulator-f6ebe",
-    storageBucket: "ibi-simulator-f6ebe.firebasestorage.app",
+    authDomain: "smarthome-simulator-f6ebe.firebaseapp.com",
+    projectId: "smarthome-simulator-f6ebe",
+    storageBucket: "smarthome-simulator-f6ebe.firebasestorage.app",
     messagingSenderId: "929875729041",
     appId: "1:929875729041:web:d53f21685b20d63fb73d30",
     measurementId: "G-YR3XWP3RVH"
@@ -8203,7 +8203,7 @@ html {
   function clearLocalStorage() {
     if (confirm('⚠️ Er du sikker på at du vil slette ALLE brugere fra localStorage?\n\nDette kan ikke fortrydes!')) {
       // Slet alle bruger-relaterede data
-      localStorage.removeItem('ibi_users');
+              localStorage.removeItem('smarthome_simulator_users');
       localStorage.removeItem('simUser');
       localStorage.removeItem('simPass');
       localStorage.removeItem('pending_sync');
@@ -8452,7 +8452,7 @@ html {
     
     // Gem bruger
     existingUsers.push(newUser);
-    localStorage.setItem('ibi_users', JSON.stringify(existingUsers));
+    localStorage.setItem('smarthome_simulator_users', JSON.stringify(existingUsers));
     
     // Log ind automatisk
     localStorage.setItem('simUser', username);
@@ -8487,7 +8487,7 @@ html {
     console.log('🔍 getCurrentUser kaldt med username:', username);
 
     // Først tjek registrerede brugere
-    const users = JSON.parse(localStorage.getItem('ibi_users') || '[]');
+    const users = JSON.parse(localStorage.getItem('smarthome_simulator_users') || '[]');
     const registeredUser = users.find(user => user.username === username);
     if (registeredUser) {
       console.log('🔍 Registreret bruger fundet:', registeredUser);
@@ -8503,7 +8503,7 @@ html {
         id: 'admin',
         firstName: studentName.firstName || 'Admin',
         lastName: studentName.lastName || 'Bruger',
-        email: studentName.email || 'admin@ibisimulator.dk',
+        email: studentName.email || 'admin@smarthomesimulator.dk',
         username: 'admin'
       };
       console.log('🔍 Admin bruger returneret:', adminUser);
@@ -8517,7 +8517,7 @@ html {
       id: username,
       firstName: studentName.firstName || username,
       lastName: studentName.lastName || 'Bruger',
-      email: studentName.email || `${username}@ibisimulator.dk`,
+      email: studentName.email || `${username}@smarthomesimulator.dk`,
       username: username
     };
     
@@ -8540,11 +8540,11 @@ html {
       });
       
       // Opdater brugerdata
-      const users = JSON.parse(localStorage.getItem('ibi_users') || '[]');
+      const users = JSON.parse(localStorage.getItem('smarthome_simulator_users') || '[]');
       const userIndex = users.findIndex(user => user.username === currentUser.username);
       if (userIndex !== -1) {
         users[userIndex] = currentUser;
-        localStorage.setItem('ibi_users', JSON.stringify(users));
+        localStorage.setItem('smarthome_simulator_users', JSON.stringify(users));
       }
       
       console.log('Opgave fuldført:', taskName, 'for bruger:', currentUser.firstName, currentUser.lastName);
@@ -8559,7 +8559,7 @@ html {
     const themeSelect = document.getElementById('themeSelect');
     if(themeSelect) {
       // Indlæs gemt tema
-      const savedTheme = localStorage.getItem('ibi.theme') || 'auto';
+      const savedTheme = localStorage.getItem('smarthome_simulator.theme') || 'auto';
       themeSelect.value = savedTheme;
       applyTheme(savedTheme);
       
@@ -8580,9 +8580,9 @@ html {
           localStorage.removeItem('onboarding_completed');
           localStorage.removeItem('completed_tasks');
           localStorage.removeItem('task_help_visible');
-          localStorage.removeItem('ibi.onboarding');
-          localStorage.removeItem('ibi.completedTasks');
-          localStorage.removeItem('ibi.onboardingStep');
+          localStorage.removeItem('smarthome_simulator.onboarding');
+          localStorage.removeItem('smarthome_simulator.completedTasks');
+          localStorage.removeItem('smarthome_simulator.onboardingStep');
           
           // Vis bekræftelse
           alert('Onboarding er nulstillet! Siden vil genindlæses for at aktivere onboarding igen.');
@@ -8636,7 +8636,7 @@ html {
     }
     
     // Gem tema valg
-    localStorage.setItem('ibi.theme', theme);
+    localStorage.setItem('smarthome_simulator.theme', theme);
     console.log('Theme applied and saved:', theme);
   }
   
@@ -8702,7 +8702,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(`🔘 Knap ${x} active:`, btn.classList.contains('active'));
       }
     });
-    try{ localStorage.setItem('ibi.activeView', id); }catch(e){}
+    try{ localStorage.setItem('smarthome_simulator.activeView', id); }catch(e){}
   }
   
   buttons.forEach(b => {
@@ -8715,7 +8715,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // initial
   let start = null;
-  try{ start = localStorage.getItem('ibi.activeView'); }catch(e){}
+  try{ start = localStorage.getItem('smarthome_simulator.activeView'); }catch(e){}
   if(!ids.includes(start)) start = ids[0];
   console.log('🚀 Starter med tab:', start);
   show(start);

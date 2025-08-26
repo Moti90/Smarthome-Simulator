@@ -1,4 +1,4 @@
-# 🏠 Smart Home Simulator - Educational Platform
+# 🏠 SmartHome Simulator - Educational Platform
 
 ## 📖 Overview
 A comprehensive smart home simulation platform designed for educational purposes. Students can learn about IoT, automation rules, and sensor systems through hands-on experience with virtual sensors and actuators.
