@@ -1354,15 +1354,23 @@
     radial-gradient(900px 500px at 110% -10%, rgba(42,176,255,.10) 0%, transparent 65%),
     linear-gradient(180deg, var(--city-bg-0), #060c18);
   border-radius:12px;
+  padding: 0 !important;
 }
 #view-tasks .card{
   background:linear-gradient(180deg, var(--city-bg-1), #0a1529);
   border:1px solid var(--city-hair);
   box-shadow:0 10px 28px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.03);
+  margin: 0;
+  border-radius: 0;
+  width: 100%;
 }
 #view-tasks .card h2{
   background:linear-gradient(180deg, var(--city-bg-2), #0a1a34);
   border-bottom:1px solid var(--city-hair);
+}
+
+#view-tasks .card .body {
+  padding: 20px 24px;
 }
 
 
@@ -1370,13 +1378,25 @@
 .task-cards {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 24px;
+  gap: 32px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .easy-column, .medium-column, .hard-column {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  background: rgba(15, 20, 28, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.easy-column {
+  border-color: rgba(16, 185, 129, 0.3) !important;
+  background: rgba(16, 185, 129, 0.05) !important;
 }
 
 .easy-column::before {
@@ -1392,6 +1412,11 @@
   border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
+.medium-column {
+  border-color: rgba(245, 158, 11, 0.3) !important;
+  background: rgba(245, 158, 11, 0.05) !important;
+}
+
 .medium-column::before {
   content: "🟡 Mellem";
   text-align: center;
@@ -1403,6 +1428,11 @@
   background: rgba(245, 158, 11, 0.1);
   border-radius: 8px;
   border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.hard-column {
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  background: rgba(239, 68, 68, 0.05) !important;
 }
 
 .hard-column::before {
@@ -1543,6 +1573,16 @@ select option:disabled {
   --hc-hair:rgba(255,255,255,.14); --hc-hair-2:rgba(255,255,255,.22);
   --hc-text:#eef3f8; --hc-muted:#a7b4c5;
   --hc-teal:#00c2a8; --hc-amber:#ffb34d; --hc-blue:#3fb2ff; --hc-red:#ff6666;
+}
+
+/* === GOLD & SILVER THEME === */
+:root{
+  --gold-bg:#0d0d0d; --gold-panel:#1a1a1a; --gold-head:#0f0f0f;
+  --gold-hair:rgba(255,215,0,.4); --gold-hair-2:rgba(255,215,0,.6);
+  --gold-text:#ffffff; --gold-muted:#e0e0e0;
+  --gold-primary:#ffd700; --gold-secondary:#ffed4e; --gold-accent:#daa520;
+  --gold-glow:rgba(255,215,0,.3); --gold-bright:#fff200;
+  --silver-text:#ffffff; --silver-muted:#f0f0f0;
 }
 html,body{ background:var(--hc-bg) !important; color:var(--hc-text) !important; }
 
@@ -2591,7 +2631,229 @@ input:focus, select:focus, textarea:focus{
   padding: 24px;
 }
 
-/* === Login background image + translucent card === */
+/* === GOLD & SILVER THEME STYLES === */
+body.gold-theme {
+  background: linear-gradient(135deg, var(--gold-bg) 0%, #000000 100%) !important;
+  color: var(--silver-text) !important;
+}
+
+body.gold-theme header {
+  background: linear-gradient(180deg, var(--gold-head), #000000) !important;
+  border-bottom: 2px solid var(--gold-primary) !important;
+  box-shadow: 0 4px 20px var(--gold-glow) !important;
+}
+
+body.gold-theme .brand .goldtext {
+  color: var(--gold-bright) !important;
+  text-shadow: 0 2px 4px #000, 0 0 20px var(--gold-primary), 0 0 30px var(--gold-primary) !important;
+  font-weight: 900 !important;
+}
+
+body.gold-theme .tabs button {
+  background: linear-gradient(180deg, #2a2a2a, #1a1a1a) !important;
+  border: 2px solid var(--gold-primary) !important;
+  color: var(--gold-primary) !important;
+  border-radius: 12px !important;
+  padding: 8px 16px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 4px 15px var(--gold-glow) !important;
+}
+
+body.gold-theme .tabs button:hover {
+  background: linear-gradient(180deg, #3a3a3a, #2a2a2a) !important;
+  border-color: var(--gold-bright) !important;
+  color: var(--gold-bright) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px var(--gold-glow) !important;
+}
+
+body.gold-theme .tabs button.active {
+  background: linear-gradient(180deg, var(--gold-primary), var(--gold-secondary)) !important;
+  box-shadow: 0 10px 25px var(--gold-glow), inset 0 -2px 0 var(--gold-primary) !important;
+  border-color: var(--gold-bright) !important;
+  color: #000 !important;
+  transform: translateY(-1px);
+  font-weight: 700 !important;
+}
+
+body.gold-theme .card {
+  background: linear-gradient(180deg, #1a1a1a, #0f0f0f) !important;
+  border: 3px solid var(--gold-primary) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 14px 36px rgba(0,0,0,.55), 0 0 30px var(--gold-glow), inset 0 1px 0 var(--gold-primary) !important;
+  overflow: hidden;
+  position: relative;
+}
+
+body.gold-theme .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 48px rgba(0,0,0,.65), 0 0 40px var(--gold-glow), inset 0 1px 0 var(--gold-bright) !important;
+  border-color: var(--gold-bright) !important;
+}
+
+body.gold-theme .card h2 {
+  background: linear-gradient(180deg, var(--gold-primary), var(--gold-secondary)) !important;
+  border-bottom: 2px solid var(--gold-primary) !important;
+  letter-spacing: .3px !important;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px 16px;
+  margin: 0;
+  color: #000 !important;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.3) !important;
+}
+
+body.gold-theme .card .body {
+  padding: 16px 18px 18px 18px;
+}
+
+/* Section colored top bars for gold theme */
+body.gold-theme #view-sim .card[data-section="sensors"] { border-top: 3px solid var(--gold-primary) !important; }
+body.gold-theme #view-sim .card[data-section="rules"] { border-top: 3px solid var(--gold-secondary) !important; }
+body.gold-theme #view-sim .card[data-section="log"] { border-top: 3px solid var(--gold-accent) !important; }
+
+body.gold-theme button {
+  background: linear-gradient(180deg, #2a2a2a, #1a1a1a) !important;
+  border: 2px solid var(--gold-primary) !important;
+  color: var(--gold-primary) !important;
+  border-radius: 9px !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,.5), 0 0 15px var(--gold-glow), inset 0 1px 0 var(--gold-primary) !important;
+  position: relative;
+  overflow: hidden;
+  font-weight: 600 !important;
+}
+
+body.gold-theme button:hover {
+  filter: brightness(1.2) !important;
+  transform: translateY(-1px) !important;
+  border-color: var(--gold-bright) !important;
+  color: var(--gold-bright) !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,.5), 0 0 25px var(--gold-glow), inset 0 1px 0 var(--gold-bright) !important;
+}
+
+body.gold-theme button:active {
+  transform: translateY(0) !important;
+  transition-duration: 0.1s;
+}
+
+body.gold-theme .success {
+  background: linear-gradient(180deg, var(--gold-primary), var(--gold-secondary)) !important;
+  border-color: var(--gold-primary) !important;
+  color: #000 !important;
+  font-weight: 700 !important;
+}
+
+body.gold-theme .danger {
+  background: linear-gradient(180deg, #ff6b6b, #ff5252) !important;
+  border-color: #ff6b6b !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+}
+
+body.gold-theme .info {
+  background: linear-gradient(180deg, var(--gold-secondary), var(--gold-accent)) !important;
+  border-color: var(--gold-secondary) !important;
+  color: #000 !important;
+  font-weight: 700 !important;
+}
+
+body.gold-theme input[type="text"], 
+body.gold-theme input[type="number"], 
+body.gold-theme input[type="password"], 
+body.gold-theme select, 
+body.gold-theme input[type="time"], 
+body.gold-theme textarea {
+  background: linear-gradient(180deg, #1a1a1a, #0f0f0f) !important;
+  border: 2px solid var(--gold-primary) !important;
+  color: var(--silver-text) !important;
+  border-radius: 10px !important;
+  padding: 10px 14px !important;
+  font-size: 13px !important;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.3), 0 0 10px var(--gold-glow) !important;
+}
+
+body.gold-theme input:hover, 
+body.gold-theme select:hover, 
+body.gold-theme textarea:hover {
+  border-color: var(--gold-bright) !important;
+  background: linear-gradient(180deg, #2a2a2a, #1f1f1f) !important;
+  box-shadow: 0 0 15px var(--gold-glow) !important;
+}
+
+body.gold-theme input:focus, 
+body.gold-theme select:focus, 
+body.gold-theme textarea:focus {
+  outline: none !important;
+  border-color: var(--gold-bright) !important;
+  box-shadow: 0 0 0 3px var(--gold-glow), 0 0 20px var(--gold-glow), inset 0 2px 4px rgba(0,0,0,.25) !important;
+  background: linear-gradient(180deg, #2f2f2f, #242424) !important;
+}
+
+body.gold-theme .tag {
+  background: #1f1f1f !important;
+  border-color: rgba(255,215,0,.35) !important;
+  color: var(--gold-primary) !important;
+}
+
+body.gold-theme #view-sim, 
+body.gold-theme #view-flow, 
+body.gold-theme #view-settings {
+  background: radial-gradient(900px 500px at 110% -10%, rgba(255,215,0,.10) 0%, transparent 65%),
+              linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%) !important;
+  border-radius: 14px !important;
+}
+
+body.gold-theme .ws-canvas {
+  background: radial-gradient(600px 400px at 30% -10%, rgba(255,215,0,.08) 0%, transparent 60%),
+              linear-gradient(180deg, #1f1f1f, #1a1a1a) !important;
+  border: 1px solid var(--gold-hair) !important;
+  box-shadow: inset 0 1px 0 rgba(255,215,0,.04), 0 12px 30px rgba(0,0,0,.5) !important;
+}
+
+body.gold-theme .ws-node {
+  background: linear-gradient(180deg, #2a2a2a, #1f1f1f) !important;
+  border: 1px solid var(--gold-hair-2) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 14px 30px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,215,0,.04) !important;
+}
+
+body.gold-theme .ws-head {
+  background: linear-gradient(180deg, #333333, #2a2a2a) !important;
+  border-bottom: 1px solid var(--gold-hair) !important;
+  font-size: 12px !important;
+  border-radius: 14px 14px 0 0 !important;
+  color: var(--gold-primary) !important;
+}
+
+/* Task cards in gold theme */
+body.gold-theme .task-card {
+  background: linear-gradient(180deg, #2a2a2a, #1f1f1f) !important;
+  border: 1px solid var(--gold-hair) !important;
+  color: var(--silver-text) !important;
+}
+
+body.gold-theme .task-card:hover {
+  border-color: var(--gold-primary) !important;
+  box-shadow: 0 8px 25px rgba(255,215,0,0.2) !important;
+}
+
+body.gold-theme .difficulty.easy {
+  background: var(--gold-primary) !important;
+  color: #000 !important;
+}
+
+body.gold-theme .difficulty.medium {
+  background: var(--gold-secondary) !important;
+  color: #000 !important;
+}
+
+body.gold-theme .difficulty.hard {
+  background: var(--gold-accent) !important;
+  color: #000 !important;
+}
+
+/* Login background image + translucent card === */
 </style>
 
   <!-- WebView2-bro -->
@@ -3854,11 +4116,11 @@ html {
               <label for="themeSelect">Tema</label>
               <select id="themeSelect" class="styled-select">
                 <option value="auto">Automatisk (følger system)</option>
-
                 <option value="dark">Mørkt tema</option>
                 <option value="powerful">Contrast Theme</option>
+                <option value="gold">Yellow</option>
               </select>
-              <span class="setting-description">Vælg mellem mørkt eller contrast tema</span>
+              <span class="setting-description">Vælg mellem mørkt eller contrast tema. Yellow tema låses op når alle nemme opgaver er gennemført.</span>
             </div>
           </div>
 
@@ -3933,7 +4195,6 @@ html {
     
     <!-- ===== View: Opgaver ===== -->
     <section id="view-tasks" class="view">
-      <div class="wrap">
         
         <!-- Opgave Oversigt -->
         <div class="card">
@@ -4052,6 +4313,21 @@ html {
           </div>
           <div class="body" id="task-details-content">
             <!-- Indholdet indsættes dynamisk -->
+          </div>
+          
+          <!-- Start knap -->
+          <div class="task-actions" style="padding: 20px 24px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
+            <button id="btnStartTask" class="btn-primary" style="margin-right: 12px; padding: 12px 24px; font-size: 16px;">
+              🚀 Start Opgave
+            </button>
+            <button onclick="hideTaskDetails()" class="btn-secondary" style="padding: 12px 24px; font-size: 16px;">
+              ❌ Annuller
+            </button>
+          </div>
+          
+          <!-- Info om hjælp -->
+          <div style="padding: 0 24px 20px 24px; text-align: center; color: #9ca3af; font-size: 14px;">
+            💡 <strong>Tip:</strong> Når du starter opgaven, kan du klikke på hjælp-ikonet (💡) i simulator-delen for at se trinene til at løse opgaven.
           </div>
         </div>
         
@@ -4543,7 +4819,6 @@ html {
             </div>
           </div>
         </div>
-      </div>
     </section>
     
     <!-- ===== View: Simulation ===== -->
@@ -6985,13 +7260,31 @@ html {
       var taskElement = document.getElementById('task-' + taskType);
       if (taskElement) {
         var title = taskElement.querySelector('h3').textContent;
-        var content = taskElement.innerHTML;
+        
+        // Fjern trinene fra indholdet - kun vis case beskrivelse og læringsmål
+        var caseDescription = taskElement.querySelector('.case-description');
+        var learningGoal = taskElement.querySelector('.case-description p:last-child');
+        
+        var content = '';
+        if (caseDescription) {
+          content += caseDescription.outerHTML;
+        }
+        if (learningGoal) {
+          content += '<div class="learning-goal" style="margin-top: 20px; padding: 16px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 8px;">';
+          content += '<h4 style="color: #3b82f6; margin: 0 0 8px 0;">🎯 Læringsmål</h4>';
+          content += learningGoal.outerHTML;
+          content += '</div>';
+        }
         
         document.getElementById('task-details-title').textContent = title;
         document.getElementById('task-details-content').innerHTML = content;
         
-        // Start opgaven
-        startTask(taskType);
+        // Vis beskrivelse uden at starte opgaven
+        
+        // Sæt event listener på start-knappen
+        document.getElementById('btnStartTask').onclick = function() {
+          startTask(taskType);
+        };
       }
     }
     
@@ -7015,6 +7308,8 @@ html {
       
       log('Opgave startet: ' + taskCriteria[taskType].name + ' - Følg trinene i valideringspanelet!');
     }
+
+
 
     function showTaskValidation(taskType) {
       var task = taskCriteria[taskType];
@@ -9357,6 +9652,9 @@ html {
       themeSelect.value = savedTheme;
       applyTheme(savedTheme);
       
+      // Opdater tema dropdown baseret på opgave fremskridt
+      updateThemeAvailability();
+      
       // Lyt til ændringer
       themeSelect.addEventListener('change', (e) => {
         const theme = e.target.value;
@@ -9391,6 +9689,37 @@ html {
   }
 
   // === Tema funktionalitet ===
+  function updateThemeAvailability() {
+    // Tjek om alle nemme opgaver er gennemført
+    const completedTasks = JSON.parse(localStorage.getItem('completed_tasks') || '[]');
+    const easyTasks = ['ganglys', 'schedule']; // ID'er for nemme opgaver
+    
+    const allEasyCompleted = easyTasks.every(taskId => 
+      completedTasks.some(task => task.id === taskId && task.completed)
+    );
+    
+    // Find Yellow tema option
+    const goldOption = themeSelect.querySelector('option[value="gold"]');
+    if (goldOption) {
+      if (allEasyCompleted) {
+        // Alle nemme opgaver gennemført - vis Yellow tema
+        goldOption.style.display = 'block';
+        goldOption.disabled = false;
+        goldOption.textContent = 'Yellow';
+      } else {
+        // Ikke alle nemme opgaver gennemført - skjul Yellow tema
+        goldOption.style.display = 'none';
+        goldOption.disabled = true;
+        
+        // Hvis Yellow tema er valgt, skift til mørkt tema
+        if (themeSelect.value === 'gold') {
+          themeSelect.value = 'dark';
+          applyTheme('dark');
+        }
+      }
+    }
+  }
+  
   function applyTheme(theme) {
     console.log('Applying theme:', theme);
     
@@ -9411,7 +9740,10 @@ html {
       document.documentElement.style.setProperty('--hc-hair', 'rgba(255,255,255,.14)');
       document.documentElement.style.setProperty('--hc-hair-2', 'rgba(255,255,255,.22)');
       
-           } else if(theme === 'powerful') {
+      // Fjern guld tema klasse
+      document.body.classList.remove('gold-theme');
+      
+    } else if(theme === 'powerful') {
          // Contrast Theme - bruger de specificerede hex koder
          document.documentElement.style.setProperty('--hc-bg', '#212121'); // Mørk grå baggrund
          document.documentElement.style.setProperty('--hc-panel', '#e67514'); // Orange panel baggrund
@@ -9420,6 +9752,13 @@ html {
          document.documentElement.style.setProperty('--hc-muted', '#D3ECCD'); // Lys grøn muted tekst
          document.documentElement.style.setProperty('--hc-hair', 'rgba(6,146,62,0.3)'); // Grøn accent med transparency
          document.documentElement.style.setProperty('--hc-hair-2', 'rgba(6,146,62,0.5)'); // Grøn accent med mere transparency
+         
+         // Fjern guld tema klasse
+         document.body.classList.remove('gold-theme');
+      
+    } else if(theme === 'gold') {
+      // Guld & Sølv tema - tilføj body klasse
+      document.body.classList.add('gold-theme');
       
     } else {
       // Auto - følg system preference
