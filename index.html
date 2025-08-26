@@ -7437,6 +7437,9 @@ html {
       } else {
         console.log('❌ Ingen bruger fundet - kan ikke gemme progress');
       }
+      
+      // Opdater tema tilgængelighed efter opgave fuldførelse
+      updateThemeAvailability();
     }
 
     function closeTaskValidation() {
@@ -9306,6 +9309,36 @@ html {
     }
   }
 
+  // Funktion til at vise tema lås op notifikation
+  function showThemeUnlockNotification() {
+    // Opret notifikation element
+    const notification = document.createElement('div');
+    notification.className = 'theme-unlock-notification';
+    notification.innerHTML = `
+      <div class="notification-content">
+        <div class="notification-icon">🎨</div>
+        <div class="notification-text">
+          <div class="notification-title">Yellow Tema Låst Op!</div>
+          <div class="notification-subtitle">Du har gennemført alle nemme opgaver</div>
+        </div>
+        <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
+      </div>
+    `;
+    
+    // Tilføj til body
+    document.body.appendChild(notification);
+    
+    // Fjern automatisk efter 5 sekunder
+    setTimeout(() => {
+      if (notification.parentElement) {
+        notification.remove();
+      }
+    }, 5000);
+    
+    // Log til console
+    console.log('🎨 Yellow tema låst op! Gå til indstillinger for at aktivere det.');
+  }
+
 
 
   // Initialiser Firebase Firestore når DOM er klar
@@ -9817,8 +9850,9 @@ html {
     const completedTasks = JSON.parse(localStorage.getItem('completed_tasks') || '[]');
     const easyTasks = ['ganglys', 'schedule']; // ID'er for nemme opgaver
     
+    // completedTasks er et array af opgave ID'er (ikke objekter)
     const allEasyCompleted = easyTasks.every(taskId => 
-      completedTasks.some(task => task.id === taskId && task.completed)
+      completedTasks.includes(taskId)
     );
     
     // Find Yellow tema option
@@ -9829,6 +9863,9 @@ html {
         goldOption.style.display = 'block';
         goldOption.disabled = false;
         goldOption.textContent = 'Yellow';
+        
+        // Vis notifikation om at Yellow tema er låst op
+        showThemeUnlockNotification();
       } else {
         // Ikke alle nemme opgaver gennemført - skjul Yellow tema
         goldOption.style.display = 'none';
