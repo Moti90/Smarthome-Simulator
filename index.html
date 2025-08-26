@@ -3512,51 +3512,50 @@ html {
         <div class="card" style="width: 100%; max-width: none;">
           <h2>Flow (beta) — Wiresheet MVP</h2>
           <div class="body">
-            <!-- Moderne Wiresheet Toolbar -->
-            <div class="ws-toolbar" style="margin-bottom: 16px; padding: 12px; background: rgba(15, 20, 28, 0.6); border-radius: 8px; border: 1px solid #2a3442;">
-              <!-- Komponent Bibliotek -->
-              <div class="ws-component-library" style="margin-bottom: 12px;">
-                <h4 style="margin: 0 0 8px 0; color: #e5e9f0; font-size: 14px;">🧩 Komponenter</h4>
-                <div class="row" style="flex-wrap:wrap;gap:6px">
-                  <button id="wsAddTrig" class="ws-btn ws-btn-primary">⚡ Trigger</button>
-                  <button id="wsAddCond" class="ws-btn ws-btn-secondary">🔗 AND</button>
-                  <button id="wsAddAct" class="ws-btn ws-btn-success">🎯 Action</button>
-                  <button id="wsAddRule" class="ws-btn ws-btn-info">📋 Rule</button>
+            <!-- Kompakt Wiresheet Toolbar -->
+            <div class="ws-toolbar" style="margin-bottom: 12px; padding: 8px; background: rgba(15, 20, 28, 0.8); border-radius: 8px; border: 1px solid #2a3442; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+              <!-- Hovedknapper i én række -->
+              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                <!-- Komponenter -->
+                <div style="display: flex; gap: 4px;">
+                  <button id="wsAddTrig" class="ws-btn ws-btn-primary" style="padding: 6px 10px; font-size: 12px;" title="Tilføj Trigger">⚡</button>
+                  <button id="wsAddCond" class="ws-btn ws-btn-secondary" style="padding: 6px 10px; font-size: 12px;" title="Tilføj AND betingelse">🔗</button>
+                  <button id="wsAddAct" class="ws-btn ws-btn-success" style="padding: 6px 10px; font-size: 12px;" title="Tilføj Action">🎯</button>
+                  <button id="wsAddRule" class="ws-btn ws-btn-info" style="padding: 6px 10px; font-size: 12px;" title="Tilføj Rule">📋</button>
+                </div>
+                
+                <div style="width: 1px; height: 24px; background: #2a3442; margin: 0 4px;"></div>
+                
+                <!-- Værktøjer -->
+                <div style="display: flex; gap: 4px;">
+                  <button id="wsUndo" class="ws-btn ws-btn-secondary" style="padding: 6px 8px; font-size: 12px;" disabled title="Undo">↶</button>
+                  <button id="wsRedo" class="ws-btn ws-btn-secondary" style="padding: 6px 8px; font-size: 12px;" disabled title="Redo">↷</button>
+                  <button id="wsCopy" class="ws-btn ws-btn-secondary" style="padding: 6px 8px; font-size: 12px;" title="Kopier">📋</button>
+                  <button id="wsPaste" class="ws-btn ws-btn-secondary" style="padding: 6px 8px; font-size: 12px;" title="Indsæt">📄</button>
+                </div>
+                
+                <div style="width: 1px; height: 24px; background: #2a3442; margin: 0 4px;"></div>
+                
+                <!-- Hovedhandlinger -->
+                <div style="display: flex; gap: 4px;">
+                  <button id="wsBuild" class="ws-btn ws-btn-success" style="padding: 6px 10px; font-size: 12px;" title="Build og tilføj regler">🚀</button>
+                  <button id="wsClear" class="ws-btn ws-btn-danger" style="padding: 6px 8px; font-size: 12px;" title="Ryd wiresheet">🗑️</button>
+                  <button id="wsSave" class="ws-btn ws-btn-primary" style="padding: 6px 8px; font-size: 12px;" title="Gem">💾</button>
+                  <button id="wsLoad" class="ws-btn ws-btn-secondary" style="padding: 6px 8px; font-size: 12px;" title="Hent">📂</button>
+                </div>
+                
+                <div style="margin-left: auto;">
+                  <button id="wsValidate" class="ws-btn ws-btn-warning" style="padding: 6px 8px; font-size: 11px;" title="Valider (ikke implementeret)">✅</button>
                 </div>
               </div>
               
-              <!-- Værktøjer -->
-              <div class="ws-tools" style="margin-bottom: 12px;">
-                <h4 style="margin: 0 0 8px 0; color: #e5e9f0; font-size: 14px;">🛠️ Værktøjer</h4>
-                <div class="row" style="flex-wrap:wrap;gap:6px">
-                  <button id="wsUndo" class="ws-btn ws-btn-secondary" disabled>↶ Undo</button>
-                  <button id="wsRedo" class="ws-btn ws-btn-secondary" disabled>↷ Redo</button>
-                  <button id="wsCopy" class="ws-btn ws-btn-secondary">📋 Copy</button>
-                  <button id="wsPaste" class="ws-btn ws-btn-secondary">📄 Paste</button>
-                </div>
-              </div>
-              
-              <!-- Handlinger -->
-              <div class="ws-actions">
-                <h4 style="margin: 0 0 8px 0; color: #e5e9f0; font-size: 14px;">⚙️ Handlinger</h4>
-                <div class="row" style="flex-wrap:wrap;gap:6px">
-                  <button id="wsBuild" class="ws-btn ws-btn-success">🚀 Build → Tilføj regler</button>
-                  <button id="wsClear" class="ws-btn ws-btn-danger">🗑️ Ryd wiresheet</button>
-                  <button id="wsSave" class="ws-btn ws-btn-primary">💾 Gem</button>
-                  <button id="wsLoad" class="ws-btn ws-btn-secondary">📂 Hent</button>
-                  <button id="wsValidate" class="ws-btn ws-btn-warning">✅ Valider (ikke implementeret)</button>
-                </div>
-              </div>
-              
-              <!-- Status -->
-              <div class="ws-status" style="margin-top: 12px; padding: 8px; background: rgba(42,176,255,0.1); border-radius: 6px; border-left: 3px solid #2ab0ff;">
-                <span class="small" style="color: #9ca3af;">
-                  💡 Tip: Træk noder rundt, klik en <span class="tag">● out</span> og derefter en <span class="tag">in ●</span> på Rule for at forbinde.
-                </span>
+              <!-- Kompakt tip -->
+              <div style="padding: 6px 10px; background: rgba(42,176,255,0.1); border-radius: 6px; border-left: 3px solid #2ab0ff; font-size: 12px; color: #9ca3af;">
+                💡 <strong>Tip:</strong> Træk noder rundt, klik <span style="background: rgba(42,176,255,0.2); padding: 2px 4px; border-radius: 3px;">● out</span> og derefter <span style="background: rgba(42,176,255,0.2); padding: 2px 4px; border-radius: 3px;">in ●</span> på Rule for at forbinde
               </div>
             </div>
 
-            <div id="wsCanvas" class="ws-canvas" style="min-height: 700px; width: 100%;">
+            <div id="wsCanvas" class="ws-canvas" style="min-height: 800px; width: 100%;">
               <svg id="wsWires" class="ws-wires"></svg>
               <div id="wsNodes" class="ws-nodes"></div>
             </div>
