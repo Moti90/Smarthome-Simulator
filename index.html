@@ -397,6 +397,535 @@
       box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3);
     }
     
+    /* HOME Knap Styling */
+    .btn-home {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+    
+    .btn-home:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+      background: linear-gradient(135deg, #34d399, #10b981);
+    }
+    
+    .btn-home:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+    }
+    
+    /* === HOME SMART HOME SIMULATOR STYLING === */
+    
+    /* Home Header */
+    .home-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      margin-bottom: 30px;
+      border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    .home-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #10b981, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+      text-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+    }
+    
+    .weather-widget {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 2px solid rgba(16, 185, 129, 0.3);
+      border-radius: 16px;
+      padding: 16px 20px;
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
+    }
+    
+    .weather-icon {
+      font-size: 2rem;
+      filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.5));
+    }
+    
+    .weather-temp {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #f8fafc;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .weather-time {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      font-weight: 500;
+      text-align: center;
+      margin-top: 4px;
+    }
+    
+    /* Home Content Layout */
+    .home-content {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 40px;
+      margin-bottom: 30px;
+      min-height: 600px;
+    }
+    
+    /* Floor Plan Styling */
+    .floor-plan-container {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      border: 3px solid rgba(16, 185, 129, 0.4);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 40px rgba(16, 185, 129, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .floor-plan-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    
+    .floor-plan {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 20px;
+      height: 100%;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Room Styling */
+    .room {
+      background: linear-gradient(135deg, #1e293b, #334155);
+      border: 2px solid rgba(16, 185, 129, 0.3);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .room:hover {
+      transform: translateY(-5px);
+      border-color: rgba(16, 185, 129, 0.6);
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+    }
+    
+    .room-label {
+      position: absolute;
+      top: 8px;
+      left: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Device Icons */
+    .device-icon {
+      font-size: 2rem;
+      margin: 8px;
+      padding: 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      background: rgba(16, 185, 129, 0.1);
+      border: 2px solid transparent;
+    }
+    
+    .device-icon:hover {
+      transform: scale(1.2);
+      background: rgba(16, 185, 129, 0.2);
+      border-color: rgba(16, 185, 129, 0.5);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+    
+    .device-icon.active {
+      background: rgba(16, 185, 129, 0.3);
+      border-color: rgba(16, 185, 129, 0.8);
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    
+    /* Light Icon Special Styling */
+    .light-icon.active {
+      background: rgba(255, 193, 7, 0.3);
+      border-color: rgba(255, 193, 7, 0.8);
+      box-shadow: 0 0 30px rgba(255, 193, 7, 0.6);
+      color: #ffc107;
+    }
+    
+    /* Stairs */
+    .stairs {
+      grid-column: 2;
+      grid-row: 2;
+      background: linear-gradient(135deg, #475569, #64748b);
+      border: 2px solid rgba(16, 185, 129, 0.3);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .stairs-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Control Panel Styling */
+    .control-panel {
+      background: linear-gradient(135deg, #ffffff, #f8fafc);
+      border: 3px solid rgba(16, 185, 129, 0.4);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 40px rgba(16, 185, 129, 0.15);
+      max-height: 600px;
+      overflow-y: auto;
+    }
+    
+    .panel-header h2 {
+      color: #0f172a;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 25px 0;
+      text-align: center;
+      background: linear-gradient(135deg, #10b981, #059669);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Control Sections */
+    .control-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .control-section:hover {
+      border-color: rgba(16, 185, 129, 0.5);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.1);
+    }
+    
+    .control-section.active {
+      border-color: rgba(16, 185, 129, 0.8);
+      background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
+    }
+    
+    .control-section h3 {
+      color: #0f172a;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0 0 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    /* Control Items */
+    .control-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .control-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+    
+    .control-item label {
+      color: #475569;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    
+    /* Slider Styling */
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .control-slider {
+      width: 120px;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 3px;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    
+    .control-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .control-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+    
+    .slider-value {
+      color: #10b981;
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+      min-width: 50px;
+      text-align: center;
+    }
+    
+    /* Toggle Styling */
+    .toggle-container {
+      position: relative;
+    }
+    
+    .control-toggle {
+      display: none;
+    }
+    
+    .toggle-label {
+      display: block;
+      width: 50px;
+      height: 26px;
+      background: #cbd5e1;
+      border-radius: 13px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .toggle-label::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: #ffffff;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .control-toggle:checked + .toggle-label {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+    
+    .control-toggle:checked + .toggle-label::after {
+      transform: translateX(24px);
+    }
+    
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 30px;
+    }
+    
+    .action-btn {
+      padding: 14px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .action-btn.primary {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+    
+    .action-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+    
+    .action-btn.secondary {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: white;
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    }
+    
+    .action-btn.secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+    }
+    
+    .action-btn.success {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    }
+    
+    .action-btn.success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    }
+    
+    /* Home Footer */
+    .home-footer {
+      display: flex;
+      justify-content: center;
+      padding: 20px 0;
+      border-top: 2px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    .time-display {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 2px solid rgba(16, 185, 129, 0.3);
+      border-radius: 16px;
+      padding: 16px 24px;
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
+    }
+    
+    .time-icon {
+      font-size: 1.5rem;
+      filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.5));
+    }
+    
+    .time-text {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #f8fafc;
+      font-family: 'Courier New', monospace;
+    }
+    
+    /* Home Welcome Notification */
+    .home-welcome-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 15px 40px rgba(16, 185, 129, 0.3);
+      z-index: 1000;
+      animation: slideInRight 0.5s ease-out;
+      max-width: 350px;
+    }
+    
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    .home-welcome-notification .notification-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .home-welcome-notification .notification-icon {
+      font-size: 2rem;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+    }
+    
+    .home-welcome-notification .notification-text {
+      flex: 1;
+    }
+    
+    .home-welcome-notification .notification-title {
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+    
+    .home-welcome-notification .notification-subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.9rem;
+    }
+    
+    .home-welcome-notification .notification-close {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+    
+    .home-welcome-notification .notification-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+    
     /* Sensor Grid Layout */
     .sensor-grid {
       display: grid;
@@ -3889,6 +4418,7 @@ html {
         <div class="card" data-section="sensors">
                   <h2 style="display: flex; justify-content: space-between; align-items: center;">
           <span>1) Virtuelle sensorer & tilstande</span>
+          <button id="btnHome" class="btn-home" onclick="showHomeDashboard()">🏠 HOME</button>
         </h2>
           <div class="body">
             <!-- Tid & miljø -->
@@ -5054,6 +5584,203 @@ html {
     </section>
     
 
+    
+    <!-- ===== View: HOME Smart Home Simulator ===== -->
+    <section id="view-home" class="view">
+      <div class="wrap">
+        
+        <!-- Top Header -->
+        <div class="home-header">
+          <h1 class="home-title">🏠 Smart Home Simulator</h1>
+          <div class="weather-widget">
+            <div class="weather-icon">⛅</div>
+            <div class="weather-temp">72°F</div>
+            <div class="weather-time" id="weatherTime">3:45 PM</div>
+          </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="home-content">
+          
+          <!-- Left Side: Floor Plan -->
+          <div class="floor-plan-container">
+            <div class="floor-plan">
+              <!-- Room 1: Living Room -->
+              <div class="room living-room" data-room="living">
+                <div class="room-label">Living Room</div>
+                <div class="device-icon light-icon" data-device="light" data-room="living">
+                  💡
+                </div>
+                <div class="device-icon wifi-icon" data-device="wifi" data-room="living">
+                  📶
+                </div>
+                <div class="device-icon camera-icon" data-device="camera" data-room="living">
+                  📹
+                </div>
+              </div>
+              
+              <!-- Room 2: Study -->
+              <div class="room study" data-room="study">
+                <div class="room-label">Study</div>
+                <div class="device-icon speaker-icon" data-device="speaker" data-room="study">
+                  🔊
+                </div>
+              </div>
+              
+              <!-- Room 3: Bedroom 1 -->
+              <div class="room bedroom-1" data-room="bedroom1">
+                <div class="room-label">Bedroom 1</div>
+                <div class="device-icon light-icon" data-device="light" data-room="bedroom1">
+                  💡
+                </div>
+                <div class="device-icon thermostat-icon" data-device="thermostat" data-room="bedroom1">
+                  🌡️
+                </div>
+              </div>
+              
+              <!-- Room 4: Bedroom 2 -->
+              <div class="room bedroom-2" data-room="bedroom2">
+                <div class="room-label">Bedroom 2</div>
+                <div class="device-icon light-icon" data-device="light" data-room="bedroom2">
+                  💡
+                </div>
+                <div class="device-icon tv-icon" data-device="tv" data-room="bedroom2">
+                  📺
+                </div>
+              </div>
+              
+              <!-- Room 5: Kitchen -->
+              <div class="room kitchen" data-room="kitchen">
+                <div class="room-label">Kitchen</div>
+                <div class="device-icon light-icon" data-device="light" data-room="kitchen">
+                  💡
+                </div>
+                <div class="device-icon lock-icon" data-device="lock" data-room="kitchen">
+                  🔒
+                </div>
+              </div>
+              
+              <!-- Stairs -->
+              <div class="stairs">
+                <div class="stairs-label">Stairs</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right Side: Control Panel -->
+          <div class="control-panel">
+            <div class="panel-header">
+              <h2>🎛️ Control Panel</h2>
+            </div>
+            
+            <!-- Climate Control -->
+            <div class="control-section active" data-section="climate">
+              <h3>🌡️ Climate Control</h3>
+              <div class="control-item">
+                <label>Temperature</label>
+                <div class="slider-container">
+                  <input type="range" id="tempSlider" min="60" max="80" value="72" class="control-slider">
+                  <span class="slider-value">72°F</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Lighting -->
+            <div class="control-section" data-section="lighting">
+              <h3>💡 Lighting</h3>
+              <div class="control-item">
+                <label>Living Room</label>
+                <div class="toggle-container">
+                  <input type="checkbox" id="lightLiving" class="control-toggle">
+                  <label for="lightLiving" class="toggle-label"></label>
+                </div>
+              </div>
+              <div class="control-item">
+                <label>Bedroom 1</label>
+                <div class="toggle-container">
+                  <input type="checkbox" id="lightBedroom1" class="control-toggle">
+                  <label for="lightBedroom1" class="toggle-label"></label>
+                </div>
+              </div>
+              <div class="control-item">
+                <label>Bedroom 2</label>
+                <div class="toggle-container">
+                  <input type="checkbox" id="lightBedroom2" class="control-toggle">
+                  <label for="lightBedroom2" class="toggle-label"></label>
+                </div>
+              </div>
+              <div class="control-item">
+                <label>Kitchen</label>
+                <div class="toggle-container">
+                  <input type="checkbox" id="lightKitchen" class="control-toggle">
+                  <label for="lightKitchen" class="toggle-label"></label>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Security -->
+            <div class="control-section" data-section="security">
+              <h3>🔒 Security</h3>
+              <div class="control-item">
+                <label>Camera</label>
+                <div class="toggle-container">
+                  <input type="checkbox" id="cameraLiving" class="control-toggle">
+                  <label for="lightLiving" class="toggle-label"></label>
+                </div>
+              </div>
+              <div class="control-item">
+                <label>Door Lock</label>
+                <div class="toggle-container">
+                  <input type="checkbox" id="lockKitchen" class="control-toggle">
+                  <label for="lockKitchen" class="toggle-label"></label>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Entertainment -->
+            <div class="control-section" data-section="entertainment">
+              <h3>🎵 Entertainment</h3>
+              <div class="control-item">
+                <label>TV</label>
+                <div class="toggle-container">
+                  <input type="checkbox" id="tvBedroom2" class="control-toggle">
+                  <label for="tvBedroom2" class="toggle-label"></label>
+                </div>
+              </div>
+              <div class="control-item">
+                <label>Speaker</label>
+                <div class="toggle-container">
+                  <input type="checkbox" id="speakerStudy" class="control-toggle">
+                  <label for="speakerStudy" class="toggle-label"></label>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+              <button class="action-btn primary" onclick="toggleAllLights()">
+                💡 Toggle All Lights
+              </button>
+              <button class="action-btn secondary" onclick="setNightMode()">
+                🌙 Night Mode
+              </button>
+              <button class="action-btn success" onclick="setAwayMode()">
+                🚪 Away Mode
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Bottom Footer -->
+        <div class="home-footer">
+          <div class="time-display">
+            <span class="time-icon">🕐</span>
+            <span class="time-text" id="homeTime">3:45 PM</span>
+          </div>
+        </div>
+        
+      </div>
+    </section>
     
     <!-- ===== View: Lærer Dashboard ===== -->
     <section id="view-teacher" class="view">
@@ -9337,6 +10064,353 @@ html {
     
     // Log til console
     console.log('🎨 Yellow tema låst op! Gå til indstillinger for at aktivere det.');
+  }
+
+  // === HOME SMART HOME SIMULATOR FUNKTIONALITET ===
+  
+  // Smart Home state
+  const smartHomeState = {
+    lights: {
+      living: false,
+      bedroom1: false,
+      bedroom2: false,
+      kitchen: false
+    },
+    security: {
+      camera: false,
+      lock: false
+    },
+    entertainment: {
+      tv: false,
+      speaker: false
+    },
+    climate: {
+      temperature: 72
+    },
+    weather: {
+      temperature: 72,
+      condition: 'partly-cloudy'
+    }
+  };
+
+  // Funktion til at vise HOME dashboard
+  function showHomeDashboard() {
+    // Skjul alle andre views
+    document.querySelectorAll('.view').forEach(view => {
+      view.style.display = 'none';
+    });
+    
+    // Vis HOME view
+    document.getElementById('view-home').style.display = 'block';
+    
+    // Opdater tid og vejr
+    updateHomeTime();
+    updateHomeWeather();
+    
+    // Opdater alle enheder baseret på state
+    updateAllDevices();
+    
+    // Vis velkomst notifikation
+    showHomeWelcomeNotification();
+    
+    console.log('🏠 HOME dashboard åbnet');
+  }
+
+  // Opdater klokkeslæt
+  function updateHomeTime() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+    
+    const timeElement = document.getElementById('homeTime');
+    if (timeElement) {
+      timeElement.textContent = timeString;
+    }
+  }
+
+  // Opdater vejr (dummy data)
+  function updateHomeWeather() {
+    const weatherTemp = document.querySelector('.weather-temp');
+    if (weatherTemp) {
+      weatherTemp.textContent = `${smartHomeState.weather.temperature}°F`;
+    }
+  }
+
+  // Opdater alle enheder baseret på state
+  function updateAllDevices() {
+    // Opdater lys
+    Object.keys(smartHomeState.lights).forEach(room => {
+      updateLightIcon(room, smartHomeState.lights[room]);
+    });
+    
+    // Opdater sikkerhed
+    updateSecurityIcon('camera', smartHomeState.security.camera);
+    updateSecurityIcon('lock', smartHomeState.security.lock);
+    
+    // Opdater underholdning
+    updateEntertainmentIcon('tv', smartHomeState.entertainment.tv);
+    updateEntertainmentIcon('speaker', smartHomeState.entertainment.speaker);
+    
+    // Opdater kontrolpanel
+    updateControlPanel();
+  }
+
+  // Opdater lys ikon
+  function updateLightIcon(room, isOn) {
+    const lightIcon = document.querySelector(`.light-icon[data-room="${room}"]`);
+    if (lightIcon) {
+      if (isOn) {
+        lightIcon.classList.add('active');
+        lightIcon.style.color = '#ffc107';
+      } else {
+        lightIcon.classList.remove('active');
+        lightIcon.style.color = '';
+      }
+    }
+  }
+
+  // Opdater sikkerhed ikon
+  function updateSecurityIcon(device, isActive) {
+    const icon = document.querySelector(`.${device}-icon`);
+    if (icon) {
+      if (isActive) {
+        icon.classList.add('active');
+      } else {
+        icon.classList.remove('active');
+      }
+    }
+  }
+
+  // Opdater underholdning ikon
+  function updateEntertainmentIcon(device, isActive) {
+    const icon = document.querySelector(`.${device}-icon`);
+    if (icon) {
+      if (isActive) {
+        icon.classList.add('active');
+      } else {
+        icon.classList.remove('active');
+      }
+    }
+  }
+
+  // Opdater kontrolpanel
+  function updateControlPanel() {
+    // Opdater lys toggles
+    Object.keys(smartHomeState.lights).forEach(room => {
+      const toggle = document.getElementById(`light${room.charAt(0).toUpperCase() + room.slice(1)}`);
+      if (toggle) {
+        toggle.checked = smartHomeState.lights[room];
+      }
+    });
+    
+    // Opdater sikkerhed toggles
+    const cameraToggle = document.getElementById('cameraLiving');
+    if (cameraToggle) cameraToggle.checked = smartHomeState.security.camera;
+    
+    const lockToggle = document.getElementById('lockKitchen');
+    if (lockToggle) lockToggle.checked = smartHomeState.security.lock;
+    
+    // Opdater underholdning toggles
+    const tvToggle = document.getElementById('tvBedroom2');
+    if (tvToggle) tvToggle.checked = smartHomeState.entertainment.tv;
+    
+    const speakerToggle = document.getElementById('speakerStudy');
+    if (speakerToggle) speakerToggle.checked = smartHomeState.entertainment.speaker;
+    
+    // Opdater temperatur slider
+    const tempSlider = document.getElementById('tempSlider');
+    const tempValue = document.querySelector('.slider-value');
+    if (tempSlider && tempValue) {
+      tempSlider.value = smartHomeState.climate.temperature;
+      tempValue.textContent = `${smartHomeState.climate.temperature}°F`;
+    }
+  }
+
+  // Event listeners for kontrolpanel
+  function setupHomeEventListeners() {
+    // Temperatur slider
+    const tempSlider = document.getElementById('tempSlider');
+    if (tempSlider) {
+      tempSlider.addEventListener('input', function() {
+        smartHomeState.climate.temperature = parseInt(this.value);
+        const tempValue = document.querySelector('.slider-value');
+        if (tempValue) {
+          tempValue.textContent = `${this.value}°F`;
+        }
+        console.log('🌡️ Temperatur ændret til:', this.value + '°F');
+      });
+    }
+
+    // Lys toggles
+    Object.keys(smartHomeState.lights).forEach(room => {
+      const toggle = document.getElementById(`light${room.charAt(0).toUpperCase() + room.slice(1)}`);
+      if (toggle) {
+        toggle.addEventListener('change', function() {
+          smartHomeState.lights[room] = this.checked;
+          updateLightIcon(room, this.checked);
+          console.log(`💡 ${room} lys ${this.checked ? 'tændt' : 'slukket'}`);
+        });
+      }
+    });
+
+    // Sikkerhed toggles
+    const cameraToggle = document.getElementById('cameraLiving');
+    if (cameraToggle) {
+      cameraToggle.addEventListener('change', function() {
+        smartHomeState.security.camera = this.checked;
+        updateSecurityIcon('camera', this.checked);
+        console.log(`📹 Kamera ${this.checked ? 'aktiveret' : 'deaktiveret'}`);
+      });
+    }
+
+    const lockToggle = document.getElementById('lockKitchen');
+    if (lockToggle) {
+      lockToggle.addEventListener('change', function() {
+        smartHomeState.security.lock = this.checked;
+        updateSecurityIcon('lock', this.checked);
+        console.log(`🔒 Dørlås ${this.checked ? 'låst' : 'ulåst'}`);
+      });
+    }
+
+    // Underholdning toggles
+    const tvToggle = document.getElementById('tvBedroom2');
+    if (tvToggle) {
+      tvToggle.addEventListener('change', function() {
+        smartHomeState.entertainment.tv = this.checked;
+        updateEntertainmentIcon('tv', this.checked);
+        console.log(`📺 TV ${this.checked ? 'tændt' : 'slukket'}`);
+      });
+    }
+
+    const speakerToggle = document.getElementById('speakerStudy');
+    if (speakerToggle) {
+      speakerToggle.addEventListener('change', function() {
+        smartHomeState.entertainment.speaker = this.checked;
+        updateEntertainmentIcon('speaker', this.checked);
+        console.log(`🔊 Højttaler ${this.checked ? 'tændt' : 'slukket'}`);
+      });
+    }
+
+    // Enhed ikon klik events
+    document.querySelectorAll('.device-icon').forEach(icon => {
+      icon.addEventListener('click', function() {
+        const device = this.dataset.device;
+        const room = this.dataset.room;
+        
+        if (device === 'light') {
+          // Toggle lys
+          smartHomeState.lights[room] = !smartHomeState.lights[room];
+          updateLightIcon(room, smartHomeState.lights[room]);
+          
+          // Opdater toggle i kontrolpanel
+          const toggle = document.getElementById(`light${room.charAt(0).toUpperCase() + room.slice(1)}`);
+          if (toggle) toggle.checked = smartHomeState.lights[room];
+          
+          console.log(`💡 ${room} lys ${smartHomeState.lights[room] ? 'tændt' : 'slukket'} via ikon`);
+        }
+      });
+    });
+  }
+
+  // Action button funktioner
+  function toggleAllLights() {
+    const allLightsOn = Object.values(smartHomeState.lights).every(light => light);
+    
+    Object.keys(smartHomeState.lights).forEach(room => {
+      smartHomeState.lights[room] = !allLightsOn;
+      updateLightIcon(room, smartHomeState.lights[room]);
+    });
+    
+    updateControlPanel();
+    console.log(`💡 Alle lys ${allLightsOn ? 'slukket' : 'tændt'}`);
+  }
+
+  function setNightMode() {
+    // Sluk alle lys undtagen ganglys
+    Object.keys(smartHomeState.lights).forEach(room => {
+      smartHomeState.lights[room] = false;
+      updateLightIcon(room, false);
+    });
+    
+    // Aktiver sikkerhed
+    smartHomeState.security.camera = true;
+    smartHomeState.security.lock = true;
+    
+    // Sluk underholdning
+    smartHomeState.entertainment.tv = false;
+    smartHomeState.entertainment.speaker = false;
+    
+    // Sæt temperatur til nat
+    smartHomeState.climate.temperature = 68;
+    
+    updateAllDevices();
+    console.log('🌙 Nat tilstand aktiveret');
+  }
+
+  function setAwayMode() {
+    // Sluk alle lys
+    Object.keys(smartHomeState.lights).forEach(room => {
+      smartHomeState.lights[room] = false;
+      updateLightIcon(room, false);
+    });
+    
+    // Aktiver sikkerhed
+    smartHomeState.security.camera = true;
+    smartHomeState.security.lock = true;
+    
+    // Sluk underholdning
+    smartHomeState.entertainment.tv = false;
+    smartHomeState.entertainment.speaker = false;
+    
+    // Sæt temperatur til bort fra hjem
+    smartHomeState.climate.temperature = 65;
+    
+    updateAllDevices();
+    console.log('🚪 Bort fra hjem tilstand aktiveret');
+  }
+
+  // Start HOME funktionalitet når DOM er klar
+  document.addEventListener('DOMContentLoaded', function() {
+    setupHomeEventListeners();
+    
+    // Opdater tid hver minut
+    setInterval(updateHomeTime, 60000);
+    
+    // Simuler vejr ændringer
+    setInterval(() => {
+      smartHomeState.weather.temperature += Math.random() > 0.5 ? 1 : -1;
+      smartHomeState.weather.temperature = Math.max(65, Math.min(85, smartHomeState.weather.temperature));
+      updateHomeWeather();
+    }, 300000); // Hver 5. minut
+  });
+
+  // Vis velkomst notifikation for HOME
+  function showHomeWelcomeNotification() {
+    const notification = document.createElement('div');
+    notification.className = 'home-welcome-notification';
+    notification.innerHTML = `
+      <div class="notification-content">
+        <div class="notification-icon">🏠</div>
+        <div class="notification-text">
+          <div class="notification-title">Velkommen til Smart Home!</div>
+          <div class="notification-subtitle">Klik på ikoner eller brug kontrolpanelet</div>
+        </div>
+        <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
+      </div>
+    `;
+    
+    // Tilføj til body
+    document.body.appendChild(notification);
+    
+    // Fjern automatisk efter 4 sekunder
+    setTimeout(() => {
+      if (notification.parentElement) {
+        notification.remove();
+      }
+    }, 4000);
   }
 
 
