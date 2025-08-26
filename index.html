@@ -1365,20 +1365,11 @@
   border-bottom:1px solid var(--city-hair);
 }
 
-/* Task Grid Layout */
-.task-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
 
-.difficulty-section {
-  margin-bottom: 20px;
-}
 
 .task-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
 
@@ -3905,113 +3896,95 @@ html {
           <div class="body">
             <p style="margin-bottom: 20px; color: #9ca3af;">Klik på en opgave for at se detaljer og starte øvelsen.</p>
             
-            <div class="task-grid">
-              <!-- Let niveau -->
-              <div class="difficulty-section">
-                <h3 style="color: #10b981; margin-bottom: 12px;">🟢 Let niveau</h3>
-                <div class="task-cards">
-                  <div class="task-card" onclick="showTaskDetails('ganglys')">
-                    <div class="task-header">
-                      <span class="difficulty easy">Let</span>
-                      <span class="task-completed" style="display:none;">✅</span>
-                    </div>
-                    <h4>Ganglys Basic</h4>
-                    <p>Automatisk ganglys der tænder ved bevægelse</p>
-                  </div>
-                  
-                  <div class="task-card" onclick="showTaskDetails('schedule')">
-                    <div class="task-header">
-                      <span class="difficulty easy">Let</span>
-                      <span class="task-completed" style="display:none;">✅</span>
-                    </div>
-                    <h4>Tidsstyring</h4>
-                    <p>Automatisk tidsstyring af lys</p>
-                  </div>
+            <div class="task-cards">
+              <div class="task-card" onclick="showTaskDetails('ganglys')">
+                <div class="task-header">
+                  <span class="difficulty easy">Let</span>
+                  <span class="task-completed" style="display:none;">✅</span>
                 </div>
+                <h4>Ganglys Basic</h4>
+                <p>Automatisk ganglys der tænder ved bevægelse</p>
               </div>
               
-              <!-- Mellem niveau -->
-              <div class="difficulty-section">
-                <h3 style="color: #f59e0b; margin-bottom: 12px;">🟡 Mellem niveau</h3>
-                <div class="task-cards">
-                  <div class="task-card" onclick="showTaskDetails('doorlight')">
-                    <div class="task-header">
-                      <span class="difficulty medium">Mellem</span>
-                      <span class="task-completed" style="display:none;">✅</span>
-                    </div>
-                    <h4>Dørlys med tidsbegrænsning</h4>
-                    <p>Natligt dørlys kun mellem 22:00-06:00</p>
-                  </div>
-                  
-                  <div class="task-card" onclick="showTaskDetails('security')">
-                    <div class="task-header">
-                      <span class="difficulty medium">Mellem</span>
-                      <span class="task-completed" style="display:none;">✅</span>
-                    </div>
-                    <h4>Sikkerhedsalarm</h4>
-                    <p>Bevægelsesalarm om natten</p>
-                  </div>
-                  
-                  <div class="task-card" onclick="showTaskDetails('comfort')">
-                    <div class="task-header">
-                      <span class="difficulty medium">Mellem</span>
-                      <span class="task-completed" style="display:none;">✅</span>
-                    </div>
-                    <h4>Komfortstyring</h4>
-                    <p>Automatisk komfort baseret på miljø</p>
-                  </div>
-                  
-                  <div class="task-card" onclick="showTaskDetails('ventilation')">
-                    <div class="task-header">
-                      <span class="difficulty medium">Mellem</span>
-                      <span class="task-completed" style="display:none;">✅</span>
-                    </div>
-                    <h4>Intelligent ventilation</h4>
-                    <p>Ventilation baseret på fugtighed og bevægelse</p>
-                  </div>
-                  
-                  <div class="task-card" onclick="showTaskDetails('global')">
-                    <div class="task-header">
-                      <span class="difficulty medium">Mellem</span>
-                      <span class="task-completed" style="display:none;">✅</span>
-                    </div>
-                    <h4>Global variabel styring</h4>
-                    <p>System tilstande med globale variabler</p>
-                  </div>
+              <div class="task-card" onclick="showTaskDetails('schedule')">
+                <div class="task-header">
+                  <span class="difficulty easy">Let</span>
+                  <span class="task-completed" style="display:none;">✅</span>
                 </div>
+                <h4>Tidsstyring</h4>
+                <p>Automatisk tidsstyring af lys</p>
               </div>
               
-              <!-- Svær niveau -->
-              <div class="difficulty-section">
-                <h3 style="color: #ef4444; margin-bottom: 12px;">🔴 Svær niveau</h3>
-                <div class="task-cards">
-                  <div class="task-card" onclick="showTaskDetails('bathroom')">
-                    <div class="task-header">
-                      <span class="difficulty hard">Svær</span>
-                      <span class="task-completed" style="display:none;">✅</span>
-                    </div>
-                    <h4>Badventilator med fugtighed</h4>
-                    <p>Intelligent badventilator med miljøsensorer</p>
-                  </div>
-                  
-                  <div class="task-card" onclick="showTaskDetails('energy')">
-                    <div class="task-header">
-                      <span class="difficulty hard">Svær</span>
-                      <span class="task-completed" style="display:none;">✅</span>
-                    </div>
-                    <h4>Energistyring</h4>
-                    <p>Smart energibesparelse med multiple betingelser</p>
-                  </div>
-                  
-                  <div class="task-card" onclick="showTaskDetails('alarm')">
-                    <div class="task-header">
-                      <span class="difficulty hard">Svær</span>
-                      <span class="task-completed" style="display:none;">✅</span>
-                    </div>
-                    <h4>Avanceret alarm</h4>
-                    <p>Multi-zone sikkerhed med tidsbaserede regler</p>
-                  </div>
+              <div class="task-card" onclick="showTaskDetails('doorlight')">
+                <div class="task-header">
+                  <span class="difficulty medium">Mellem</span>
+                  <span class="task-completed" style="display:none;">✅</span>
                 </div>
+                <h4>Dørlys med tidsbegrænsning</h4>
+                <p>Natligt dørlys kun mellem 22:00-06:00</p>
+              </div>
+              
+              <div class="task-card" onclick="showTaskDetails('security')">
+                <div class="task-header">
+                  <span class="difficulty medium">Mellem</span>
+                  <span class="task-completed" style="display:none;">✅</span>
+                </div>
+                <h4>Sikkerhedsalarm</h4>
+                <p>Bevægelsesalarm om natten</p>
+              </div>
+              
+              <div class="task-card" onclick="showTaskDetails('comfort')">
+                <div class="task-header">
+                  <span class="difficulty medium">Mellem</span>
+                  <span class="task-completed" style="display:none;">✅</span>
+                </div>
+                <h4>Komfortstyring</h4>
+                <p>Automatisk komfort baseret på miljø</p>
+              </div>
+              
+              <div class="task-card" onclick="showTaskDetails('ventilation')">
+                <div class="task-header">
+                  <span class="difficulty medium">Mellem</span>
+                  <span class="task-completed" style="display:none;">✅</span>
+                </div>
+                <h4>Intelligent ventilation</h4>
+                <p>Ventilation baseret på fugtighed og bevægelse</p>
+              </div>
+              
+              <div class="task-card" onclick="showTaskDetails('global')">
+                <div class="task-header">
+                  <span class="difficulty medium">Mellem</span>
+                  <span class="task-completed" style="display:none;">✅</span>
+                </div>
+                <h4>Global variabel styring</h4>
+                <p>System tilstande med globale variabler</p>
+              </div>
+              
+              <div class="task-card" onclick="showTaskDetails('bathroom')">
+                <div class="task-header">
+                  <span class="difficulty hard">Svær</span>
+                  <span class="task-completed" style="display:none;">✅</span>
+                </div>
+                <h4>Badventilator med fugtighed</h4>
+                <p>Intelligent badventilator med miljøsensorer</p>
+              </div>
+              
+              <div class="task-card" onclick="showTaskDetails('energy')">
+                <div class="task-header">
+                  <span class="difficulty hard">Svær</span>
+                  <span class="task-completed" style="display:none;">✅</span>
+                </div>
+                <h4>Energistyring</h4>
+                <p>Smart energibesparelse med multiple betingelser</p>
+              </div>
+              
+              <div class="task-card" onclick="showTaskDetails('alarm')">
+                <div class="task-header">
+                  <span class="difficulty hard">Svær</span>
+                  <span class="task-completed" style="display:none;">✅</span>
+                </div>
+                <h4>Avanceret alarm</h4>
+                <p>Multi-zone sikkerhed med tidsbaserede regler</p>
               </div>
             </div>
           </div>
@@ -6949,7 +6922,7 @@ html {
 
         function showTaskDetails(taskType) {
       // Skjul oversigten
-      document.querySelector('.task-grid').parentElement.parentElement.style.display = 'none';
+      document.querySelector('.task-cards').parentElement.parentElement.style.display = 'none';
       
       // Vis detaljerne
       document.getElementById('task-details').style.display = 'block';
@@ -6970,7 +6943,7 @@ html {
     
     function hideTaskDetails() {
       // Vis oversigten igen
-      document.querySelector('.task-grid').parentElement.parentElement.style.display = 'block';
+      document.querySelector('.task-cards').parentElement.parentElement.style.display = 'block';
       
       // Skjul detaljerne
       document.getElementById('task-details').style.display = 'none';
