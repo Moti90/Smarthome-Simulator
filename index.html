@@ -2742,8 +2742,8 @@ html {
     <button type="button" data-target="view-sim">🏠 Simulator</button>
     <button type="button" data-target="view-flow">🧩 Wiresheet</button>
     <button type="button" data-target="view-learning">📚 Læring</button>
-    <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
     <button type="button" onclick="showQuickStart()" title="Kom godt i gang">🚀 Opgaver</button>
+    <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
   </nav>
 </header>
 
@@ -3516,37 +3516,37 @@ html {
             <div class="ws-toolbar" style="margin-bottom: 12px; padding: 8px; background: rgba(15, 20, 28, 0.8); border-radius: 8px; border: 1px solid #2a3442; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
               <!-- Hovedknapper i én række -->
               <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
-                <!-- Komponenter -->
-                <div style="display: flex; gap: 4px;">
-                  <button id="wsAddTrig" class="ws-btn ws-btn-primary" style="padding: 6px 10px; font-size: 12px;" title="Tilføj Trigger">⚡</button>
-                  <button id="wsAddCond" class="ws-btn ws-btn-secondary" style="padding: 6px 10px; font-size: 12px;" title="Tilføj AND betingelse">🔗</button>
-                  <button id="wsAddAct" class="ws-btn ws-btn-success" style="padding: 6px 10px; font-size: 12px;" title="Tilføj Action">🎯</button>
-                  <button id="wsAddRule" class="ws-btn ws-btn-info" style="padding: 6px 10px; font-size: 12px;" title="Tilføj Rule">📋</button>
-                </div>
+                                 <!-- Komponenter -->
+                 <div style="display: flex; gap: 6px;">
+                   <button id="wsAddTrig" class="ws-btn ws-btn-primary" style="padding: 8px 12px; font-size: 12px; min-width: 80px;" title="Tilføj Trigger">⚡ Trigger</button>
+                   <button id="wsAddCond" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px; min-width: 80px;" title="Tilføj AND betingelse">🔗 AND</button>
+                   <button id="wsAddAct" class="ws-btn ws-btn-success" style="padding: 8px 12px; font-size: 12px; min-width: 80px;" title="Tilføj Action">🎯 Action</button>
+                   <button id="wsAddRule" class="ws-btn ws-btn-info" style="padding: 8px 12px; font-size: 12px; min-width: 80px;" title="Tilføj Rule">📋 Rule</button>
+                 </div>
                 
                 <div style="width: 1px; height: 24px; background: #2a3442; margin: 0 4px;"></div>
                 
-                <!-- Værktøjer -->
-                <div style="display: flex; gap: 4px;">
-                  <button id="wsUndo" class="ws-btn ws-btn-secondary" style="padding: 6px 8px; font-size: 12px;" disabled title="Undo">↶</button>
-                  <button id="wsRedo" class="ws-btn ws-btn-secondary" style="padding: 6px 8px; font-size: 12px;" disabled title="Redo">↷</button>
-                  <button id="wsCopy" class="ws-btn ws-btn-secondary" style="padding: 6px 8px; font-size: 12px;" title="Kopier">📋</button>
-                  <button id="wsPaste" class="ws-btn ws-btn-secondary" style="padding: 6px 8px; font-size: 12px;" title="Indsæt">📄</button>
-                </div>
+                                 <!-- Værktøjer -->
+                 <div style="display: flex; gap: 6px;">
+                   <button id="wsUndo" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px;" disabled title="Undo">↶ Undo</button>
+                   <button id="wsRedo" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px;" disabled title="Redo">↷ Redo</button>
+                   <button id="wsCopy" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px;" title="Kopier">📋 Copy</button>
+                   <button id="wsPaste" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px;" title="Indsæt">📄 Paste</button>
+                 </div>
                 
                 <div style="width: 1px; height: 24px; background: #2a3442; margin: 0 4px;"></div>
                 
-                <!-- Hovedhandlinger -->
-                <div style="display: flex; gap: 4px;">
-                  <button id="wsBuild" class="ws-btn ws-btn-success" style="padding: 6px 10px; font-size: 12px;" title="Build og tilføj regler">🚀</button>
-                  <button id="wsClear" class="ws-btn ws-btn-danger" style="padding: 6px 8px; font-size: 12px;" title="Ryd wiresheet">🗑️</button>
-                  <button id="wsSave" class="ws-btn ws-btn-primary" style="padding: 6px 8px; font-size: 12px;" title="Gem">💾</button>
-                  <button id="wsLoad" class="ws-btn ws-btn-secondary" style="padding: 6px 8px; font-size: 12px;" title="Hent">📂</button>
-                </div>
+                                 <!-- Hovedhandlinger -->
+                 <div style="display: flex; gap: 6px;">
+                   <button id="wsBuild" class="ws-btn ws-btn-success" style="padding: 8px 12px; font-size: 12px;" title="Build og tilføj regler">🚀 Build</button>
+                   <button id="wsClear" class="ws-btn ws-btn-danger" style="padding: 8px 12px; font-size: 12px;" title="Ryd wiresheet">🗑️ Clear</button>
+                   <button id="wsSave" class="ws-btn ws-btn-primary" style="padding: 8px 12px; font-size: 12px;" title="Gem">💾 Save</button>
+                   <button id="wsLoad" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px;" title="Hent">📂 Load</button>
+                 </div>
                 
-                <div style="margin-left: auto;">
-                  <button id="wsValidate" class="ws-btn ws-btn-warning" style="padding: 6px 8px; font-size: 11px;" title="Valider (ikke implementeret)">✅</button>
-                </div>
+                                 <div style="margin-left: auto;">
+                   <button id="wsValidate" class="ws-btn ws-btn-warning" style="padding: 8px 12px; font-size: 12px;" title="Valider (ikke implementeret)">✅ Validate</button>
+                 </div>
               </div>
               
               <!-- Kompakt tip -->
