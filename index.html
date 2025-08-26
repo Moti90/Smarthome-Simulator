@@ -1347,6 +1347,24 @@
 #view-settings .danger { background:linear-gradient(180deg,#7a3232,#5b2424); border-color:#a24a4a; }
 #view-settings .info   { background:linear-gradient(180deg,#20527a,#1a4261); border-color:#2d6fa0; }
 
+/* TASKS VIEW */
+#view-tasks{
+  position:relative;
+  background:
+    radial-gradient(900px 500px at 110% -10%, rgba(42,176,255,.10) 0%, transparent 65%),
+    linear-gradient(180deg, var(--city-bg-0), #060c18);
+  border-radius:12px;
+}
+#view-tasks .card{
+  background:linear-gradient(180deg, var(--city-bg-1), #0a1529);
+  border:1px solid var(--city-hair);
+  box-shadow:0 10px 28px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.03);
+}
+#view-tasks .card h2{
+  background:linear-gradient(180deg, var(--city-bg-2), #0a1a34);
+  border-bottom:1px solid var(--city-hair);
+}
+
 
 /* === Dark dropdowns (match city theme) === */
 select {
@@ -2742,7 +2760,7 @@ html {
     <button type="button" data-target="view-sim">🏠 Simulator</button>
     <button type="button" data-target="view-flow">🧩 Wiresheet</button>
     <button type="button" data-target="view-learning">📚 Læring</button>
-    <button type="button" onclick="showQuickStart()" title="Kom godt i gang">🚀 Opgaver</button>
+    <button type="button" data-target="view-tasks" title="Kom godt i gang">🚀 Opgaver</button>
     <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
   </nav>
 </header>
@@ -3779,6 +3797,283 @@ html {
 
 
 
+        </div>
+      </div>
+    </section>
+    
+    <!-- ===== View: Opgaver ===== -->
+    <section id="view-tasks" class="view">
+      <div class="wrap">
+        <div class="card">
+          <h2>🚀 Kom godt i gang</h2>
+          <div class="body">
+            
+            <div class="task" id="task-ganglys">
+              <span class="difficulty easy">Let</span>
+              <span class="task-completed" style="display:none;">✅</span>
+              <h3>Ganglys Basic</h3>
+              <div class="case-description">
+                <h4>📋 Case: Automatisk ganglys</h4>
+                <p>Du arbejder på et kontor hvor gangene ofte er tomme om aftenen. For at spare energi og sikre sikkerhed, skal du implementere et automatisk ganglys der tænder når der er bevægelse.</p>
+                <p><strong>Læringsmål:</strong> Forstå grundlæggende trigger-action logik og hvordan PIR-sensorer fungerer.</p>
+              </div>
+              <div class="steps">
+                <ol>
+                  <li>Gå til "Simulator" fanen</li>
+                  <li>Klik "Sæt: Breached" under PIR</li>
+                  <li>Klik "Aktivér ændringer"</li>
+                  <li>Gå til "Regler" sektionen</li>
+                  <li>Vælg "IF PIR bliver Breached" som trigger</li>
+                  <li>Vælg "THEN Lys → Tænd" som action</li>
+                  <li>Klik "Tilføj regel"</li>
+                  <li>Klik "Kør regler (RUN)"</li>
+                </ol>
+              </div>
+            </div>
+            
+            <div class="task" id="task-doorlight">
+              <span class="difficulty medium">Mellem</span>
+              <span class="task-completed" style="display:none;">✅</span>
+              <h3>Dørlys med tidsbegrænsning</h3>
+              <div class="case-description">
+                <h4>📋 Case: Natligt dørlys</h4>
+                <p>En familie har problemer med at finde vej i mørket om natten når de skal til toilettet. De vil have et lys der automatisk tænder når døren åbnes, men kun mellem 22:00 og 06:00 for at spare energi.</p>
+                <p><strong>Læringsmål:</strong> Kombinere sensor-triggers med tidsbetingelser og forstå AND-logik.</p>
+              </div>
+              <div class="steps">
+                <ol>
+                  <li>Gå til "Z-Wave sensorer" sektionen</li>
+                  <li>Vælg "Dør-/vindueskontakt" fra dropdown</li>
+                  <li>Sæt værdi til "Opened"</li>
+                  <li>Klik "Sæt (buffer)"</li>
+                  <li>Klik "Aktivér ændringer"</li>
+                  <li>Gå til "Regler" sektionen</li>
+                  <li>Vælg "IF Dørkontakt ændres til Opened" som trigger</li>
+                  <li>Tilføj AND: "Tid mellem" med "22:00-06:00"</li>
+                  <li>Vælg "THEN Lys → Tænd" som action</li>
+                  <li>Tilføj regel og test</li>
+                </ol>
+              </div>
+            </div>
+            
+            <div class="task" id="task-bathroom">
+              <span class="difficulty hard">Svær</span>
+              <span class="task-completed" style="display:none;">✅</span>
+              <h3>Badventilator med fugtighed</h3>
+              <div class="case-description">
+                <h4>📋 Case: Intelligent badventilator</h4>
+                <p>Et badeværelse har problemer med skimmel på grund af høj fugtighed efter bad. Du skal implementere en ventilator der automatisk starter når fugtigheden er høj, men kun når der ikke er nogen i rummet (lavt lys).</p>
+                <p><strong>Læringsmål:</strong> Arbejde med numeriske sensorer, kombinere multiple betingelser og forstå miljøbaseret automation.</p>
+              </div>
+              <div class="steps">
+                <ol>
+                  <li>Gå til "Z-Wave sensorer" sektionen</li>
+                  <li>Vælg "Fugtighed (%)" fra dropdown</li>
+                  <li>Sæt værdi til 75</li>
+                  <li>Klik "Sæt (buffer)"</li>
+                  <li>Klik "Aktivér ændringer"</li>
+                  <li>Gå til "Regler" sektionen</li>
+                  <li>Vælg "IF Fugtighed ≥ (værdi)" som trigger med værdi 75</li>
+                  <li>Tilføj AND: "Lys (lux) <" med værdi 50</li>
+                  <li>Vælg "THEN Ventilator → On" som action</li>
+                  <li>Klik "Tilføj regel"</li>
+                </ol>
+              </div>
+            </div>
+            
+            <div class="task" id="task-security">
+              <span class="difficulty medium">Mellem</span>
+              <span class="task-completed" style="display:none;">✅</span>
+              <h3>Sikkerhedsalarm</h3>
+              <div class="case-description">
+                <h4>📋 Case: Hjemmesikkerhed</h4>
+                <p>En familie vil have et sikkerhedssystem der aktiverer en alarm når der er bevægelse om natten, men kun når de ikke er hjemme (døren er lukket).</p>
+                <p><strong>Læringsmål:</strong> Implementere sikkerhedslogik med multiple sensorer og forstå hvordan man kombinerer forskellige sensorer.</p>
+              </div>
+              <div class="steps">
+                <ol>
+                  <li>Gå til "Z-Wave sensorer" sektionen</li>
+                  <li>Vælg "PIR (bevægelse)" fra dropdown og sæt til "Breached"</li>
+                  <li>Vælg "Dør-/vindueskontakt" fra dropdown og sæt til "Closed"</li>
+                  <li>Klik "Sæt (buffer)" for begge sensorer</li>
+                  <li>Klik "Aktivér ændringer"</li>
+                  <li>Gå til "Regler" sektionen</li>
+                  <li>Vælg "IF PIR bliver Breached" som trigger</li>
+                  <li>Tilføj AND: "Dørkontakt = Closed"</li>
+                  <li>Tilføj AND: "Tid mellem" med "22:00-06:00"</li>
+                  <li>Vælg "THEN Push (log)" som action</li>
+                  <li>Tilføj regel og test</li>
+                </ol>
+              </div>
+            </div>
+            
+            <div class="task" id="task-comfort">
+              <span class="difficulty medium">Mellem</span>
+              <span class="task-completed" style="display:none;">✅</span>
+              <h3>Komfortstyring</h3>
+              <div class="case-description">
+                <h4>📋 Case: Automatisk komfort</h4>
+                <p>Et kontor har problemer med at holde den rette temperatur og luftkvalitet. Du skal implementere et system der automatisk justerer ventilation og lys baseret på temperatur og fugtighed.</p>
+                <p><strong>Læringsmål:</strong> Arbejde med multiple actions og forstå hvordan man optimerer for komfort.</p>
+              </div>
+              <div class="steps">
+                <ol>
+                  <li>Gå til "Z-Wave sensorer" sektionen</li>
+                  <li>Sæt temperatur til 25°C og fugtighed til 70%</li>
+                  <li>Klik "Aktivér ændringer"</li>
+                  <li>Gå til "Regler" sektionen</li>
+                  <li>Vælg "IF Temperatur ≥ 25" som trigger</li>
+                  <li>Tilføj AND: "Fugtighed ≥ 70"</li>
+                  <li>Vælg "THEN Ventilator → On" som action</li>
+                  <li>Tilføj AND action: "Dimmer → 50%"</li>
+                  <li>Klik "Tilføj regel" og test</li>
+                </ol>
+              </div>
+            </div>
+            
+            <div class="task" id="task-ventilation">
+              <span class="difficulty medium">Mellem</span>
+              <span class="task-completed" style="display:none;">✅</span>
+              <h3>Intelligent ventilation</h3>
+              <div class="case-description">
+                <h4>📋 Case: Energibesparende ventilation</h4>
+                <p>Et køkken har problemer med luftkvalitet efter madlavning. Du skal implementere en ventilator der starter baseret på fugtighed og temperatur, men kun når der er bevægelse i rummet.</p>
+                <p><strong>Læringsmål:</strong> Kombinere miljøsensorer med bevægelsessensorer for intelligent automation.</p>
+              </div>
+              <div class="steps">
+                <ol>
+                  <li>Gå til "Z-Wave sensorer" sektionen</li>
+                  <li>Sæt fugtighed til 80% og temperatur til 28°C</li>
+                  <li>Sæt PIR til "Breached"</li>
+                  <li>Klik "Aktivér ændringer"</li>
+                  <li>Gå til "Regler" sektionen</li>
+                  <li>Vælg "IF Fugtighed ≥ 75" som trigger</li>
+                  <li>Tilføj AND: "Temperatur ≥ 25"</li>
+                  <li>Tilføj AND: "PIR = Breached"</li>
+                  <li>Vælg "THEN Ventilator → On" som action</li>
+                  <li>Klik "Tilføj regel" og test</li>
+                </ol>
+              </div>
+            </div>
+            
+            <div class="task" id="task-global">
+              <span class="difficulty medium">Mellem</span>
+              <span class="task-completed" style="display:none;">✅</span>
+              <h3>Global variabel styring</h3>
+              <div class="case-description">
+                <h4>📋 Case: System tilstand</h4>
+                <p>Du skal implementere et system der bruger globale variabler til at styre forskellige tilstande i hjemmet, som "away mode" eller "night mode".</p>
+                <p><strong>Læringsmål:</strong> Forstå globale variabler og hvordan man bruger dem til at koordinere automationer.</p>
+              </div>
+              <div class="steps">
+                <ol>
+                  <li>Gå til "Regler" sektionen</li>
+                  <li>Vælg "IF Global name=value" som trigger med værdi "mode=away"</li>
+                  <li>Vælg "THEN Set Global" som action med værdi "lights=off"</li>
+                  <li>Klik "Tilføj regel"</li>
+                </ol>
+              </div>
+            </div>
+            
+            <div class="task" id="task-energy">
+              <span class="difficulty hard">Svær</span>
+              <span class="task-completed" style="display:none;">✅</span>
+              <h3>Energistyring</h3>
+              <div class="case-description">
+                <h4>📋 Case: Smart energibesparelse</h4>
+                <p>Et hjem vil reducere energiforbruget ved at automatisk slukke unødvendige enheder når der ikke er nogen hjemme, og justere lys baseret på naturligt lys.</p>
+                <p><strong>Læringsmål:</strong> Implementere kompleks energistyring med multiple betingelser og actions.</p>
+              </div>
+              <div class="steps">
+                <ol>
+                  <li>Gå til "Z-Wave sensorer" sektionen</li>
+                  <li>Sæt PIR til "Safe" (ingen bevægelse)</li>
+                  <li>Sæt lys til 200 lux (dagslys)</li>
+                  <li>Klik "Aktivér ændringer"</li>
+                  <li>Gå til "Regler" sektionen</li>
+                  <li>Vælg "IF PIR = Safe" som trigger</li>
+                  <li>Tilføj AND: "Lys ≥ 100" (dagslys)</li>
+                  <li>Tilføj AND: "Tid mellem" med "08:00-18:00"</li>
+                  <li>Vælg "THEN Lys → Off" som action</li>
+                  <li>Tilføj AND action: "Dimmer → 0%"</li>
+                  <li>Klik "Tilføj regel" og test</li>
+                </ol>
+              </div>
+            </div>
+            
+            <div class="task" id="task-alarm">
+              <span class="difficulty hard">Svær</span>
+              <span class="task-completed" style="display:none;">✅</span>
+              <h3>Avanceret alarm</h3>
+              <div class="case-description">
+                <h4>📋 Case: Multi-zone sikkerhed</h4>
+                <p>Et stort hjem har brug for et avanceret sikkerhedssystem der kan håndtere forskellige zoner og reagere forskelligt baseret på tidspunkt og zone.</p>
+                <p><strong>Læringsmål:</strong> Implementere kompleks sikkerhedslogik med multiple zoner og tidsbaserede regler.</p>
+              </div>
+              <div class="steps">
+                <ol>
+                  <li>Gå til "Z-Wave sensorer" sektionen</li>
+                  <li>Sæt PIR til "Breached" og dør til "Opened"</li>
+                  <li>Sæt klokkeslæt til 23:30</li>
+                  <li>Klik "Aktivér ændringer"</li>
+                  <li>Gå til "Regler" sektionen</li>
+                  <li>Vælg "IF PIR bliver Breached" som trigger</li>
+                  <li>Tilføj AND: "Dørkontakt = Opened"</li>
+                  <li>Tilføj AND: "Tid mellem" med "22:00-06:00"</li>
+                  <li>Vælg "THEN Push (log)" som action</li>
+                  <li>Tilføj AND action: "Lys → On" (advarsel)</li>
+                  <li>Klik "Tilføj regel" og test</li>
+                </ol>
+              </div>
+            </div>
+            
+            <div class="task" id="task-schedule">
+              <span class="difficulty easy">Let</span>
+              <span class="task-completed" style="display:none;">✅</span>
+              <h3>Tidsstyring</h3>
+              <div class="case-description">
+                <h4>📋 Case: Automatisk tidsstyring</h4>
+                <p>Du skal implementere en simpel tidsstyring der tænder lys på bestemte tidspunkter om morgenen og slukker dem om aftenen.</p>
+                <p><strong>Læringsmål:</strong> Forstå tidsbaserede triggers og hvordan man bruger dem til daglig automation.</p>
+              </div>
+              <div class="steps">
+                <ol>
+                  <li>Gå til "Z-Wave sensorer" sektionen</li>
+                  <li>Sæt klokkeslæt til 07:00</li>
+                  <li>Klik "Aktivér ændringer"</li>
+                  <li>Gå til "Regler" sektionen</li>
+                  <li>Vælg "IF Time = 07:00" som trigger</li>
+                  <li>Vælg "THEN Lys → On" som action</li>
+                  <li>Klik "Tilføj regel"</li>
+                  <li>Test ved at ændre tiden til 07:00</li>
+                </ol>
+              </div>
+            </div>
+            
+            <div class="buttons">
+              <div class="task-buttons">
+                <div class="button-group">
+                  <h4>Let</h4>
+                  <button class="start-task" onclick="startTask('ganglys')">Ganglys</button>
+                  <button class="start-task" onclick="startTask('schedule')">Tidsstyring</button>
+                </div>
+                <div class="button-group">
+                  <h4>Mellem</h4>
+                  <button class="start-task" onclick="startTask('doorlight')">Dørlys</button>
+                  <button class="start-task" onclick="startTask('security')">Sikkerhed</button>
+                  <button class="start-task" onclick="startTask('comfort')">Komfort</button>
+                  <button class="start-task" onclick="startTask('ventilation')">Ventilation</button>
+                  <button class="start-task" onclick="startTask('global')">Global</button>
+                </div>
+                <div class="button-group">
+                  <h4>Svær</h4>
+                  <button class="start-task" onclick="startTask('bathroom')">Badventilator</button>
+                  <button class="start-task" onclick="startTask('energy')">Energistyring</button>
+                  <button class="start-task" onclick="startTask('alarm')">Alarm</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -5676,7 +5971,7 @@ html {
       {
         title: 'Opgaver & Læring',
         content: 'Besøg "Opgaver" fanen for at få praktiske øvelser og "Læring" fanen for at udforske avancerede koncepter.',
-        target: '[onclick="showQuickStart()"]',
+        target: '[data-target="view-tasks"]',
         position: 'bottom'
       },
       {
@@ -5872,25 +6167,7 @@ html {
       showOnboardingStep(0);
     }
 
-    function showQuickStart() {
-      document.getElementById('quickStart').style.display = 'block';
-      
-      // Update completed tasks indicators
-      var completedTasks = JSON.parse(localStorage.getItem('completed_tasks') || '[]');
-      ['ganglys', 'doorlight', 'bathroom'].forEach(function(taskId) {
-        var taskEl = document.getElementById('task-' + taskId);
-        if (taskEl) {
-          var completedEl = taskEl.querySelector('.task-completed');
-          if (completedEl) {
-            completedEl.style.display = completedTasks.includes(taskId) ? 'inline' : 'none';
-          }
-        }
-      });
-    }
 
-    function closeQuickStart() {
-      document.getElementById('quickStart').style.display = 'none';
-    }
 
     // Task validation system
     var activeTask = null;
@@ -6230,7 +6507,7 @@ html {
     };
 
     function startTask(taskType) {
-      closeQuickStart();
+
       activeTask = taskType;
       
       // Show task validation panel
@@ -6423,8 +6700,7 @@ html {
     window.startOnboarding = startOnboarding;
     window.nextOnboardingStep = nextOnboardingStep;
     window.pauseOnboarding = pauseOnboarding;
-    window.showQuickStart = showQuickStart;
-    window.closeQuickStart = closeQuickStart;
+    
     window.startTask = startTask;
     window.closeTaskValidation = closeTaskValidation;
     window.toggleTaskHelp = toggleTaskHelp;
@@ -8690,7 +8966,7 @@ html {
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   console.log('🚀 DOMContentLoaded - Tab system starter...');
-  const ids = ['view-sim','view-flow','view-learning','view-settings'];
+  const ids = ['view-sim','view-flow','view-learning','view-tasks','view-settings'];
   console.log('📋 Tab IDs:', ids);
   
   const buttons = document.querySelectorAll('.mainnav button');
