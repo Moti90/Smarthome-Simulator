@@ -6619,12 +6619,16 @@ html {
             <div class="settings-section">
               <h3>📊 Data indstillinger</h3>
               <div class="setting-item">
-                <label for="teacherSchoolId">Skole ID</label>
-                <input id="teacherSchoolId" type="text" value="default" class="styled-input" placeholder="fx: default, skole1, etc.">
+                <label for="teacherSchoolId">Vælg skole</label>
+                <select id="teacherSchoolId" class="styled-input">
+                  <option value="">Indlæser skoler...</option>
+                </select>
               </div>
               <div class="setting-item">
-                <label for="teacherClassId">Klasse ID</label>
-                <input id="teacherClassId" type="text" value="default" class="styled-input" placeholder="fx: default, 9a, etc.">
+                <label for="teacherClassId">Vælg klasse</label>
+                <select id="teacherClassId" class="styled-input">
+                  <option value="">Vælg først en skole</option>
+                </select>
               </div>
               <div class="setting-item">
                 <button id="btnLoadProgress" class="btn-primary">📥 Indlæs elev progress</button>
@@ -6665,6 +6669,10 @@ html {
         <div class="card">
           <h2>📚 Eksisterende klasser</h2>
           <div class="body">
+            <div style="margin-bottom: 16px;">
+              <button id="btnReloadClasses" class="btn-primary" style="margin-right: 8px;">🔄 Genindlæs klasser</button>
+              <button id="btnClearClasses" class="btn-danger">🗑️ Ryd alle klasser</button>
+            </div>
             <div id="existingClassesList" class="classes-list">
               <p class="muted">Indlæser eksisterende klasser...</p>
             </div>
@@ -10576,6 +10584,19 @@ html {
       };
       console.log('✅ Switch to class button found and configured');
     }
+
+    // Klasse administration knapper
+    const btnReloadClasses = document.getElementById('btnReloadClasses');
+    if(btnReloadClasses) {
+      btnReloadClasses.onclick = loadExistingClasses;
+      console.log('✅ Reload classes button found and configured');
+    }
+
+    const btnClearClasses = document.getElementById('btnClearClasses');
+    if(btnClearClasses) {
+      btnClearClasses.onclick = clearAllClasses;
+      console.log('✅ Clear all classes button found and configured');
+    }
     
     // Simulation mode event listeners
     const btnStartSimulation = document.getElementById('btnStartSimulation');
@@ -11188,7 +11209,7 @@ html {
     }
   }
   
-  function loadTeacherProgress() {
+  async function loadTeacherProgress() {
     const schoolId = localStorage.getItem('teacher_school_id') || 'default';
     const classId = localStorage.getItem('teacher_class_id') || 'default';
     
@@ -11197,6 +11218,9 @@ html {
     // Opdater input felter
     document.getElementById('teacherSchoolId').value = schoolId;
     document.getElementById('teacherClassId').value = classId;
+    
+    // Indlæs skoler og klasser automatisk
+    await loadSchoolsForTeachers();
     
     // Hvis vi kører lokalt, vis lokale data
     if (isLocalEnvironment) {
@@ -11403,7 +11427,7 @@ html {
     }
   }
   
-  function switchToClass(schoolId, classId) {
+  async function switchToClass(schoolId, classId) {
     // Opdater lærer's nuværende klasse
     localStorage.setItem('teacher_school_id', schoolId);
     localStorage.setItem('teacher_class_id', classId);
@@ -11414,8 +11438,11 @@ html {
     document.getElementById('teacherClassId').value = classId;
     document.getElementById('newClassId').value = classId;
     
+    // Opdater lærer dropdown menuer
+    await loadSchoolsForTeachers();
+    
     // Indlæs elev progress for den nye klasse
-    loadTeacherProgress();
+    await loadTeacherProgress();
     
     alert(`🔄 Skiftet til klasse: ${schoolId}/${classId}`);
     
@@ -11527,6 +11554,42 @@ html {
       container.innerHTML = '<p class="muted">Fejl ved indlæsning af klasser</p>';
     }
   }
+
+  // Funktion til at rydde alle klasser
+  async function clearAllClasses() {
+    if (!confirm('⚠️ Er du sikker på at du vil slette ALLE klasser?\n\nDette kan ikke fortrydes og vil påvirke alle brugere!')) {
+      return;
+    }
+    
+    try {
+      // Slet fra Firebase hvis tilgængelig
+      if (window.db && isFirebaseAvailable) {
+        try {
+          console.log('🌐 Sletter alle klasser fra Firebase...');
+          const snapshot = await window.db.collection('classes').get();
+          const deletePromises = snapshot.docs.map(doc => doc.ref.delete());
+          await Promise.all(deletePromises);
+          console.log('✅ Alle klasser slettet fra Firebase');
+        } catch (firebaseError) {
+          console.warn('⚠️ Firebase fejl ved sletning - fortsætter med lokal sletning:', firebaseError.message);
+        }
+      }
+      
+      // Slet fra localStorage
+      localStorage.removeItem('smarthome_classes');
+      
+      // Opdater liste
+      await loadExistingClasses();
+      
+      alert('✅ Alle klasser er slettet!');
+      
+      console.log('🗑️ Alle klasser slettet');
+      
+    } catch (error) {
+      console.error('❌ Fejl ved sletning af alle klasser:', error);
+      alert(`❌ Fejl ved sletning af alle klasser: ${error.message}`);
+    }
+  }
   
   async function deleteClass(schoolId, classId, firebaseId = null) {
     if (!confirm(`⚠️ Er du sikker på at du vil slette klassen ${schoolId}/${classId}?\n\nDette kan ikke fortrydes!`)) {
@@ -11563,6 +11626,121 @@ html {
     } catch (error) {
       console.error('❌ Fejl ved sletning af klasse:', error);
       alert(`❌ Fejl ved sletning af klasse: ${error.message}`);
+    }
+  }
+
+  // === LÆRER KLASSE VÆLGER ===
+  
+  async function loadSchoolsForTeachers() {
+    const schoolSelect = document.getElementById('teacherSchoolId');
+    const classSelect = document.getElementById('teacherClassId');
+    
+    if (!schoolSelect || !classSelect) return;
+    
+    try {
+      let allClasses = [];
+      
+      // Hent fra Firebase hvis tilgængelig
+      if (window.db && isFirebaseAvailable) {
+        try {
+          console.log('🌐 Henter skoler fra Firebase for lærer...');
+          const snapshot = await window.db.collection('classes').get();
+          const firebaseClasses = snapshot.docs.map(doc => ({
+            ...doc.data(),
+            id: doc.id
+          }));
+          allClasses = allClasses.concat(firebaseClasses);
+          console.log('✅ Hentet', firebaseClasses.length, 'klasser fra Firebase');
+        } catch (error) {
+          console.warn('⚠️ Kunne ikke hente fra Firebase - bruger kun localStorage:', error.message);
+        }
+      }
+      
+      // Hent fra localStorage som backup
+      const localClasses = JSON.parse(localStorage.getItem('smarthome_classes') || '[]');
+      allClasses = allClasses.concat(localClasses);
+      
+      // Fjern duplikater og få unikke skoler
+      const uniqueSchools = [...new Set(allClasses.map(cls => cls.schoolId))];
+      uniqueSchools.sort(); // Sorter alfabetisk
+      
+      // Opdater skole dropdown
+      schoolSelect.innerHTML = '<option value="">Vælg skole</option>';
+      uniqueSchools.forEach(schoolId => {
+        const option = document.createElement('option');
+        option.value = schoolId;
+        option.textContent = schoolId === 'default' ? 'Standard' : schoolId;
+        schoolSelect.appendChild(option);
+      });
+      
+      // Tilføj event listener til skole dropdown
+      schoolSelect.onchange = function() {
+        loadClassesForTeacherSchool(this.value);
+      };
+      
+      // Indlæs gemt skole hvis den findes
+      const savedTeacherSchool = localStorage.getItem('teacher_school_id');
+      if (savedTeacherSchool) {
+        schoolSelect.value = savedTeacherSchool;
+        loadClassesForTeacherSchool(savedTeacherSchool);
+      }
+      
+    } catch (error) {
+      console.error('❌ Fejl ved indlæsning af skoler for lærer:', error);
+      schoolSelect.innerHTML = '<option value="">Fejl ved indlæsning</option>';
+    }
+  }
+  
+  async function loadClassesForTeacherSchool(schoolId) {
+    const classSelect = document.getElementById('teacherClassId');
+    if (!classSelect || !schoolId) return;
+    
+    try {
+      let allClasses = [];
+      
+      // Hent fra Firebase hvis tilgængelig
+      if (window.db && isFirebaseAvailable) {
+        try {
+          const snapshot = await window.db.collection('classes').get();
+          const firebaseClasses = snapshot.docs.map(doc => ({
+            ...doc.data(),
+            id: doc.id
+          }));
+          allClasses = allClasses.concat(firebaseClasses);
+        } catch (error) {
+          console.warn('⚠️ Kunne ikke hente klasser fra Firebase:', error.message);
+        }
+      }
+      
+      // Hent fra localStorage som backup
+      const localClasses = JSON.parse(localStorage.getItem('smarthome_classes') || '[]');
+      allClasses = allClasses.concat(localClasses);
+      
+      // Filtrer klasser for den valgte skole
+      const schoolClasses = allClasses.filter(cls => cls.schoolId === schoolId);
+      schoolClasses.sort((a, b) => a.classId.localeCompare(b.classId)); // Sorter alfabetisk
+      
+      // Opdater klasse dropdown
+      classSelect.innerHTML = '<option value="">Vælg klasse</option>';
+      schoolClasses.forEach(cls => {
+        const option = document.createElement('option');
+        option.value = cls.classId;
+        option.textContent = cls.classId === 'default' ? 'Standard' : cls.classId;
+        if (cls.className && cls.className !== `${cls.schoolId}_${cls.classId}`) {
+          option.textContent += ` - ${cls.className}`;
+        }
+        classSelect.appendChild(option);
+      });
+      
+      // Indlæs gemt klasse hvis den findes
+      const savedTeacherClass = localStorage.getItem('teacher_class_id');
+      if (savedTeacherClass && savedTeacherSchool === schoolId) {
+        classSelect.value = savedTeacherClass;
+      }
+      
+    } catch (error) {
+      console.error('❌ Fejl ved indlæsning af klasser for lærer:', error);
+      classSelect.innerHTML = '<option value="">Fejl ved indlæsning</option>';
     }
   }
 
