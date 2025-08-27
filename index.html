@@ -49,8 +49,8 @@
       margin:0;background:#111;color:#e5e9f0
     }
 
-    header{padding:12px 16px;background:#111720;border-bottom:1px solid #1f2933;display:flex;align-items:center;gap:12px;position:relative}
-    .brand{ position:absolute; left:0; right:0; text-align:center; pointer-events:none; }
+    header{padding:12px 16px;background:#111720;border-bottom:1px solid #1f2933;display:flex;align-items:center;gap:12px;position:relative;justify-content:flex-start}
+    .brand{ display:flex; align-items:center; justify-content:flex-start; text-align:left; margin-left: -25%; }
     .brand .goldtext{ color:#D4AF37; font-weight:700; text-shadow:0 1px 0 #000, 0 0 6px rgba(212,175,55,.5); letter-spacing:0.5px; }
     .top-right{margin-left:auto;display:flex;gap:8px;align-items:center}
 
@@ -432,25 +432,90 @@
       height: 100vh;
       width: 100vw;
       background: #111720;
+      position: relative;
+      z-index: 1;
     }
     
-    /* Home Content Layout */
+    /* Sikre at HOME view bliver helt skjult */
+    #view-home.hidden {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      z-index: -1 !important;
+    }
+    
+    /* Sikre at andre views ikke overlapper */
+    .view:not(#view-home) {
+      z-index: 2;
+    }
+    
+    /* Sikre at HOME view har lavere z-index når det er skjult */
+    #view-home.hidden {
+      z-index: -999 !important;
+    }
+    
+    /* Sikre at alle views har korrekt z-index når de er aktive */
+    .view.active {
+      z-index: 10;
+    }
+    
+    /* Sikre at HOME view ikke kan overlappe andre views */
+    #view-home:not(.active) {
+      z-index: -1;
+    }
+    
+    /* Sikre at HOME view er helt skjult når det ikke er aktivt */
+    #view-home:not(.active) .floor-plan-background {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+    }
+    
+    /* Når HOME view er aktivt, skal floor-plan-background vises */
+    #view-home.active .floor-plan-background {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      z-index: 999 !important;
+    }
+    
+    /* Sikre at HOME view har højeste z-index når aktivt */
+    #view-home.active {
+      z-index: 1000 !important;
+    }
+    
+    /* Sikre at andre views ikke kan overlappe HOME view */
+    .view:not(#view-home):not(.hidden) {
+      z-index: 100;
+    }
+    
+    /* Home Content Layout - Simple flex layout */
     .home-content {
-      display: block;
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      height: calc(100vh - 100px);
+      background: #111720;
+    }
+    
+    /* Override .wrap grid for Smart Home */
+    #view-home .wrap {
+      display: block !important;
+    }
+    
+    /* Base styling for body og html */
+    body, html {
       margin: 0;
       padding: 0;
       min-height: 100vh;
       background: #111720;
-      overflow: hidden;
+      overflow-x: hidden; /* Kun horizontal scroll deaktiveret */
     }
     
-    /* Fjern scroll fra body og html */
-    body, html {
+    /* HOME view skal have overflow hidden på body */
+    body.home-active {
       overflow: hidden;
-      margin: 0;
-      padding: 0;
       height: 100vh;
-      background: #111720;
     }
     
     /* Wrap styling */
@@ -472,7 +537,7 @@
     /* Floor Plan Styling */
     .floor-plan-container {
       background: 
-        url('floorplan.jpg.jpg') center center / contain no-repeat;
+        url('floorplan1.jpg.png') center center / contain no-repeat;
       border: 3px solid rgba(16, 185, 129, 0.4);
       border-radius: 20px;
       padding: 20px;
@@ -485,33 +550,836 @@
     
     /* Ingen overlay på plantegningen */
     
-    /* Floor plan background - direkte billede uden boks */
+    /* Floor plan background - takes most of the space */
     .floor-plan-background {
       background: 
-        url('floorplan.jpg.jpg') center center / contain no-repeat,
+        url('floorplan1.jpg.png') center center / contain no-repeat,
         #111720;
-      height: 80vh;
-      width: 80vw;
-      border-radius: 0;
-      margin: 0;
-      padding: 0;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #111720;
+      flex: 1;
+      position: relative;
+      border-radius: 10px;
+      border: 2px solid rgba(16, 185, 129, 0.3);
+      margin-top: -4%;
     }
     
-    /* Control Panel Styling */
-    .control-panel {
-      background: linear-gradient(135deg, #ffffff, #f8fafc);
-      border: 3px solid rgba(16, 185, 129, 0.4);
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 15px 40px rgba(16, 185, 129, 0.15);
-      max-height: 600px;
+    /* Smart Home Device Ikoner */
+    .smart-device {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+      border: 2px solid rgba(16, 185, 129, 0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      z-index: 100;
+      backdrop-filter: blur(5px);
+    }
+    
+    .smart-device:hover {
+      transform: scale(1.2);
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-color: #ffffff;
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+      z-index: 200;
+    }
+    
+    .smart-device:active {
+      transform: scale(1.1);
+      transition-duration: 0.1s;
+    }
+    
+    /* Drag states for smart devices */
+    .smart-device.dragging {
+      cursor: grabbing !important;
+      z-index: 1000 !important;
+      opacity: 0.8;
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.6);
+    }
+    
+    .smart-device.locked {
+      cursor: default !important;
+    }
+    
+    .smart-device.locked::after {
+      content: "🔒";
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      font-size: 12px;
+      background: rgba(16, 185, 129, 0.9);
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid white;
+    }
+
+    /* Lys i tændt tilstand - lysende effekt */
+        .smart-device.light.on {
+      background: radial-gradient(circle, rgba(255, 235, 59, 0.9) 0%, rgba(255, 193, 7, 0.8) 50%, rgba(255, 152, 0, 0.7) 100%);
+      border: 2px solid #ffd700;
+      box-shadow:
+        0 0 25px rgba(255, 235, 59, 0.8),
+        0 0 40px rgba(255, 235, 59, 0.6),
+        0 4px 20px rgba(0, 0, 0, 0.3);
+      animation: lightGlow 2s ease-in-out infinite alternate;
+    }
+
+    /* Aktive tilstande for forskellige enheder */
+    .smart-device.fan.on {
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.9) 0%, rgba(16, 185, 129, 0.8) 50%, rgba(5, 150, 105, 0.7) 100%);
+      border: 2px solid #10b981;
+      box-shadow:
+        0 0 20px rgba(34, 197, 94, 0.6),
+        0 0 30px rgba(34, 197, 94, 0.4);
+      animation: fanSpin 1s linear infinite;
+    }
+
+    /* Sensor .on class removed - sensors now use specific value-based classes */
+
+    .smart-device.camera.on {
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.9) 0%, rgba(37, 99, 235, 0.8) 50%, rgba(29, 78, 216, 0.7) 100%);
+      border: 2px solid #3b82f6;
+      box-shadow:
+        0 0 20px rgba(59, 130, 246, 0.6),
+        0 0 30px rgba(59, 130, 246, 0.4);
+      animation: cameraBlink 2s ease-in-out infinite;
+    }
+
+    .smart-device.lock.on {
+      background: radial-gradient(circle, rgba(239, 68, 68, 0.9) 0%, rgba(220, 38, 38, 0.8) 50%, rgba(185, 28, 28, 0.7) 100%);
+      border: 2px solid #ef4444;
+      box-shadow:
+        0 0 20px rgba(239, 68, 68, 0.6),
+        0 0 30px rgba(239, 68, 68, 0.4);
+    }
+
+    .smart-device.lock.off {
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.9) 0%, rgba(5, 150, 105, 0.8) 50%, rgba(4, 120, 87, 0.7) 100%);
+      border: 2px solid #10b981;
+      box-shadow:
+        0 0 20px rgba(16, 185, 129, 0.6),
+        0 0 30px rgba(16, 185, 129, 0.4);
+    }
+
+    .smart-device.speaker.on {
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.9) 0%, rgba(147, 51, 234, 0.8) 50%, rgba(126, 34, 206, 0.7) 100%);
+      border: 2px solid #a855f7;
+      box-shadow:
+        0 0 20px rgba(168, 85, 247, 0.6),
+        0 0 30px rgba(168, 85, 247, 0.4);
+      animation: speakerPulse 1s ease-in-out infinite alternate;
+    }
+
+    .smart-device.window.on {
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.9) 0%, rgba(217, 119, 6, 0.8) 50%, rgba(180, 83, 9, 0.7) 100%);
+      border: 2px solid #f59e0b;
+      box-shadow:
+        0 0 20px rgba(245, 158, 11, 0.6),
+        0 0 30px rgba(245, 158, 11, 0.4);
+    }
+
+    .smart-device.smoke.on {
+      background: radial-gradient(circle, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.9) 50%, rgba(185, 28, 28, 0.8) 100%);
+      border: 2px solid #ef4444;
+      box-shadow:
+        0 0 25px rgba(239, 68, 68, 0.8),
+        0 0 40px rgba(239, 68, 68, 0.6);
+      animation: smokeAlarm 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes lightGlow {
+      0% { 
+        box-shadow: 
+          0 0 25px rgba(255, 235, 59, 0.8),
+          0 0 40px rgba(255, 235, 59, 0.6),
+          0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+      100% { 
+        box-shadow: 
+          0 0 35px rgba(255, 235, 59, 1),
+          0 0 50px rgba(255, 235, 59, 0.8),
+          0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    @keyframes fanSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes sensorPulse {
+      0% { 
+        box-shadow: 
+          0 0 20px rgba(239, 68, 68, 0.6),
+          0 0 30px rgba(239, 68, 68, 0.4);
+      }
+      100% { 
+        box-shadow: 
+          0 0 30px rgba(239, 68, 68, 0.9),
+          0 0 45px rgba(239, 68, 68, 0.7);
+      }
+    }
+
+    @keyframes cameraBlink {
+      0%, 90% { opacity: 1; }
+      95% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes speakerPulse {
+      0% { 
+        box-shadow: 
+          0 0 20px rgba(168, 85, 247, 0.6),
+          0 0 30px rgba(168, 85, 247, 0.4);
+      }
+      100% { 
+        box-shadow: 
+          0 0 30px rgba(168, 85, 247, 0.9),
+          0 0 45px rgba(168, 85, 247, 0.7);
+      }
+    }
+
+    @keyframes smokeAlarm {
+      0% { 
+        box-shadow: 
+          0 0 25px rgba(239, 68, 68, 0.8),
+          0 0 40px rgba(239, 68, 68, 0.6);
+      }
+      100% { 
+        box-shadow: 
+          0 0 40px rgba(239, 68, 68, 1),
+          0 0 60px rgba(239, 68, 68, 0.9);
+      }
+    }
+
+    /* Sensor value states */
+    .smart-device.sensor-normal {
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.9) 0%, rgba(16, 185, 129, 0.8) 50%, rgba(5, 150, 105, 0.7) 100%);
+      border: 2px solid #10b981;
+      box-shadow:
+        0 0 15px rgba(34, 197, 94, 0.5),
+        0 0 25px rgba(34, 197, 94, 0.3);
+    }
+
+    .smart-device.sensor-low {
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.9) 0%, rgba(37, 99, 235, 0.8) 50%, rgba(29, 78, 216, 0.7) 100%);
+      border: 2px solid #3b82f6;
+      box-shadow:
+        0 0 15px rgba(59, 130, 246, 0.5),
+        0 0 25px rgba(59, 130, 246, 0.3);
+    }
+
+    .smart-device.sensor-high {
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.9) 0%, rgba(217, 119, 6, 0.8) 50%, rgba(180, 83, 9, 0.7) 100%);
+      border: 2px solid #f59e0b;
+      box-shadow:
+        0 0 15px rgba(245, 158, 11, 0.5),
+        0 0 25px rgba(245, 158, 11, 0.3);
+    }
+
+    .smart-device.sensor-critical {
+      background: radial-gradient(circle, rgba(239, 68, 68, 0.9) 0%, rgba(220, 38, 38, 0.8) 50%, rgba(185, 28, 28, 0.7) 100%);
+      border: 2px solid #ef4444;
+      box-shadow:
+        0 0 20px rgba(239, 68, 68, 0.6),
+        0 0 30px rgba(239, 68, 68, 0.4);
+      animation: sensorPulse 1.5s ease-in-out infinite alternate;
+    }
+
+    /* Smart Home Kontrolpanel til højre */
+    .smart-home-control-panel {
+      width: 300px;
+      background: rgba(30, 41, 59, 0.95);
+      border: 2px solid rgba(16, 185, 129, 0.6);
+      border-radius: 10px;
+      padding: 16px;
+      height: calc(100vh - 120px);
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .smart-home-control-panel h3 {
+      color: #10b981;
+      margin: 0 0 20px 0;
+      font-size: 18px;
+      text-align: center;
+      border-bottom: 1px solid rgba(16, 185, 129, 0.3);
+      padding-bottom: 10px;
+    }
+
+    .smart-home-control-panel .control-section {
+      margin-bottom: 25px;
+    }
+
+    .smart-home-control-panel .control-section h4 {
+      color: #cbd5e1;
+      margin: 0 0 15px 0;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .smart-home-control-panel .device-control {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .smart-home-control-panel .device-control:hover {
+      background: rgba(30, 41, 59, 0.8);
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    .smart-home-control-panel .device-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .smart-home-control-panel .device-icon {
+      font-size: 18px;
+      width: 30px;
+      text-align: center;
+    }
+
+    .smart-home-control-panel .device-name {
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .smart-home-control-panel .device-toggle {
+      width: 50px;
+      height: 25px;
+      background: #374151;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .smart-home-control-panel .device-toggle.on {
+      background: #10b981;
+    }
+
+    .smart-home-control-panel .device-toggle::after {
+      content: '';
+      position: absolute;
+      width: 19px;
+      height: 19px;
+      border-radius: 50%;
+      background: white;
+      top: 3px;
+      left: 3px;
+      transition: all 0.3s ease;
+    }
+
+    .smart-home-control-panel .device-toggle.on::after {
+      transform: translateX(25px);
+    }
+
+    /* Climate Control Styling */
+    .climate-control {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .climate-control .device-info {
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .temperature-display {
+      color: #10b981;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .temperature-slider-container {
+      width: 100%;
+      padding: 10px 0;
+    }
+
+    .temperature-slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #374151;
+      outline: none;
+      -webkit-appearance: none;
+      margin: 5px 0;
+    }
+
+    .temperature-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #10b981;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    .temperature-slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #10b981;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    .temp-labels {
+      display: flex;
+      justify-content: space-between;
+      color: #9ca3af;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    /* Security Controls */
+    .security-status {
+      color: #ef4444;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .security-toggle.on + .security-status,
+    .security-status.active {
+      color: #10b981;
+    }
+
+    /* Scenario Buttons */
+    .scenario-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .scenario-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px 10px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #cbd5e1;
+    }
+
+    .scenario-btn:hover {
+      background: rgba(30, 41, 59, 0.8);
+      border-color: rgba(16, 185, 129, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .scenario-btn.active {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10b981;
+      color: #10b981;
+    }
+
+    .scenario-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .scenario-name {
+      font-size: 12px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    /* Automation Section */
+    .automation-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .automation-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .automation-icon {
+      font-size: 20px;
+    }
+
+    .automation-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .automation-name {
+      color: #cbd5e1;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .automation-count {
+      color: #9ca3af;
+      font-size: 12px;
+    }
+
+    .rule-list {
+      max-height: 200px;
       overflow-y: auto;
     }
+
+    .rule-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(16, 185, 129, 0.1);
+      border-radius: 6px;
+      margin-bottom: 6px;
+      transition: all 0.3s ease;
+    }
+    
+    .rule-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rule-item:hover {
+      background: rgba(15, 23, 42, 0.8);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .rule-info {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .rule-name {
+      color: #cbd5e1;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .rule-description {
+      color: #9ca3af;
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    .rule-toggle {
+      width: 30px;
+      height: 15px;
+      background: #374151;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .rule-toggle.on {
+      background: #10b981;
+    }
+
+    .rule-toggle::after {
+      content: '';
+      position: absolute;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: white;
+      top: 2px;
+      left: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .rule-toggle.on::after {
+      transform: translateX(15px);
+    }
+
+    .rule-delete {
+      width: 24px;
+      height: 24px;
+      border: 1px solid #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+      border-radius: 4px;
+      color: #ef4444;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .rule-delete:hover {
+      background: #ef4444;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .rule-delete:active {
+      transform: scale(0.95);
+    }
+
+    /* Responsive adjustments for smaller screens */
+    @media (max-width: 1200px) {
+      .smart-home-control-panel {
+        width: 260px;
+        max-width: 260px;
+        min-width: 240px;
+        padding: 12px;
+      }
+      
+      .home-content {
+        gap: 8px;
+        padding: 8px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .home-content {
+        flex-direction: column;
+        overflow-y: auto;
+        height: auto;
+        max-height: none;
+      }
+      
+      .smart-home-control-panel {
+        width: 100%;
+        max-width: 100%;
+        max-height: 250px;
+        margin-top: 0;
+      }
+      
+      .floor-plan-background {
+        min-height: 300px;
+        flex: none;
+      }
+    }
+
+    /* Notification System */
+    .notification {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2000;
+      max-width: 400px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      animation: notificationSlideIn 0.3s ease-out;
+    }
+
+    .notification-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+      border-radius: 12px;
+    }
+
+    .notification-message {
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .notification-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+      margin-left: 10px;
+    }
+
+    .notification-close:hover {
+      opacity: 1;
+    }
+
+    .notification-info .notification-content {
+      background: rgba(59, 130, 246, 0.9);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .notification-success .notification-content {
+      background: rgba(16, 185, 129, 0.9);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .notification-security .notification-content {
+      background: rgba(239, 68, 68, 0.9);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .notification-scenario .notification-content {
+      background: rgba(139, 92, 246, 0.9);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .notification-automation .notification-content {
+      background: rgba(245, 158, 11, 0.9);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .notification.fade-out {
+      animation: notificationSlideOut 0.3s ease-in forwards;
+    }
+
+    @keyframes notificationSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    @keyframes notificationSlideOut {
+      from {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+      }
+    }
+
+    /* Animation for temperature and security effects */
+    @keyframes tempPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    @keyframes securityPulse {
+      0%, 100% { 
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.8);
+        border-color: #ef4444;
+      }
+      50% { 
+        box-shadow: 0 0 25px rgba(239, 68, 68, 1);
+        border-color: #dc2626;
+      }
+    }
+    
+    /* Device type specific styling */
+    .smart-device.light {
+      border-color: rgba(251, 191, 36, 0.8);
+    }
+    
+    .smart-device.light:hover {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      border-color: #ffffff;
+      box-shadow: 0 8px 25px rgba(251, 191, 36, 0.5);
+    }
+    
+    .smart-device.thermostat {
+      border-color: rgba(239, 68, 68, 0.8);
+    }
+    
+    .smart-device.thermostat:hover {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      border-color: #ffffff;
+      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
+    }
+    
+    .smart-device.camera {
+      border-color: rgba(139, 92, 246, 0.8);
+    }
+    
+    .smart-device.camera:hover {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      border-color: #ffffff;
+      box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
+    }
+    
+    .smart-device.sensor {
+      border-color: rgba(59, 130, 246, 0.8);
+    }
+    
+    .smart-device.sensor:hover {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      border-color: #ffffff;
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
+    }
+    
+    .smart-device.lock {
+      border-color: rgba(107, 114, 128, 0.8);
+    }
+    
+    .smart-device.lock:hover {
+      background: linear-gradient(135deg, #6b7280, #4b5563);
+      border-color: #ffffff;
+      box-shadow: 0 8px 25px rgba(107, 114, 128, 0.5);
+    }
+    
+    /* Responsive device icons på smaller screens */
+    @media (max-width: 768px) {
+      .smart-device {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+      }
+    }
+    
+    /* Drag mode styling */
+    .smart-device.draggable {
+      cursor: move !important;
+      border: 3px dashed #10b981 !important;
+      animation: dragPulse 2s infinite;
+    }
+    
+    .smart-device.dragging {
+      transform: scale(1.3) !important;
+      z-index: 300 !important;
+      opacity: 0.8;
+      box-shadow: 0 15px 35px rgba(16, 185, 129, 0.6) !important;
+    }
+    
+    @keyframes dragPulse {
+      0%, 100% { border-color: #10b981; }
+      50% { border-color: #34d399; }
+    }
+    
+    /* Gammel Control Panel Styling fjernet - bruges kun smart-home-control-panel nu */
     
     .panel-header h2 {
       color: #0f172a;
@@ -525,26 +1393,7 @@
       background-clip: text;
     }
     
-    /* Control Sections */
-    .control-section {
-      margin-bottom: 30px;
-      padding: 20px;
-      background: #ffffff;
-      border: 2px solid #e2e8f0;
-      border-radius: 16px;
-      transition: all 0.3s ease;
-    }
-    
-    .control-section:hover {
-      border-color: rgba(16, 185, 129, 0.5);
-      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.1);
-    }
-    
-    .control-section.active {
-      border-color: rgba(16, 185, 129, 0.8);
-      background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
-      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
-    }
+    /* Gamle Control Sections fjernet - bruges kun smart-home-control-panel versioner nu */
     
     .control-section h3 {
       color: #0f172a;
@@ -1622,43 +2471,24 @@
   --city-green:#10b981;    /* for Rule (samler) */
 }
 
-/* FLOW VIEW (Wiresheet) */
-#view-flow{
-  position:relative;
-  background:
-    radial-gradient(1000px 600px at 120% -10%, rgba(42,176,255,.10) 0%, transparent 60%),
-    radial-gradient(800px 500px at -10% 10%, rgba(31,143,224,.10) 0%, transparent 65%),
-    linear-gradient(180deg, var(--city-bg-0), #060c18);
-  border-radius:12px;
-}
+/* FLOW VIEW removed - integrated into home view */
 
 /* LEARNING VIEW - ONLY INLINE STYLES WORK! */
 
 /* Hide Tips & Tricks section on other pages */
 #view-sim .tips-section,
-#view-flow .tips-section,
 #view-settings .tips-section,
 #view-sim .card:has(h2:contains("Tips")),
-#view-flow .card:has(h2:contains("Tips")),
 #view-settings .card:has(h2:contains("Tips")) {
   display: none !important;
 }
 
 /* Alternative: Hide any card with Tips & Tricks heading on non-learning pages */
 #view-sim .card:has(h2:contains("💡")),
-#view-flow .card:has(h2:contains("💡")),
 #view-settings .card:has(h2:contains("💡")) {
   display: none !important;
 }
-#view-flow .card{
-  background:linear-gradient(180deg, var(--city-bg-1), #0a1529);
-  border:1px solid var(--city-hair);
-  box-shadow:0 10px 28px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.03);
-}
-#view-flow .card h2{
-  background:linear-gradient(180deg, var(--city-bg-2), #0a1a34);
-  border-bottom:1px solid var(--city-hair);
-}
+/* #view-flow styles removed - integrated into home view */
 
 /* Wiresheet canvas */
 .ws-canvas{
@@ -2179,7 +3009,7 @@ input:focus, select:focus, textarea:focus{
 .tag{ background:#0d1a20 !important; border-color:rgba(0,194,168,.35) !important; color:#c8fff3 !important; }
 
 /* View backgrounds */
-#view-sim, #view-flow, #view-settings{
+#view-sim, #view-home, #view-settings{
   background:
     radial-gradient(900px 500px at 110% -10%, rgba(63,178,255,.10) 0%, transparent 65%),
     linear-gradient(180deg, #0a0f16 0%, #090d12 100%) !important;
@@ -3225,7 +4055,7 @@ body.gold-theme .tag {
 }
 
 body.gold-theme #view-sim, 
-body.gold-theme #view-flow, 
+body.gold-theme #view-home, 
 body.gold-theme #view-settings {
   background: radial-gradient(900px 500px at 110% -10%, rgba(255,215,0,.10) 0%, transparent 65%),
               linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%) !important;
@@ -3447,7 +4277,7 @@ body.crimson-theme .tag {
 }
 
 body.crimson-theme #view-sim, 
-body.crimson-theme #view-flow, 
+body.crimson-theme #view-home, 
 body.crimson-theme #view-settings {
   background: radial-gradient(900px 500px at 110% -10%, rgba(220,20,60,.10) 0%, transparent 65%),
               linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%) !important;
@@ -3569,7 +4399,7 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
   padding:10px 14px;
   display:flex; align-items:center; gap:12px;
 }
-.brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.06em;}
+.brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.06em; justify-content:flex-start; margin-left: -25%;}
 .brand .name{color:#e6f0ff;}
 .mainnav{margin-left:auto; display:flex; gap:8px;}
 .mainnav button{
@@ -3606,7 +4436,7 @@ html,body{margin:0;background:var(--bg);color:#e2e8f0;font-family:'Segoe UI',sys
 
 /* Accent borders per section */
 #view-sim .card, #view-sim [data-card]{ border-top:3px solid #2ab0ff; }
-#view-flow .card, #view-flow [data-card]{ border-top:3px solid #10b981; }
+/* #view-flow styles removed - rule builder integrated into home view */
 #view-settings .card, #view-settings [data-card]{ border-top:3px solid #fbbf24; }
 #view-simulation .card, #view-simulation [data-card]{ border-top:3px solid #8b5cf6; }
 
@@ -3793,14 +4623,15 @@ html {
 </head>
 <body>
 
-<header class="appbar" style="display: none;">
+<header class="appbar" style="display: flex;">
   <div class="brand">
-    <img src="LOGO.png" alt="SMARTHOME SIMULATOR logo" height="50" style="margin-right: 10px;">
-    <span class="name" style="font-size: 14px; letter-spacing: 0.5px;">SMARTHOME SIMULATOR</span>
+    <img src="LOGO.png" alt="SMARTHOME SIMULATOR logo" height="50" style="margin-left: -900px;">
+    <span style="color: white; font-size: 24px; margin-left: 10px; font-weight: 500;">Smarthome Simulator</span>
   </div>
   <nav class="mainnav">
-    <button type="button" data-target="view-sim">🏠 Simulator</button>
-    <button type="button" data-target="view-flow">🧩 Wiresheet</button>
+    <button type="button" data-target="view-forside">🏡 Forside</button>
+    <button type="button" data-target="view-sim">📊 Sensorer & Regler</button>
+    <button type="button" data-target="view-home">🏠 Smart Home</button>
     <button type="button" data-target="view-learning">📚 Læring</button>
     <button type="button" data-target="view-tasks" title="Kom godt i gang">🚀 Opgaver</button>
     <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
@@ -3808,7 +4639,7 @@ html {
 </header>
 
   <!-- SmartHome Simulator Intro -->
-  <div id="loginView" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
+  <div id="loginView" style="display:none;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
     <div class="logo-container">
       <img src="LOGO.png" alt="SmartHome Simulator Logo" class="logo">
       <!-- Wi-Fi bølger (pulserende) -->
@@ -3924,7 +4755,7 @@ html {
     </div>
   </div>
 
-  <div id="mainApp" style="display:none;">
+  <div id="mainApp" style="display:block;">
 
   <!-- Onboarding System -->
   <div id="onboardingOverlay" class="onboarding-overlay"></div>
@@ -4300,14 +5131,46 @@ html {
   </div>
 
   <div class="views">
+    <!-- ===== View: Forside ===== -->
+    <section id="view-forside" class="view active">
+      <div class="wrap" style="position: relative; height: 100vh;">
+        <div class="card" style="text-align: center; max-width: 800px; margin: 0 auto; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+          <h1>🏡 Velkommen til SmartHome Simulator</h1>
+          <div class="body">
+            <p style="font-size: 18px; margin-bottom: 30px;">En uddannelsesplatform til IoT og hjemmeautomatisering</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 30px 0;">
+              
+              <div class="feature-card" style="padding: 20px; background: rgba(15, 20, 28, 0.8); border-radius: 12px; border: 1px solid #2a3442;">
+                <h3>📊 Sensorer & Regler</h3>
+                <p>Lær IoT grundlæggende med virtuelle sensorer og automatiseringsregler</p>
+                <button onclick="document.querySelector('[data-target=view-sim]').click()" style="background: #2ab0ff; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Åbn Sensorer & Regler</button>
+              </div>
+              
+              <div class="feature-card" style="padding: 20px; background: rgba(15, 20, 28, 0.8); border-radius: 12px; border: 1px solid #2a3442;">
+                <h3>🏠 Smart Home</h3>
+                <p>Design og test avancerede automationsscenarier i et realistisk smart home</p>
+                <button onclick="document.querySelector('[data-target=view-home]').click()" style="background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Åbn Smart Home</button>
+              </div>
+              
+            </div>
+            
+            <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #2a3442;">
+              <h3>📚 Kom godt i gang</h3>
+              <p>Nye brugere kan starte med <strong>Opgaver</strong> fanen for guidede øvelser.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== View: Simulator ===== -->
-    <section id="view-sim" class="view active">
+    <section id="view-sim" class="view">
       <div class="wrap">
         <!-- 1) Sensorer -->
         <div class="card" data-section="sensors">
                   <h2 style="display: flex; justify-content: space-between; align-items: center;">
           <span>1) Virtuelle sensorer & tilstande</span>
-          <button id="btnHome" class="btn-home" onclick="showHomeDashboard()">🏠 HOME</button>
         </h2>
           <div class="body">
             <!-- Tid & miljø -->
@@ -4574,64 +5437,7 @@ html {
       <div class="footer small">SmartHome Simulator v2.0 (WebView2 • SPA med faner @Rasmus Jakobsen)</div>
     </section>
 
-    <!-- ===== View: Flow (beta) ===== -->
-    <section id="view-flow" class="view">
-      <div class="wrap" style="grid-template-columns: 1fr; max-width: none;">
-        <div class="card" style="width: 100%; max-width: none;">
-          <h2>Flow (beta) — Wiresheet MVP</h2>
-          <div class="body">
-            <!-- Kompakt Wiresheet Toolbar -->
-            <div class="ws-toolbar" style="margin-bottom: 12px; padding: 8px; background: rgba(15, 20, 28, 0.8); border-radius: 8px; border: 1px solid #2a3442; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-              <!-- Hovedknapper i én række -->
-              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
-                                 <!-- Komponenter -->
-                 <div style="display: flex; gap: 6px;">
-                   <button id="wsAddTrig" class="ws-btn ws-btn-primary" style="padding: 8px 12px; font-size: 12px; min-width: 80px;" title="Tilføj Trigger">⚡ Trigger</button>
-                   <button id="wsAddCond" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px; min-width: 80px;" title="Tilføj AND betingelse">🔗 AND</button>
-                   <button id="wsAddAct" class="ws-btn ws-btn-success" style="padding: 8px 12px; font-size: 12px; min-width: 80px;" title="Tilføj Action">🎯 Action</button>
-                   <button id="wsAddRule" class="ws-btn ws-btn-info" style="padding: 8px 12px; font-size: 12px; min-width: 80px;" title="Tilføj Rule">📋 Rule</button>
-                 </div>
-                
-                <div style="width: 1px; height: 24px; background: #2a3442; margin: 0 4px;"></div>
-                
-                                 <!-- Værktøjer -->
-                 <div style="display: flex; gap: 6px;">
-                   <button id="wsUndo" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px;" disabled title="Undo">↶ Undo</button>
-                   <button id="wsRedo" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px;" disabled title="Redo">↷ Redo</button>
-                   <button id="wsCopy" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px;" title="Kopier">📋 Copy</button>
-                   <button id="wsPaste" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px;" title="Indsæt">📄 Paste</button>
-                 </div>
-                
-                <div style="width: 1px; height: 24px; background: #2a3442; margin: 0 4px;"></div>
-                
-                                 <!-- Hovedhandlinger -->
-                 <div style="display: flex; gap: 6px;">
-                   <button id="wsBuild" class="ws-btn ws-btn-success" style="padding: 8px 12px; font-size: 12px;" title="Build og tilføj regler">🚀 Build</button>
-                   <button id="wsClear" class="ws-btn ws-btn-danger" style="padding: 8px 12px; font-size: 12px;" title="Ryd wiresheet">🗑️ Clear</button>
-                   <button id="wsSave" class="ws-btn ws-btn-primary" style="padding: 8px 12px; font-size: 12px;" title="Gem">💾 Save</button>
-                   <button id="wsLoad" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px;" title="Hent">📂 Load</button>
-                 </div>
-                
-                                 <div style="margin-left: auto;">
-                   <button id="wsValidate" class="ws-btn ws-btn-warning" style="padding: 8px 12px; font-size: 12px;" title="Valider (ikke implementeret)">✅ Validate</button>
-                 </div>
-              </div>
-              
-              <!-- Kompakt tip -->
-              <div style="padding: 6px 10px; background: rgba(42,176,255,0.1); border-radius: 6px; border-left: 3px solid #2ab0ff; font-size: 12px; color: #9ca3af;">
-                💡 <strong>Tip:</strong> Træk noder rundt, klik <span style="background: rgba(42,176,255,0.2); padding: 2px 4px; border-radius: 3px;">● out</span> og derefter <span style="background: rgba(42,176,255,0.2); padding: 2px 4px; border-radius: 3px;">in ●</span> på Rule for at forbinde
-              </div>
-            </div>
-
-            <div id="wsCanvas" class="ws-canvas" style="min-height: 800px; width: 100%;">
-              <svg id="wsWires" class="ws-wires"></svg>
-              <div id="wsNodes" class="ws-nodes"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    
+        
     <!-- ===== View: Læring ===== -->
     <section id="view-learning" class="view">
       <div class="wrap">
@@ -5477,19 +6283,310 @@ html {
     <!-- ===== View: HOME Smart Home Simulator ===== -->
     <section id="view-home" class="view">
       <div class="wrap">
-        
-        <!-- Ingen header - kun plantegning -->
-        
-        <!-- Main Content -->
-        <div class="home-content">
-          
-          <!-- Left Side: Floor Plan -->
-          <!-- Left Side: Floor Plan -->
+        <!-- Floor Plan Content -->
+        <div id="home-floor-plan" class="home-content">
+          <!-- Smart Home Mode Buttons -->
+          <div style="
+            position: absolute;
+            top: 10px;
+            left: calc(50% + 30px + 15%);
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+          ">
+            <button id="home-floor-plan-btn" style="
+              padding: 6px 12px; 
+              background: #10b981; 
+              color: white; 
+              border: none; 
+              cursor: pointer; 
+              font-size: 12px; 
+              border-radius: 4px;
+            " onclick="showFloorPlan()">
+              🏠 Plantegning
+            </button>
+            <button id="home-rule-builder-btn" style="
+              padding: 6px 12px; 
+              background: #2d3b4f; 
+              color: #e5e9f0; 
+              border: 1px solid #3b495e; 
+              cursor: pointer; 
+              font-size: 12px; 
+              border-radius: 4px;
+            " onclick="showRuleBuilder()">
+              🧩 Regel Builder
+            </button>
+          </div>
+          <!-- Floor Plan -->
           <div class="floor-plan-background">
-            <!-- Billedet vises direkte uden boks -->
+            <!-- Smart Home Device Ikoner -->
+            
+            <!-- Soveværelse -->
+            <div class="smart-device light" style="top: 71.2%; left: 75.4%;" data-device="bedroom-light" title="Soveværelse lys">💡</div>
+            <div class="smart-device camera" style="top: 26.9%; left: 89.2%;" data-device="entrance-camera" title="Sikkerhedskamera ved hoveddør">📹</div>
+            <div class="smart-device window" style="top: 75.1%; left: 87.9%;" data-device="bedroom-window" title="Vindue sensor">🪟</div>
+            
+            <!-- Balkon -->
+            <div class="smart-device camera" style="top: 33.8%; left: 17.1%;" data-device="balcony-camera" title="Udendørs kamera">📹</div>
+            <div class="smart-device sensor" style="top: 83.6%; left: 16.3%;" data-device="outdoor-temp" title="Udendørs temperatur">🌡️</div>
+            <div class="smart-device window" style="top: 19.7%; left: 19.2%;" data-device="balcony-door" title="Balkondør sensor">🪟</div>
+            
+            <!-- Stue -->
+            <div class="smart-device light" style="top: 61.8%; left: 46.5%;" data-device="living-room-light" title="Stue lys">💡</div>
+            <div class="smart-device thermostat" style="top: 82.1%; left: 29.7%;" data-device="thermostat" title="Termostat">🌡️</div>
+            <div class="smart-device speaker" style="top: 81.2%; left: 50.5%;" data-device="living-speaker" title="Smart højttaler">🔊</div>
+            <div class="smart-device sensor" style="top: 68.7%; left: 7.1%;" data-device="living-motion" title="Bevægelsessensor">👁️</div>
+            
+            <!-- Spisebord -->
+            <div class="smart-device light" style="top: 19.2%; left: 28.8%;" data-device="dining-light" title="Spisebord lys">💡</div>
+            
+            <!-- Køkken -->
+            <div class="smart-device light" style="top: 23.7%; left: 49.8%;" data-device="kitchen-light" title="Køkken lys">💡</div>
+            <div class="smart-device sensor" style="top: 43.7%; left: 46.9%;" data-device="motion-kitchen" title="Bevægelsessensor">👁️</div>
+            <div class="smart-device smoke" style="top: 8.8%; left: 43.8%;" data-device="smoke-detector" title="Røgdetektor">💨</div>
+            
+            <!-- Badeværelse -->
+            <div class="smart-device light" style="top: 22.1%; left: 69.7%;" data-device="bathroom-light" title="Badeværelse lys">💡</div>
+            <div class="smart-device fan" style="top: 32.9%; left: 75.6%;" data-device="bathroom-fan" title="Ventilator">🌪️</div>
+            <div class="smart-device sensor" style="top: 14.6%; left: 75.5%;" data-device="humidity-sensor" title="Fugtighedssensor">💧</div>
+            
+            <!-- Entré -->
+            <div class="smart-device lock" style="top: 42.7%; left: 87%;" data-device="front-door" title="Smart dørlås">🔐</div>
+            <div class="smart-device sensor" style="top: 29.9%; left: 87.7%;" data-device="entrance-motion" title="Entré bevægelse">👁️</div>
+          </div>
+
+          <!-- Control Panel -->
+          <div class="smart-home-control-panel">
+            <h3>🏠 Smart Home Kontrol</h3>
+            
+            <div class="control-section">
+              <h4>💡 Belysning</h4>
+              
+              <div class="device-control">
+                <div class="device-info">
+                  <div class="device-icon">💡</div>
+                  <div class="device-name">Soveværelse</div>
+                </div>
+                <button class="device-toggle" data-device="bedroom-light"></button>
+              </div>
+              
+              <div class="device-control">
+                <div class="device-info">
+                  <div class="device-icon">💡</div>
+                  <div class="device-name">Stue</div>
+                </div>
+                <button class="device-toggle" data-device="living-room-light"></button>
+              </div>
+              
+              <div class="device-control">
+                <div class="device-info">
+                  <div class="device-icon">💡</div>
+                  <div class="device-name">Spisebord</div>
+                </div>
+                <button class="device-toggle" data-device="dining-light"></button>
+              </div>
+              
+              <div class="device-control">
+                <div class="device-info">
+                  <div class="device-icon">💡</div>
+                  <div class="device-name">Køkken</div>
+                </div>
+                <button class="device-toggle" data-device="kitchen-light"></button>
+              </div>
+              
+              <div class="device-control">
+                <div class="device-info">
+                  <div class="device-icon">💡</div>
+                  <div class="device-name">Badeværelse</div>
+                </div>
+                <button class="device-toggle" data-device="bathroom-light"></button>
+              </div>
+            </div>
+
+            <div class="control-section">
+              <h4>🌡️ Klima</h4>
+              
+              <div class="device-control climate-control">
+                <div class="device-info">
+                  <div class="device-icon">🌡️</div>
+                  <div class="device-name">Temperatur</div>
+                  <div class="temperature-display">
+                    <span id="currentTemp">21</span>°C
+                  </div>
+                </div>
+                <div class="temperature-slider-container">
+                  <input type="range" class="temperature-slider" id="tempSlider" min="0" max="40" value="21" step="0.5">
+                  <div class="temp-labels">
+                    <span>0°</span>
+                    <span>40°</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="device-control">
+                <div class="device-info">
+                  <div class="device-icon">🌪️</div>
+                  <div class="device-name">Ventilation</div>
+                </div>
+                <button class="device-toggle" data-device="ventilation"></button>
+              </div>
+            </div>
+
+            <div class="control-section">
+              <h4>🔒 Sikkerhed</h4>
+              
+              <div class="device-control">
+                <div class="device-info">
+                  <div class="device-icon">🚨</div>
+                  <div class="device-name">Alarm System</div>
+                  <div class="security-status" id="alarmStatus">Deaktiveret</div>
+                </div>
+                <button class="device-toggle security-toggle" data-device="alarm-system"></button>
+              </div>
+              
+              <div class="device-control">
+                <div class="device-info">
+                  <div class="device-icon">🔐</div>
+                  <div class="device-name">Auto-lås døre</div>
+                </div>
+                <button class="device-toggle" data-device="auto-lock"></button>
+              </div>
+            </div>
+
+            <div class="control-section">
+              <h4>📱 Scenarier</h4>
+              
+              <div class="scenario-buttons">
+                <button class="scenario-btn morning" data-scenario="good-morning">
+                  <div class="scenario-icon">🌅</div>
+                  <div class="scenario-name">God Morgen</div>
+                </button>
+                
+                <button class="scenario-btn away" data-scenario="leaving-home">
+                  <div class="scenario-icon">🏃</div>
+                  <div class="scenario-name">Forlader Hjem</div>
+                </button>
+                
+                <button class="scenario-btn evening" data-scenario="good-night">
+                  <div class="scenario-icon">🌙</div>
+                  <div class="scenario-name">God Nat</div>
+                </button>
+                
+                <button class="scenario-btn home" data-scenario="coming-home">
+                  <div class="scenario-icon">🏠</div>
+                  <div class="scenario-name">Kommer Hjem</div>
+                </button>
+              </div>
+            </div>
+
+            <div class="control-section">
+              <h4>⚙️ Automation</h4>
+              
+              <div class="automation-status">
+                <div class="automation-info">
+                  <div class="automation-icon">🤖</div>
+                  <div class="automation-text">
+                    <div class="automation-name">Smart Regler</div>
+                    <div class="automation-count" id="ruleCount">0 aktive regler</div>
+                  </div>
+                </div>
+                <button class="device-toggle" data-device="automation-master" id="automationToggle"></button>
+              </div>
+              
+              <div class="rule-list" id="activeRules">
+                <!-- Dynamisk indhold fra wiresheet -->
+              </div>
+            </div>
+          </div>
+          
+          <!-- Positionerings kontroller (skjult til senere brug) -->
+          <div class="position-controls" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 1000; background: rgba(17, 23, 32, 0.9); padding: 15px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.3);">
+            <h4 style="color: #10b981; margin: 0 0 10px 0; font-size: 14px;">📍 Ikon Positionering</h4>
+            <button id="toggleDragMode" class="btn-primary" style="margin-bottom: 8px;">🖱️ Aktiver træk-mode</button>
+            <button id="lockPositions" class="btn-success" style="display: none;">🔒 Lås positioner</button>
+            <p id="dragStatus" style="color: #cbd5e1; font-size: 12px; margin: 5px 0 0 0;">Klik for at aktivere træk</p>
           </div>
           
           <!-- Ingen kontrolpanel - kun plantegning -->
+        </div>
+        
+        <!-- Rule Builder Content (initially hidden) -->
+        <div id="home-rule-builder" class="home-content" style="display: none;">
+          <!-- Back to Floor Plan Button -->
+          <div style="
+            position: absolute;
+            top: 10px;
+            left: calc(20px + 25%);
+            z-index: 1000;
+          ">
+            <button onclick="showFloorPlan()" style="
+              padding: 8px 16px; 
+              background: #2d3b4f; 
+              color: #e5e9f0; 
+              border: 1px solid #3b495e; 
+              cursor: pointer; 
+              font-size: 12px; 
+              border-radius: 4px;
+              display: flex;
+              align-items: center;
+              gap: 6px;
+            ">
+              ← Tilbage til Plantegning
+            </button>
+          </div>
+          
+          <div class="card" style="width: 100%; max-width: none;">
+            <h3>🧩 Smart Home Regel Builder</h3>
+            <div class="body">
+              <!-- Simplificeret Wiresheet Toolbar (kun til home) -->
+              <div class="ws-toolbar" style="margin-bottom: 12px; padding: 8px; background: rgba(15, 20, 28, 0.8); border-radius: 8px; border: 1px solid #2a3442; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                <!-- Hovedknapper i én række -->
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                  <!-- Komponenter -->
+                  <div style="display: flex; gap: 6px;">
+                    <button id="wsAddTrig" class="ws-btn ws-btn-primary" style="padding: 8px 12px; font-size: 12px; min-width: 80px;" title="Tilføj Trigger">⚡ Trigger</button>
+                    <button id="wsAddCond" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px; min-width: 80px;" title="Tilføj AND betingelse">🔗 AND</button>
+                    <button id="wsAddAct" class="ws-btn ws-btn-success" style="padding: 8px 12px; font-size: 12px; min-width: 80px;" title="Tilføj Action">🎯 Action</button>
+                    <button id="wsAddRule" class="ws-btn ws-btn-info" style="padding: 8px 12px; font-size: 12px; min-width: 80px;" title="Tilføj Rule">📋 Rule</button>
+                  </div>
+                  
+                  <div style="width: 1px; height: 24px; background: #2a3442; margin: 0 4px;"></div>
+                  
+                  <!-- Værktøjer -->
+                  <div style="display: flex; gap: 6px;">
+                    <button id="wsUndo" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px;" disabled title="Undo">↶ Undo</button>
+                    <button id="wsRedo" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px;" disabled title="Redo">↷ Redo</button>
+                    <button id="wsCopy" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px;" title="Kopier">📋 Copy</button>
+                    <button id="wsPaste" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px;" title="Indsæt">📄 Paste</button>
+                  </div>
+                  
+                  <div style="width: 1px; height: 24px; background: #2a3442; margin: 0 4px;"></div>
+                  
+                  <!-- Hovedhandlinger (forenklet - kun til home) -->
+                  <div style="display: flex; gap: 6px;">
+                    <button id="wsBuild" class="ws-btn ws-btn-success" style="padding: 8px 12px; font-size: 12px;" title="Build og tilføj regler til Smart Home">🚀 Send til Home</button>
+                    <button id="wsClear" class="ws-btn ws-btn-danger" style="padding: 8px 12px; font-size: 12px;" title="Ryd wiresheet">🗑️ Clear</button>
+                    <button id="wsSave" class="ws-btn ws-btn-primary" style="padding: 8px 12px; font-size: 12px;" title="Gem">💾 Save</button>
+                    <button id="wsLoad" class="ws-btn ws-btn-secondary" style="padding: 8px 12px; font-size: 12px;" title="Hent">📂 Load</button>
+                  </div>
+                  
+                  <div style="margin-left: auto;">
+                    <button id="wsValidate" class="ws-btn ws-btn-warning" style="padding: 8px 12px; font-size: 12px;" title="Valider (ikke implementeret)">✅ Validate</button>
+                  </div>
+                </div>
+                
+                <!-- Kompakt tip -->
+                <div style="padding: 6px 10px; background: rgba(16,185,129,0.1); border-radius: 6px; border-left: 3px solid #10b981; font-size: 12px; color: #9ca3af;">
+                  💡 <strong>Smart Home Mode:</strong> Regler bygget her sendes direkte til jeres smart home system. Træk noder og forbind dem for at skabe automationer.
+                </div>
+              </div>
+
+              <div id="wsCanvas" class="ws-canvas" style="min-height: 800px; width: 100%;">
+                <svg id="wsWires" class="ws-wires"></svg>
+                <div id="wsNodes" class="ws-nodes"></div>
+              </div>
+            </div>
+          </div>
         </div>
         
         <!-- Ingen footer - kun plantegning -->
@@ -5520,6 +6617,42 @@ html {
                 <button id="btnExportCSV" class="btn-success">📊 Eksporter CSV</button>
                 <button id="btnTeacherLogout" class="btn-danger">👨‍🏫 Log ud som lærer</button>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Opret ny klasse -->
+        <div class="card">
+          <h2>🏫 Opret ny klasse</h2>
+          <div class="body">
+            <div class="settings-section">
+              <h3>➕ Ny klasse</h3>
+              <div class="setting-item">
+                <label for="newSchoolId">Skole ID</label>
+                <input id="newSchoolId" type="text" class="styled-input" placeholder="fx: skole1, skole2, etc.">
+              </div>
+              <div class="setting-item">
+                <label for="newClassId">Klasse ID</label>
+                <input id="newClassId" type="text" class="styled-input" placeholder="fx: 9a, 10b, etc.">
+              </div>
+              <div class="setting-item">
+                <label for="newClassName">Klasse navn (valgfrit)</label>
+                <input id="newClassName" type="text" class="styled-input" placeholder="fx: 9. klasse A, 10. klasse B, etc.">
+              </div>
+              <div class="setting-item">
+                <button id="btnCreateClass" class="btn-primary">🏫 Opret klasse</button>
+                <button id="btnSwitchToClass" class="btn-success">🔄 Skift til klasse</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Eksisterende klasser -->
+        <div class="card">
+          <h2>📚 Eksisterende klasser</h2>
+          <div class="body">
+            <div id="existingClassesList" class="classes-list">
+              <p class="muted">Indlæser eksisterende klasser...</p>
             </div>
           </div>
         </div>
@@ -7998,11 +9131,34 @@ html {
     // Options
     var TRIG_OPTS = [
       ['always','Ved aktivering'],
-      ['motionBreached','PIR → Breached'],
-      ['motionSafe','PIR → Safe'],
-      ['doorOpened','Dør → Opened'],
-      ['timeEquals','Time = hh:mm'],
-      ['humidityAbove','Fugt ≥'],
+      // Bevægelsessensorer
+      ['entranceMotion','🚪 Entré bevægelse'],
+      ['livingMotion','🛋️ Stue bevægelse'],
+      ['kitchenMotion','🍳 Køkken bevægelse'],
+      // Døre og vinduer
+      ['frontDoorOpened','🔐 Hoveddør åbnet'],
+      ['frontDoorClosed','🔐 Hoveddør lukket'],
+      ['bedroomWindowOpened','🪟 Soveværelse vindue åbnet'],
+      ['balconyDoorOpened','🪟 Balkondør åbnet'],
+      // Sensorer
+      ['humidityAbove','💧 Fugtighed over'],
+      ['humidityBelow','💧 Fugtighed under'],
+      ['tempAbove','🌡️ Temperatur over'],
+      ['tempBelow','🌡️ Temperatur under'],
+      ['smokeDetected','💨 Røg detekteret'],
+      // Lys tilstand
+      ['bedroomLightOn','💡 Soveværelse lys tændt'],
+      ['livingLightOn','💡 Stue lys tændt'],
+      ['kitchenLightOn','💡 Køkken lys tændt'],
+      ['anyLightOn','💡 Et lys tændt'],
+      ['allLightsOff','💡 Alle lys slukket'],
+      // Tid
+      ['timeEquals','🕐 Tid = hh:mm'],
+      ['timeBetween','🕐 Tid mellem'],
+      // Alarm system
+      ['alarmActivated','🚨 Alarm aktiveret'],
+      ['alarmDeactivated','🚨 Alarm deaktiveret'],
+      // Generic
       ['globalEqTrig','Global name=value'],
       ['sensorEqTrig','Sensor =='],
       ['sensorGtTrig','Sensor >'],
@@ -8023,13 +9179,70 @@ html {
       ['sensorContains','Sensor contains'],['timeBetween','Tid mellem']
     ];
     var ACT_OPTS = [
-      ['lightOn','Lys → On'],['lightOff','Lys → Off'],
-      ['dim30','Dæmper → 30%'],['dim100','Dæmper → 100%'],
-      ['fanOn','Fan → On'],['fanOff','Fan → Off'],
-      ['push','Push (log)'],['setGlobal','Set Global'],['delayLightOff','Delay→LightOff']
+      // Individuelle lamper
+      ['bedroomLightOn','💡 Soveværelse lys → Tænd'],
+      ['bedroomLightOff','💡 Soveværelse lys → Sluk'],
+      ['livingLightOn','💡 Stue lys → Tænd'],
+      ['livingLightOff','💡 Stue lys → Sluk'],
+      ['diningLightOn','💡 Spisebord lys → Tænd'],
+      ['diningLightOff','💡 Spisebord lys → Sluk'],
+      ['kitchenLightOn','💡 Køkken lys → Tænd'],
+      ['kitchenLightOff','💡 Køkken lys → Sluk'],
+      ['bathroomLightOn','💡 Badeværelse lys → Tænd'],
+      ['bathroomLightOff','💡 Badeværelse lys → Sluk'],
+      // Alle lys
+      ['allLightsOn','💡 Alle lys → Tænd'],
+      ['allLightsOff','💡 Alle lys → Sluk'],
+      // Dæmpere
+      ['bedroomDim30','🔅 Soveværelse → 30%'],
+      ['bedroomDim100','🔆 Soveværelse → 100%'],
+      ['livingDim30','🔅 Stue → 30%'],
+      ['livingDim100','🔆 Stue → 100%'],
+      // Ventilation
+      ['ventilationOn','🌪️ Ventilation → Tænd'],
+      ['ventilationOff','🌪️ Ventilation → Sluk'],
+      // Dørlås
+      ['frontDoorLock','🔐 Hoveddør → Lås'],
+      ['frontDoorUnlock','🔐 Hoveddør → Lås op'],
+      ['autoLockOn','🔐 Auto-lås → Tænd'],
+      ['autoLockOff','🔐 Auto-lås → Sluk'],
+      // Alarm system
+      ['alarmOn','🚨 Alarm → Aktiver'],
+      ['alarmOff','🚨 Alarm → Deaktiver'],
+      // Temperatur
+      ['tempUp','🌡️ Temperatur → Op (+2°)'],
+      ['tempDown','🌡️ Temperatur → Ned (-2°)'],
+      ['setTemp5','🌡️ Sæt temperatur → 5° (frysning)'],
+      ['setTemp10','🌡️ Sæt temperatur → 10° (koldt)'],
+      ['setTemp18','🌡️ Sæt temperatur → 18° (køligt)'],
+      ['setTemp21','🌡️ Sæt temperatur → 21° (normalt)'],
+      ['setTemp24','🌡️ Sæt temperatur → 24° (varmt)'],
+      ['setTemp30','🌡️ Sæt temperatur → 30° (meget varmt)'],
+      ['setTemp35','🌡️ Sæt temperatur → 35° (ekstremt varmt)'],
+      // Scenarier
+      ['scenarioGoodMorning','🌅 Scenarie → God Morgen'],
+      ['scenarioLeavingHome','🚗 Scenarie → Forlader Hjem'],
+      ['scenarioGoodNight','🌙 Scenarie → God Nat'],
+      ['scenarioComingHome','🏠 Scenarie → Kommer Hjem'],
+      // Master kontrol
+      ['automationOn','🤖 Automation → Tænd'],
+      ['automationOff','🤖 Automation → Sluk'],
+      // Notifikationer og logs
+      ['push','📢 Push (log)'],
+      ['pushSecurity','🚨 Sikkerhedsalarm'],
+      ['pushWeather','🌤️ Vejr notifikation'],
+      // Generic
+      ['setGlobal','Set Global'],
+      ['delayLightOff','Delay→LightOff'],
+      // Legacy (bagudkompatibilitet)
+      ['lightOn','Lys → On'],
+      ['lightOff','Lys → Off'],
+      ['fanOn','Fan → On'],
+      ['fanOff','Fan → Off']
     ];
     function phTrigger(k){
-      return {'always':'','timeEquals':'hh:mm (07:30)','humidityAbove':'tal (65)',
+      return {'always':'','timeEquals':'hh:mm (07:30)','humidityAbove':'tal (65)','humidityBelow':'tal (40)',
+        'tempAbove':'grader (25)','tempBelow':'grader (18)',
         'globalEqTrig':'navn=værdi','sensorEqTrig':'sensor.xx=val',
         'sensorGtTrig':'sensor.xx=21','sensorLtTrig':'sensor.xx=21','sensorGeTrig':'sensor.xx=21','sensorLeTrig':'sensor.xx=21'}[k]||'';
     }
@@ -8391,6 +9604,8 @@ html {
     var bClear= document.getElementById('wsClear');
     var bSave = document.getElementById('wsSave');
     var bLoad = document.getElementById('wsLoad');
+    var wsDestination = document.getElementById('wsDestination');
+    var wsDestinationStatus = document.getElementById('wsDestinationStatus');
     
     // New tool buttons
     var bUndo = document.getElementById('wsUndo');
@@ -8402,6 +9617,21 @@ html {
     if(bCond) bCond.onclick = function(){ addNode('cond', 40, 180); };
     if(bAct)  bAct.onclick  = function(){ addNode('act',  40, 300); };
     if(bRule) bRule.onclick = function(){ addNode('rule', 520, 160); };
+
+    // Destination selector
+    if(wsDestination && wsDestinationStatus) {
+      wsDestination.onchange = function() {
+        var destination = this.value;
+        if(destination === 'home') {
+          wsDestinationStatus.textContent = 'Smart Home automation system';
+          wsDestinationStatus.style.color = '#10b981';
+        } else {
+          wsDestinationStatus.textContent = 'Traditionel simulator';
+          wsDestinationStatus.style.color = '#9ca3af';
+        }
+        console.log('📡 Wiresheet destination changed to:', destination);
+      };
+    }
 
     if(bClear) bClear.onclick = function(){
       if(!confirm('Ryd alle noder og forbindelser?')) return;
@@ -8466,27 +9696,400 @@ html {
         cond2Value: c2? (c2.value||'') : '',
         ruleName: (ruleNode.value||'').trim()
       };
-      var outRules = acts.map(function(a){
-        return Object.assign({}, base, { action1: a.subtype||'lightOn', action1Value: (a.value||'') });
+      // Create one rule with all actions
+      var rule = Object.assign({}, base);
+      
+      // Add all actions to the same rule
+      acts.forEach(function(a, index) {
+        var actionKey = 'action' + (index + 1);
+        var valueKey = actionKey + 'Value';
+        rule[actionKey] = a.subtype || 'lightOn';
+        rule[valueKey] = (a.value || '').trim();
       });
-      return {ok:true, rules: outRules};
+      
+      return {ok: true, rules: [rule]};
     }
 
     if(bBuild) bBuild.onclick = function(){
+      // Wiresheet is now only used in Home mode, so always send to home
+      var destination = 'home';
+      console.log('🧩 Building wiresheet rules for Smart Home');
+      
       var allRules = [];
       Object.values(WS.nodes).filter(function(n){ return n.type==='rule'; }).forEach(function(rn){
         var res = compileRule(rn);
         if(!res.ok){ window.log('Rule#'+rn.id+': '+res.warn); return; }
-        res.rules.forEach(function(rr){ window.state.rules.push(rr); });
         allRules = allRules.concat(res.rules);
       });
-      if(allRules.length>0){
-        window.refreshRules();
-        window.log('Wiresheet → '+allRules.length+' regel/r lagt til.');
-      } else {
+      
+      if(allRules.length === 0){
         alert('Ingen gyldige Rule-noder at bygge.');
+        return;
       }
+      
+      // Always send to Smart Home automation system (since wiresheet is integrated in home tab)
+      sendRulesToHome(allRules);
+      window.log('Smart Home Rule Builder: '+allRules.length+' regel/r sendt til Smart Home.');
     };
+
+    // === WIRESHEET → HOME AUTOMATION BRIDGE ===
+    
+    function sendRulesToHome(wiresheetRules) {
+      console.log('🌉 Bridge: Converting wiresheet rules to home format...');
+      console.log('📥 Wiresheet rules:', wiresheetRules);
+      
+      // Convert wiresheet rules to home automation format
+      var homeRules = wiresheetRules.map(function(rule) {
+        return convertWiresheetRuleToHome(rule);
+      }).filter(function(rule) {
+        return rule !== null; // Filter out rules that couldn't be converted
+      });
+      
+      console.log('📤 Converted home rules:', homeRules);
+      
+      if(homeRules.length === 0) {
+        alert('Ingen regler kunne konverteres til Smart Home format.');
+        return;
+      }
+      
+      // Send to home automation system
+      if(typeof window.addHomeAutomationRule === 'function') {
+        homeRules.forEach(function(homeRule) {
+          window.addHomeAutomationRule(homeRule);
+        });
+        
+        // Show success notification
+        if(typeof window.showNotification === 'function') {
+          window.showNotification('🧩 ' + homeRules.length + ' regel(er) modtaget fra Wiresheet', 'automation');
+        }
+        
+        console.log('✅ Successfully sent', homeRules.length, 'rules to home automation');
+      } else {
+        console.error('❌ Home automation system not available');
+        alert('Smart Home systemet er ikke tilgængeligt. Prøv at gå til Home-fanen først.');
+      }
+    }
+    
+    // Convert Danish action text to action codes
+    function convertDanishActionToCode(danishText) {
+      console.log('🇩🇰 Converting Danish text:', danishText);
+      
+      // Map Danish text to action codes
+      var danishToCode = {
+        // Soveværelse lys
+        'Soveværelse lys → Tænd': 'bedroomLightOn',
+        'Soveværelse lys → Sluk': 'bedroomLightOff',
+        'Soveværelse lys → Dæmp 30%': 'bedroomDim30',
+        'Soveværelse lys → Dæmp 100%': 'bedroomDim100',
+        
+        // Stue lys
+        'Stue lys → Tænd': 'livingLightOn',
+        'Stue lys → Sluk': 'livingLightOff',
+        'Stue lys → Dæmp 30%': 'livingDim30',
+        'Stue lys → Dæmp 100%': 'livingDim100',
+        
+        // Spisebord lys
+        'Spisebord lys → Tænd': 'diningLightOn',
+        'Spisebord lys → Sluk': 'diningLightOff',
+        
+        // Køkken lys
+        'Køkken lys → Tænd': 'kitchenLightOn',
+        'Køkken lys → Sluk': 'kitchenLightOff',
+        
+        // Badeværelse lys
+        'Badeværelse lys → Tænd': 'bathroomLightOn',
+        'Badeværelse lys → Sluk': 'bathroomLightOff',
+        
+        // Alle lys
+        'Alle lys → Tænd': 'allLightsOn',
+        'Alle lys → Sluk': 'allLightsOff',
+        
+        // Ventilation
+        'Ventilation → Tænd': 'ventilationOn',
+        'Ventilation → Sluk': 'ventilationOff',
+        
+        // Dørlås
+        'Dørlås → Lås': 'frontDoorLock',
+        'Dørlås → Lås op': 'frontDoorUnlock',
+        'Auto-lås → Tænd': 'autoLockOn',
+        'Auto-lås → Sluk': 'autoLockOff',
+        
+        // Alarm
+        'Alarm → Aktiver': 'alarmOn',
+        'Alarm → Deaktiver': 'alarmOff',
+        
+        // Temperatur
+        'Temperatur → Øg': 'tempUp',
+        'Temperatur → Sænk': 'tempDown',
+        'Temperatur → 18°C': 'setTemp18',
+        'Temperatur → 21°C': 'setTemp21',
+        'Temperatur → 24°C': 'setTemp24',
+        
+        // Scenarier
+        'God morgen': 'scenarioGoodMorning',
+        'Forlad hjem': 'scenarioLeavingHome',
+        'God nat': 'scenarioGoodNight',
+        'Kom hjem': 'scenarioComingHome',
+        
+        // Notifikationer
+        'Push notifikation': 'push',
+        'Sikkerhedsalarm': 'pushSecurity',
+        'Vejr opdatering': 'pushWeather'
+      };
+      
+      var actionCode = danishToCode[danishText];
+      if (actionCode) {
+        console.log('✅ Converted:', danishText, '→', actionCode);
+        return actionCode;
+      } else {
+        console.log('❌ No mapping found for:', danishText);
+        return danishText; // Return original if no mapping found
+      }
+    }
+
+    function convertWiresheetRuleToHome(wiresheetRule) {
+      console.log('🔄 Converting rule:', wiresheetRule);
+      
+      // Map wiresheet internal values to home device IDs
+      var triggerMapping = {
+        'always': 'entrance-motion',           // "Ved aktivering" 
+        'motionBreached': 'entrance-motion',   // "PIR → Breached"
+        'motionSafe': 'entrance-motion',       // "PIR → Safe"
+        'doorOpened': 'front-door',           // "Dør → Opened"
+        'timeEquals': 'time-scheduler',       // "Time = hh:mm"
+        'humidityAbove': 'humidity-sensor',   // "Fugt ≥"
+        // Nye specifikke triggers
+        'entranceMotion': 'entrance-motion',
+        'livingMotion': 'living-motion', 
+        'kitchenMotion': 'motion-kitchen',
+        'frontDoorOpened': 'front-door',
+        'frontDoorClosed': 'front-door',
+        'bedroomWindowOpened': 'bedroom-window',
+        'balconyDoorOpened': 'balcony-door',
+        'humidityBelow': 'humidity-sensor',
+        'tempAbove': 'thermostat',
+        'tempBelow': 'thermostat',
+        'smokeDetected': 'smoke-detector',
+        'bedroomLightOn': 'bedroom-light',
+        'livingLightOn': 'living-room-light',
+        'kitchenLightOn': 'kitchen-light',
+        'anyLightOn': 'living-room-light',
+        'allLightsOff': 'living-room-light',
+        'timeBetween': 'time-scheduler',
+        'alarmActivated': 'alarm-system',
+        'alarmDeactivated': 'alarm-system'
+      };
+      
+      var actionMapping = {
+        // Individuelle lamper
+        'bedroomLightOn': { device: 'bedroom-light', state: true },
+        'bedroomLightOff': { device: 'bedroom-light', state: false },
+        'livingLightOn': { device: 'living-room-light', state: true },
+        'livingLightOff': { device: 'living-room-light', state: false },
+        'diningLightOn': { device: 'dining-light', state: true },
+        'diningLightOff': { device: 'dining-light', state: false },
+        'kitchenLightOn': { device: 'kitchen-light', state: true },
+        'kitchenLightOff': { device: 'kitchen-light', state: false },
+        'bathroomLightOn': { device: 'bathroom-light', state: true },
+        'bathroomLightOff': { device: 'bathroom-light', state: false },
+        // Alle lys og dæmpere
+        'allLightsOn': { type: 'allLights', state: true },
+        'allLightsOff': { type: 'allLights', state: false },
+        'bedroomDim30': { device: 'bedroom-light', state: true },
+        'bedroomDim100': { device: 'bedroom-light', state: true },
+        'livingDim30': { device: 'living-room-light', state: true },
+        'livingDim100': { device: 'living-room-light', state: true },
+        // Ventilation (controls both control panel and bathroom-fan icon)
+        'ventilationOn': { device: 'ventilation', state: true },
+        'ventilationOff': { device: 'ventilation', state: false },
+        // Dørlås
+        'frontDoorLock': { device: 'front-door', state: true },
+        'frontDoorUnlock': { device: 'front-door', state: false },
+        'autoLockOn': { device: 'auto-lock', state: true },
+        'autoLockOff': { device: 'auto-lock', state: false },
+        // Alarm system
+        'alarmOn': { device: 'alarm-system', state: true },
+        'alarmOff': { device: 'alarm-system', state: false },
+        // Temperatur (special handling)
+        'tempUp': { type: 'temperature', value: 23 },
+        'tempDown': { type: 'temperature', value: 19 },
+        'setTemp5': { type: 'temperature', value: 5 },
+        'setTemp10': { type: 'temperature', value: 10 },
+        'setTemp18': { type: 'temperature', value: 18 },
+        'setTemp21': { type: 'temperature', value: 21 },
+        'setTemp24': { type: 'temperature', value: 24 },
+        'setTemp30': { type: 'temperature', value: 30 },
+        'setTemp35': { type: 'temperature', value: 35 },
+        // Scenarier
+        'scenarioGoodMorning': { type: 'scenario', scenario: 'good-morning' },
+        'scenarioLeavingHome': { type: 'scenario', scenario: 'leaving-home' },
+        'scenarioGoodNight': { type: 'scenario', scenario: 'good-night' },
+        'scenarioComingHome': { type: 'scenario', scenario: 'coming-home' },
+        // Master automation
+        'automationOn': { device: 'automation-master', state: true },
+        'automationOff': { device: 'automation-master', state: false },
+        // Notifikationer
+        'push': { type: 'notification', message: 'Wiresheet trigger' },
+        'pushSecurity': { type: 'notification', message: '🚨 Sikkerhedsalarm aktiveret!' },
+        'pushWeather': { type: 'notification', message: '🌤️ Vejr opdatering' },
+        // Legacy (bagudkompatibilitet)
+        'lightOn': { device: 'living-room-light', state: true },
+        'lightOff': { device: 'living-room-light', state: false },
+        'dim30': { device: 'living-room-light', state: true },
+        'dim100': { device: 'living-room-light', state: true },
+        'fanOn': { device: 'ventilation', state: true },
+        'fanOff': { device: 'ventilation', state: false },
+        'securityOn': { device: 'alarm-system', state: true },
+        'securityOff': { device: 'alarm-system', state: false }
+      };
+      
+      // Get trigger device and state
+      var triggerDevice = triggerMapping[wiresheetRule.trigger];
+      if (!triggerDevice) {
+        console.warn('⚠️ Unknown trigger:', wiresheetRule.trigger);
+        return null;
+      }
+      
+      // Get all actions (support for multiple actions)
+      var actions = [];
+      if (wiresheetRule.action1) actions.push(wiresheetRule.action1);
+      if (wiresheetRule.action2) actions.push(wiresheetRule.action2);
+      if (wiresheetRule.action3) actions.push(wiresheetRule.action3);
+      if (wiresheetRule.action4) actions.push(wiresheetRule.action4);
+      
+      if (actions.length === 0) {
+        console.warn('⚠️ No actions found in wiresheet rule');
+        return null;
+      }
+      
+      // Build home automation rule
+      var homeRule = {
+        name: wiresheetRule.ruleName || ('Wiresheet Regel: ' + wiresheetRule.trigger + ' → ' + actions.join(', ')),
+        description: 'Automatisk importeret fra Wiresheet',
+        enabled: true,
+        trigger: createHomeTrigger(wiresheetRule.trigger, triggerDevice, wiresheetRule.triggerValue),
+        actions: []
+      };
+      
+      // Add all actions
+      actions.forEach(function(actionName, index) {
+        console.log('🔍 Processing action:', actionName, 'type:', typeof actionName);
+        
+        // Convert Danish text to action code if needed
+        var actionCode = convertDanishActionToCode(actionName);
+        console.log('🔍 Converted action code:', actionCode);
+        
+        var actionConfig = actionMapping[actionCode];
+        if (!actionConfig) {
+          console.warn('⚠️ Unknown action:', actionName, '->', actionCode);
+          console.log('🔍 Available actions:', Object.keys(actionMapping));
+          return;
+        }
+        
+        // Add action based on type
+        if (actionConfig.type === 'scenario') {
+          homeRule.actions.push({
+            type: 'scenario',
+            scenario: actionConfig.scenario,
+            delay: index * 100 // Small delay between actions
+          });
+        } else if (actionConfig.type === 'notification') {
+          homeRule.actions.push({
+            type: 'notification',
+            message: actionConfig.message,
+            delay: index * 100
+          });
+        } else if (actionConfig.type === 'allLights') {
+          homeRule.actions.push({
+            type: 'allLights',
+            state: actionConfig.state,
+            delay: index * 100
+          });
+        } else {
+          homeRule.actions.push({
+            type: 'device',
+            device: actionConfig.device,
+            state: actionConfig.state,
+            delay: index * 100
+          });
+        }
+      });
+      
+      return homeRule;
+    }
+    
+    function createHomeTrigger(triggerType, deviceId, triggerValue) {
+      // Numeric triggers for sensors
+      if (triggerType === 'humidityAbove') {
+        return {
+          type: 'numeric',
+          device: deviceId,
+          operator: 'greater',
+          threshold: parseFloat(triggerValue || 50)
+        };
+      } else if (triggerType === 'humidityBelow') {
+        return {
+          type: 'numeric',
+          device: deviceId,
+          operator: 'less',
+          threshold: parseFloat(triggerValue || 50)
+        };
+      } else if (triggerType === 'tempAbove') {
+        return {
+          type: 'numeric',
+          device: deviceId,
+          operator: 'greater',
+          threshold: parseFloat(triggerValue || 25)
+        };
+      } else if (triggerType === 'tempBelow') {
+        return {
+          type: 'numeric',
+          device: deviceId,
+          operator: 'less',
+          threshold: parseFloat(triggerValue || 18)
+        };
+      } else {
+        // Boolean triggers for switches, motion sensors etc.
+        return {
+          type: 'boolean',
+          device: deviceId,
+          state: getTriggerState(triggerType, triggerValue)
+        };
+      }
+    }
+    
+    function getTriggerState(trigger, value) {
+      switch(trigger) {
+        case 'always':
+        case 'motionBreached':
+        case 'entranceMotion':
+        case 'livingMotion':
+        case 'kitchenMotion':
+        case 'doorOpened':
+        case 'frontDoorOpened':
+        case 'bedroomWindowOpened':
+        case 'balconyDoorOpened':
+        case 'smokeDetected':
+        case 'alarmActivated':
+          return true;
+        case 'motionSafe':
+        case 'frontDoorClosed':
+        case 'alarmDeactivated':
+          return false;
+        case 'bedroomLightOn':
+        case 'livingLightOn':
+        case 'kitchenLightOn':
+        case 'anyLightOn':
+          return true;
+        case 'allLightsOff':
+          return false;
+        case 'timeEquals':
+        case 'timeBetween':
+          return true; // Time triggers are handled differently
+        default:
+          return true;
+      }
+    }
 
     // --- Preview strings under each Rule node
     function preview(){
@@ -8935,6 +10538,29 @@ html {
     const btnTeacherLoginSubmit = document.getElementById('btnTeacherLoginSubmit');
     if(btnTeacherLoginSubmit) {
       btnTeacherLoginSubmit.onclick = doTeacherLogin;
+    }
+
+    // Klasse administration knapper
+    const btnCreateClass = document.getElementById('btnCreateClass');
+    if(btnCreateClass) {
+      btnCreateClass.onclick = createNewClass;
+      console.log('✅ Create class button found and configured');
+    }
+
+    const btnSwitchToClass = document.getElementById('btnSwitchToClass');
+    if(btnSwitchToClass) {
+      btnSwitchToClass.onclick = function() {
+        const schoolId = document.getElementById('newSchoolId').value.trim();
+        const classId = document.getElementById('newClassId').value.trim();
+        
+        if (!schoolId || !classId) {
+          alert('⚠️ Indtast venligst både Skole ID og Klasse ID!');
+          return;
+        }
+        
+        switchToClass(schoolId, classId);
+      };
+      console.log('✅ Switch to class button found and configured');
     }
     
     // Simulation mode event listeners
@@ -9658,6 +11284,226 @@ html {
     alert('✅ Logget ud som lærer!');
     console.log('🔍 doTeacherLogout færdig');
   }
+
+  // === KLASSE ADMINISTRATION ===
+  
+  async function createNewClass() {
+    const schoolId = document.getElementById('newSchoolId').value.trim();
+    const classId = document.getElementById('newClassId').value.trim();
+    const className = document.getElementById('newClassName').value.trim();
+    
+    if (!schoolId || !classId) {
+      alert('⚠️ Skole ID og Klasse ID er påkrævet!');
+      return;
+    }
+    
+    // Opret klasse objekt
+    const newClass = {
+      schoolId: schoolId,
+      classId: classId,
+      className: className || `${schoolId}_${classId}`,
+      createdAt: new Date().toISOString(),
+      teacherId: localStorage.getItem('teacher_logged_in') === 'true' ? 'teacher' : 'unknown'
+    };
+    
+    try {
+      // Gem i Firebase hvis tilgængelig
+      if (window.db && isFirebaseAvailable) {
+        console.log('🌐 Gemmer klasse i Firebase...');
+        await window.db.collection('classes').add(newClass);
+        console.log('✅ Klasse gemt i Firebase');
+      }
+      
+      // Gem også lokalt som backup
+      const existingClasses = JSON.parse(localStorage.getItem('smarthome_classes') || '[]');
+      
+      // Tjek om klassen allerede eksisterer
+      const classExists = existingClasses.some(cls => 
+        cls.schoolId === schoolId && cls.classId === classId
+      );
+      
+      if (classExists) {
+        alert('⚠️ Denne klasse eksisterer allerede!');
+        return;
+      }
+      
+      existingClasses.push(newClass);
+      localStorage.setItem('smarthome_classes', JSON.stringify(existingClasses));
+      
+      // Ryd input felter
+      document.getElementById('newSchoolId').value = '';
+      document.getElementById('newClassId').value = '';
+      document.getElementById('newClassName').value = '';
+      
+      // Opdater liste over eksisterende klasser
+      await loadExistingClasses();
+      
+      alert(`✅ Klasse "${newClass.className}" oprettet!\n\nSkole: ${schoolId}\nKlasse: ${classId}\n\n${window.db && isFirebaseAvailable ? '🌐 Gemt i skyen' : '💾 Gemt lokalt'}`);
+      
+      console.log('🏫 Ny klasse oprettet:', newClass);
+      
+    } catch (error) {
+      console.error('❌ Fejl ved oprettelse af klasse:', error);
+      alert(`❌ Fejl ved oprettelse af klasse: ${error.message}`);
+    }
+  }
+  
+  function switchToClass(schoolId, classId) {
+    // Opdater lærer's nuværende klasse
+    localStorage.setItem('teacher_school_id', schoolId);
+    localStorage.setItem('teacher_class_id', classId);
+    
+    // Opdater input felter
+    document.getElementById('teacherSchoolId').value = schoolId;
+    document.getElementById('newSchoolId').value = schoolId;
+    document.getElementById('teacherClassId').value = classId;
+    document.getElementById('newClassId').value = classId;
+    
+    // Indlæs elev progress for den nye klasse
+    loadTeacherProgress();
+    
+    alert(`🔄 Skiftet til klasse: ${schoolId}/${classId}`);
+    
+    console.log('🔄 Skiftet til klasse:', { schoolId, classId });
+  }
+  
+  async function loadExistingClasses() {
+    const container = document.getElementById('existingClassesList');
+    container.innerHTML = '<p class="muted">Indlæser klasser...</p>';
+    
+    try {
+      let allClasses = [];
+      
+      // Hent fra Firebase hvis tilgængelig
+      if (window.db && isFirebaseAvailable) {
+        console.log('🌐 Henter klasser fra Firebase...');
+        try {
+          const snapshot = await window.db.collection('classes').get();
+          const firebaseClasses = snapshot.docs.map(doc => ({
+            ...doc.data(),
+            id: doc.id
+          }));
+          allClasses = allClasses.concat(firebaseClasses);
+          console.log('✅ Hentet', firebaseClasses.length, 'klasser fra Firebase');
+        } catch (error) {
+          console.warn('⚠️ Kunne ikke hente fra Firebase:', error);
+        }
+      }
+      
+      // Hent fra localStorage som backup
+      const localClasses = JSON.parse(localStorage.getItem('smarthome_classes') || '[]');
+      allClasses = allClasses.concat(localClasses);
+      
+      // Fjern duplikater baseret på schoolId + classId
+      const uniqueClasses = [];
+      const seen = new Set();
+      
+      allClasses.forEach(cls => {
+        const key = `${cls.schoolId}_${cls.classId}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          uniqueClasses.push(cls);
+        }
+      });
+      
+      if (uniqueClasses.length === 0) {
+        container.innerHTML = '<p class="muted">Ingen klasser oprettet endnu</p>';
+        return;
+      }
+      
+      // Sorter efter oprettelsesdato (nyeste først)
+      uniqueClasses.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      
+      const html = uniqueClasses.map(cls => `
+        <div class="class-item" style="
+          padding: 12px; 
+          background: rgba(15, 20, 28, 0.8); 
+          border: 1px solid #2a3442; 
+          border-radius: 8px; 
+          margin-bottom: 8px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        ">
+          <div>
+            <strong>${cls.className}</strong><br>
+            <small style="color: #9ca3af;">${cls.schoolId} / ${cls.classId}</small><br>
+            <small style="color: #6b7280;">Oprettet: ${new Date(cls.createdAt).toLocaleDateString('da-DK')}</small>
+            ${cls.id ? '<br><small style="color: #059669;">🌐 Sky</small>' : '<br><small style="color: #6b7280;">💾 Lokal</small>'}
+          </div>
+          <div>
+            <button onclick="switchToClass('${cls.schoolId}', '${cls.classId}')" 
+                    style="
+                      background: #10b981; 
+                      color: white; 
+                      border: none; 
+                      padding: 6px 12px; 
+                      border-radius: 4px; 
+                      cursor: pointer;
+                      font-size: 12px;
+                      margin-right: 8px;
+                    ">
+              🔄 Skift til
+            </button>
+            ${cls.id ? `
+              <button onclick="deleteClass('${cls.schoolId}', '${cls.classId}', '${cls.id}')" 
+                      style="
+                        background: #ef4444; 
+                        color: white; 
+                        border: none; 
+                        padding: 6px 12px; 
+                        border-radius: 4px; 
+                        cursor: pointer;
+                        font-size: 12px;
+                      ">
+                🗑️ Slet
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+      
+      container.innerHTML = html;
+      
+    } catch (error) {
+      console.error('❌ Fejl ved indlæsning af klasser:', error);
+      container.innerHTML = '<p class="muted">Fejl ved indlæsning af klasser</p>';
+    }
+  }
+  
+  async function deleteClass(schoolId, classId, firebaseId = null) {
+    if (!confirm(`⚠️ Er du sikker på at du vil slette klassen ${schoolId}/${classId}?\n\nDette kan ikke fortrydes!`)) {
+      return;
+    }
+    
+    try {
+      // Slet fra Firebase hvis tilgængelig
+      if (firebaseId && window.db && isFirebaseAvailable) {
+        console.log('🌐 Sletter klasse fra Firebase...');
+        await window.db.collection('classes').doc(firebaseId).delete();
+        console.log('✅ Klasse slettet fra Firebase');
+      }
+      
+      // Slet fra localStorage
+      const existingClasses = JSON.parse(localStorage.getItem('smarthome_classes') || '[]');
+      const updatedClasses = existingClasses.filter(cls => 
+        !(cls.schoolId === schoolId && cls.classId === classId)
+      );
+      
+      localStorage.setItem('smarthome_classes', JSON.stringify(updatedClasses));
+      
+      // Opdater liste
+      await loadExistingClasses();
+      
+      alert(`✅ Klasse ${schoolId}/${classId} slettet!`);
+      
+      console.log('🗑️ Klasse slettet:', { schoolId, classId, firebaseId });
+      
+    } catch (error) {
+      console.error('❌ Fejl ved sletning af klasse:', error);
+      alert(`❌ Fejl ved sletning af klasse: ${error.message}`);
+    }
+  }
   
 
 
@@ -9810,13 +11656,18 @@ html {
 
   // Funktion til at vise HOME dashboard
   function showHomeDashboard() {
-    // Skjul alle andre views
+    // Skjul alle andre views og fjern active klasse
     document.querySelectorAll('.view').forEach(view => {
       view.style.display = 'none';
+      view.classList.add('hidden');
+      view.classList.remove('active');
     });
     
-    // Vis HOME view
-    document.getElementById('view-home').style.display = 'block';
+    // Vis HOME view og tilføj active klasse
+    const homeView = document.getElementById('view-home');
+    homeView.style.display = 'block';
+    homeView.classList.remove('hidden');
+    homeView.classList.add('active');
     
     // Opdater tid og vejr
     updateHomeTime();
@@ -9829,6 +11680,58 @@ html {
     showHomeWelcomeNotification();
     
     console.log('🏠 HOME dashboard åbnet');
+  }
+  
+  // Funktion til at skjule HOME view helt
+  function hideHomeView() {
+    const homeView = document.getElementById('view-home');
+    if (homeView) {
+      homeView.style.display = 'none';
+      homeView.classList.add('hidden');
+      homeView.classList.remove('active');
+      homeView.style.zIndex = '-999';
+    }
+  }
+
+  // Toggle funktioner for Home fanen
+  function showFloorPlan() {
+    // Vis plantegning, skjul rule builder
+    document.getElementById('home-floor-plan').style.display = 'flex';
+    document.getElementById('home-rule-builder').style.display = 'none';
+    
+    // Opdater toggle knapper
+    const floorBtn = document.getElementById('home-floor-plan-btn');
+    const ruleBtn = document.getElementById('home-rule-builder-btn');
+    
+    floorBtn.style.background = '#10b981';
+    floorBtn.style.color = 'white';
+    floorBtn.style.border = 'none';
+    
+    ruleBtn.style.background = 'rgba(15, 20, 28, 0.8)';
+    ruleBtn.style.color = '#e5e9f0';
+    ruleBtn.style.border = '1px solid #2a3442';
+    
+    console.log('🏠 Floor plan mode activated');
+  }
+
+  function showRuleBuilder() {
+    // Skjul plantegning, vis rule builder
+    document.getElementById('home-floor-plan').style.display = 'none';
+    document.getElementById('home-rule-builder').style.display = 'block';
+    
+    // Opdater toggle knapper
+    const floorBtn = document.getElementById('home-floor-plan-btn');
+    const ruleBtn = document.getElementById('home-rule-builder-btn');
+    
+    ruleBtn.style.background = '#10b981';
+    ruleBtn.style.color = 'white';
+    ruleBtn.style.border = 'none';
+    
+    floorBtn.style.background = 'rgba(15, 20, 28, 0.8)';
+    floorBtn.style.color = '#e5e9f0';
+    floorBtn.style.border = '1px solid #2a3442';
+    
+    console.log('🧩 Rule builder mode activated');
   }
 
   // Opdater klokkeslæt
@@ -10673,7 +12576,7 @@ html {
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   console.log('🚀 DOMContentLoaded - Tab system starter...');
-  const ids = ['view-sim','view-flow','view-learning','view-tasks','view-settings'];
+  const ids = ['view-forside','view-sim','view-home','view-learning','view-tasks','view-settings'];
   console.log('📋 Tab IDs:', ids);
   
   const buttons = document.querySelectorAll('.mainnav button');
@@ -10682,6 +12585,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Gør show funktionen globalt tilgængelig
   window.show = function(id){
     console.log('🎯 show() kaldt med:', id);
+    
+    // Håndter body klasse for HOME view overflow
+    if (id === 'view-home') {
+      document.body.classList.add('home-active');
+      console.log('🏠 Tilføjede home-active klasse til body');
+    } else {
+      document.body.classList.remove('home-active');
+      console.log('📄 Fjernede home-active klasse fra body');
+    }
+    
     ids.forEach(x => {
       const el = document.getElementById(x);
       if(el){ 
@@ -10721,7 +12634,102 @@ document.addEventListener('DOMContentLoaded', () => {
   if(!ids.includes(start)) start = ids[0];
   console.log('🚀 Starter med tab:', start);
   show(start);
+  
+  // Setup drag and drop for smart devices
+  setupSmartDeviceDragAndDrop();
 });
+
+// Smart Device Drag and Drop Functionality
+function setupSmartDeviceDragAndDrop() {
+  const devices = document.querySelectorAll('.smart-device');
+  let draggedDevice = null;
+  let isDragging = false;
+  let startX, startY;
+  let originalX, originalY;
+  
+  devices.forEach(device => {
+    // Add right-click context menu for locking/unlocking
+    device.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      device.classList.toggle('locked');
+      
+      if (device.classList.contains('locked')) {
+        device.title = device.title + ' (Låst)';
+        console.log('🔒 Device locked:', device.dataset.device);
+      } else {
+        device.title = device.title.replace(' (Låst)', '');
+        console.log('🔓 Device unlocked:', device.dataset.device);
+      }
+    });
+    
+    // Mouse events for dragging
+    device.addEventListener('mousedown', (e) => {
+      if (device.classList.contains('locked')) {
+        return; // Don't allow dragging if locked
+      }
+      
+      if (e.button === 0) { // Left click only
+        isDragging = true;
+        draggedDevice = device;
+        startX = e.clientX;
+        startY = e.clientY;
+        
+        const rect = device.getBoundingClientRect();
+        originalX = rect.left;
+        originalY = rect.top;
+        
+        device.classList.add('dragging');
+        device.style.cursor = 'grabbing';
+        
+        e.preventDefault();
+      }
+    });
+    
+    device.addEventListener('mouseup', () => {
+      if (draggedDevice) {
+        draggedDevice.classList.remove('dragging');
+        draggedDevice.style.cursor = '';
+        draggedDevice = null;
+        isDragging = false;
+      }
+    });
+  });
+  
+  // Global mouse move and up events
+  document.addEventListener('mousemove', (e) => {
+    if (isDragging && draggedDevice) {
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+      
+      const newLeft = originalX + deltaX;
+      const newTop = originalY + deltaY;
+      
+      // Convert to percentage for responsive positioning
+      const container = draggedDevice.closest('.floor-plan-background');
+      if (container) {
+        const containerRect = container.getBoundingClientRect();
+        const percentX = ((newLeft - containerRect.left) / containerRect.width) * 100;
+        const percentY = ((newTop - containerRect.top) / containerRect.height) * 100;
+        
+        // Keep within bounds (0-100%)
+        const clampedX = Math.max(0, Math.min(100, percentX));
+        const clampedY = Math.max(0, Math.min(100, percentY));
+        
+        draggedDevice.style.left = clampedX + '%';
+        draggedDevice.style.top = clampedY + '%';
+      }
+    }
+  });
+  
+  document.addEventListener('mouseup', () => {
+    if (draggedDevice) {
+      draggedDevice.classList.remove('dragging');
+      draggedDevice.style.cursor = '';
+      draggedDevice = null;
+      isDragging = false;
+    }
+  });
+}
 </script>
 
 <script>
@@ -11408,6 +13416,1016 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial state
   updateConnectionInfo('');
 })();
+</script>
+
+<script>
+// === DRAG AND DROP FUNCTIONALITY FOR SMART DEVICES ===
+let isDragMode = false;
+let draggedElement = null;
+let offset = { x: 0, y: 0 };
+
+function enableDragMode() {
+  isDragMode = true;
+  const devices = document.querySelectorAll('.smart-device');
+  devices.forEach(device => {
+    device.classList.add('draggable');
+    device.addEventListener('mousedown', startDrag);
+  });
+  
+  document.getElementById('toggleDragMode').style.display = 'none';
+  document.getElementById('lockPositions').style.display = 'block';
+  document.getElementById('dragStatus').textContent = 'Træk-mode aktiveret! Træk ikoner til nye positioner';
+  document.getElementById('dragStatus').style.color = '#10b981';
+}
+
+function disableDragMode() {
+  isDragMode = false;
+  const devices = document.querySelectorAll('.smart-device');
+  devices.forEach(device => {
+    device.classList.remove('draggable', 'dragging');
+    device.removeEventListener('mousedown', startDrag);
+  });
+  
+  document.getElementById('toggleDragMode').style.display = 'block';
+  document.getElementById('lockPositions').style.display = 'none';
+  document.getElementById('dragStatus').textContent = 'Klik for at aktivere træk';
+  document.getElementById('dragStatus').style.color = '#cbd5e1';
+}
+
+function startDrag(e) {
+  if (!isDragMode) return;
+  
+  draggedElement = e.target;
+  draggedElement.classList.add('dragging');
+  
+  const rect = draggedElement.getBoundingClientRect();
+  offset.x = e.clientX - rect.left;
+  offset.y = e.clientY - rect.top;
+  
+  document.addEventListener('mousemove', drag);
+  document.addEventListener('mouseup', stopDrag);
+  e.preventDefault();
+}
+
+function drag(e) {
+  if (!draggedElement) return;
+  
+  const parentRect = draggedElement.parentElement.getBoundingClientRect();
+  
+  let newX = ((e.clientX - offset.x - parentRect.left) / parentRect.width) * 100;
+  let newY = ((e.clientY - offset.y - parentRect.top) / parentRect.height) * 100;
+  
+  // Keep within bounds
+  newX = Math.max(0, Math.min(95, newX));
+  newY = Math.max(0, Math.min(95, newY));
+  
+  draggedElement.style.left = newX + '%';
+  draggedElement.style.top = newY + '%';
+}
+
+function stopDrag() {
+  if (draggedElement) {
+    draggedElement.classList.remove('dragging');
+    draggedElement = null;
+  }
+  document.removeEventListener('mousemove', drag);
+  document.removeEventListener('mouseup', stopDrag);
+}
+
+function lockPositions() {
+  const devices = document.querySelectorAll('.smart-device');
+  const positions = {};
+  
+  devices.forEach(device => {
+    const leftPercent = parseFloat(device.style.left) || 0;
+    const topPercent = parseFloat(device.style.top) || 0;
+    
+    const deviceId = device.getAttribute('data-device');
+    positions[deviceId] = {
+      top: Math.round(topPercent * 10) / 10,
+      left: Math.round(leftPercent * 10) / 10
+    };
+  });
+  
+  console.log('🔒 Nye positioner:', positions);
+  
+  // Vis positions
+  let positionText = '📍 Nye CSS positioner:\n\n';
+  Object.entries(positions).forEach(([device, pos]) => {
+    positionText += `${device}: top: ${pos.top}%; left: ${pos.left}%\n`;
+  });
+  
+  alert(positionText + '\nKopiér disse værdier til konsollen hvis du vil bruge dem.');
+  disableDragMode();
+}
+
+// Event listeners for drag controls  
+document.addEventListener('DOMContentLoaded', function() {
+  const toggleBtn = document.getElementById('toggleDragMode');
+  const lockBtn = document.getElementById('lockPositions');
+  
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', enableDragMode);
+  }
+  
+  if (lockBtn) {
+    lockBtn.addEventListener('click', lockPositions);
+  }
+  
+  // Setup smart home control functionality
+  setupLightControls();
+  setupFloorPlanInteraction();
+  
+  // Initialize sensor visual states - remove any default on/off classes
+  const outdoorTempIcon = document.querySelector('.smart-device[data-device="outdoor-temp"]');
+  const humidityIcon = document.querySelector('.smart-device[data-device="humidity-sensor"]');
+  
+  if (outdoorTempIcon) {
+    outdoorTempIcon.classList.remove('on', 'off');
+  }
+  if (humidityIcon) {
+    humidityIcon.classList.remove('on', 'off');
+  }
+  
+  updateSensorIcon('outdoor-temp', deviceStates['outdoor-temp']);
+  updateSensorIcon('humidity-sensor', deviceStates['humidity-sensor']);
+  
+  // Sync ventilation states at startup
+  deviceStates['bathroom-fan'] = deviceStates['ventilation'];
+  updateDeviceIcon('bathroom-fan', deviceStates['ventilation']);
+  
+  // Initialize default automation rules
+  initializeDefaultRules();
+  
+  console.log('🚀 Smart Home Automation System fully loaded!');
+});
+
+// === SMART HOME CONTROL FUNCTIONALITY ===
+
+// Device states
+let deviceStates = {
+  // Lights
+  'bedroom-light': false,
+  'living-room-light': false,
+  'dining-light': false,
+  'kitchen-light': false,
+  'bathroom-light': false,
+  
+  // Sensors (PIR/Motion)
+  'entrance-motion': false,
+  'living-motion': false,
+  'motion-kitchen': false,
+  
+  // Cameras
+  'entrance-camera': false,
+  'balcony-camera': false,
+  
+  // Windows/Doors
+  'bedroom-window': false,
+  'balcony-door': false,
+  'front-door': false, // true = locked, false = unlocked
+  
+  // Speakers/Audio
+  'living-speaker': false,
+  
+  // Fans/Ventilation (ventilation controls bathroom-fan)
+  'bathroom-fan': false,
+  'ventilation': false,
+  
+  // Safety
+  'smoke-detector': false,
+  
+  // Climate sensors
+  'temperature': 21,
+  'outdoor-temp': 15,
+  'humidity-sensor': 45,
+  
+  // Security
+  'alarm-system': false,
+  'auto-lock': false,
+  
+  // Automation
+  'automation-master': true
+};
+
+// Smart home automation rules
+let automationRules = [];
+let activeScenario = null;
+
+function setupLightControls() {
+  console.log('🏠 Setting up smart home controls...');
+  
+  // Setup device toggle buttons
+  const toggleButtons = document.querySelectorAll('.device-toggle');
+  toggleButtons.forEach(button => {
+    const deviceId = button.getAttribute('data-device');
+    
+    if (deviceId && deviceStates.hasOwnProperty(deviceId)) {
+      button.addEventListener('click', function() {
+        toggleDevice(deviceId);
+      });
+      
+      // Set initial state
+      updateDeviceUI(deviceId, deviceStates[deviceId]);
+    }
+  });
+  
+  // Setup temperature slider
+  const tempSlider = document.getElementById('tempSlider');
+  const currentTempDisplay = document.getElementById('currentTemp');
+  
+  if (tempSlider && currentTempDisplay) {
+    tempSlider.addEventListener('input', function() {
+      const newTemp = parseFloat(this.value);
+      deviceStates.temperature = newTemp;
+      currentTempDisplay.textContent = newTemp;
+      
+      // Update thermostat icon on floor plan
+      updateThermostatIcon(newTemp);
+      
+      console.log('🌡️ Temperature set to:', newTemp + '°C');
+    });
+  }
+  
+  // Setup scenario buttons
+  const scenarioButtons = document.querySelectorAll('.scenario-btn');
+  scenarioButtons.forEach(button => {
+    const scenario = button.getAttribute('data-scenario');
+    button.addEventListener('click', function() {
+      executeScenario(scenario);
+    });
+  });
+  
+  console.log('🏠 Smart home controls ready!', Object.keys(deviceStates).length, 'devices configured');
+}
+
+function setupFloorPlanInteraction() {
+  console.log('🎮 Setting up floor plan interaction...');
+  
+  // Get all smart device icons
+  const deviceIcons = document.querySelectorAll('.smart-device');
+  
+  deviceIcons.forEach(icon => {
+    const deviceId = icon.getAttribute('data-device');
+    
+    // Skip thermostat (handled by control panel slider)
+    if (deviceId === 'thermostat') {
+      console.log('⏭️ Skipping thermostat (handled by control panel):', deviceId);
+      return;
+    }
+    
+    // Check if device exists in deviceStates
+    if (!deviceStates.hasOwnProperty(deviceId)) {
+      console.warn('⚠️ Device not found in deviceStates:', deviceId);
+      return;
+    }
+    
+    // Set initial visual state
+    updateDeviceIcon(deviceId, deviceStates[deviceId]);
+    
+    // Add click handler
+    icon.addEventListener('click', function(e) {
+      // Prevent drag mode interference
+      if (icon.classList.contains('draggable')) {
+        return;
+      }
+      
+      console.log('🖱️ Floor plan device clicked:', deviceId);
+      
+      // Special handling for sensors
+      if (deviceId === 'outdoor-temp') {
+        showTemperatureSensorDialog(deviceId);
+      } else if (deviceId === 'humidity-sensor') {
+        showHumiditySensorDialog(deviceId);
+      } else {
+        // Toggle device state for regular devices
+        toggleDevice(deviceId);
+        
+        // Show status notification for regular devices
+        showDeviceStatusNotification(deviceId, deviceStates[deviceId]);
+      }
+      
+      // Show click feedback
+      icon.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        icon.style.transform = '';
+      }, 150);
+    });
+    
+    // Add hover effect for clickable devices
+    icon.style.cursor = 'pointer';
+    
+    // Update title based on device type
+    if (deviceId === 'outdoor-temp') {
+      icon.title = icon.title + ' (Klik for at ændre temperatur)';
+    } else if (deviceId === 'humidity-sensor') {
+      icon.title = icon.title + ' (Klik for at ændre fugtighed)';
+    } else {
+      icon.title = icon.title + ' (Klik for at skifte status)';
+    }
+  });
+  
+  console.log('✅ Floor plan interaction setup complete');
+}
+
+function showTemperatureSensorDialog(deviceId) {
+  const currentTemp = deviceStates[deviceId];
+  const sensorName = deviceId === 'outdoor-temp' ? 'Udendørs temperatur' : 'Temperatur sensor';
+  
+  const newTemp = prompt(`🌡️ ${sensorName}\n\nNuværende temperatur: ${currentTemp}°C\n\nIndtast ny temperatur (-20 til 50°C):`, currentTemp);
+  
+  if (newTemp !== null && !isNaN(newTemp)) {
+    const temp = Math.max(-20, Math.min(50, parseFloat(newTemp)));
+    deviceStates[deviceId] = temp;
+    
+    // Update visual feedback
+    updateSensorIcon(deviceId, temp);
+    
+    // Show notification
+    showNotification(`🌡️ ${sensorName} sat til ${temp}°C`, 'info');
+    
+    // Trigger automation rules
+    if (deviceStates['automation-master']) {
+      checkAutomationTriggers(deviceId, temp);
+    }
+    
+    console.log('🌡️ Temperature sensor updated:', deviceId, temp + '°C');
+  }
+}
+
+function showHumiditySensorDialog(deviceId) {
+  const currentHumidity = deviceStates[deviceId];
+  
+  const newHumidity = prompt(`💧 Fugtighedssensor\n\nNuværende fugtighed: ${currentHumidity}%\n\nIndtast ny fugtighed (0-100%):`, currentHumidity);
+  
+  if (newHumidity !== null && !isNaN(newHumidity)) {
+    const humidity = Math.max(0, Math.min(100, parseFloat(newHumidity)));
+    deviceStates[deviceId] = humidity;
+    
+    // Update visual feedback
+    updateSensorIcon(deviceId, humidity);
+    
+    // Show notification
+    showNotification(`💧 Fugtighedssensor sat til ${humidity}%`, 'info');
+    
+    // Trigger automation rules
+    if (deviceStates['automation-master']) {
+      checkAutomationTriggers(deviceId, humidity);
+    }
+    
+    console.log('💧 Humidity sensor updated:', deviceId, humidity + '%');
+  }
+}
+
+function updateSensorIcon(deviceId, value) {
+  const deviceIcon = document.querySelector(`.floor-plan-background .smart-device[data-device="${deviceId}"]`);
+  if (deviceIcon) {
+    // Add visual feedback based on value ranges
+    deviceIcon.classList.remove('sensor-low', 'sensor-normal', 'sensor-high', 'sensor-critical');
+    
+    if (deviceId === 'outdoor-temp') {
+      if (value < -10) {
+        deviceIcon.classList.add('sensor-critical'); // Ekstremt koldt - rød pulserende
+      } else if (value < 0) {
+        deviceIcon.classList.add('sensor-low'); // Koldt - blå
+      } else if (value > 35) {
+        deviceIcon.classList.add('sensor-critical'); // Ekstremt varmt - rød pulserende
+      } else if (value > 28) {
+        deviceIcon.classList.add('sensor-high'); // Varmt - orange
+      }
+      // Mellem 0-28°C = ingen farve (neutral)
+    } else if (deviceId === 'humidity-sensor') {
+      if (value > 80) {
+        deviceIcon.classList.add('sensor-critical'); // Meget høj fugtighed - rød pulserende
+      } else if (value > 65) {
+        deviceIcon.classList.add('sensor-high'); // Høj fugtighed - orange
+      } else if (value < 25) {
+        deviceIcon.classList.add('sensor-low'); // Lav fugtighed - blå
+      }
+      // Mellem 25-65% = ingen farve (neutral)
+    }
+    
+    console.log('🎨 Updated sensor icon:', deviceId, 'value:', value);
+  }
+}
+
+function toggleDevice(deviceId) {
+  console.log('🔧 Toggling device:', deviceId);
+  
+  // Toggle the state
+  deviceStates[deviceId] = !deviceStates[deviceId];
+  const isOn = deviceStates[deviceId];
+  
+  console.log('🔧', deviceId, 'is now:', isOn ? 'ON' : 'OFF');
+  console.log('🤖 Automation master state:', deviceStates['automation-master']);
+  
+  // Update the UI
+  updateDeviceUI(deviceId, isOn);
+  
+  // Update the device icon on the floor plan
+  updateDeviceIcon(deviceId, isOn);
+  
+  // Handle special device logic
+  handleSpecialDeviceLogic(deviceId, isOn);
+  
+  // Trigger automation rules if enabled
+  if (deviceStates['automation-master']) {
+    console.log('🚀 Triggering automation check for:', deviceId, isOn);
+    checkAutomationTriggers(deviceId, isOn);
+  } else {
+    console.log('⏸️ Automation master is disabled, skipping triggers');
+  }
+}
+
+function handleSpecialDeviceLogic(deviceId, isOn) {
+  switch(deviceId) {
+    case 'alarm-system':
+      const alarmStatus = document.getElementById('alarmStatus');
+      if (alarmStatus) {
+        alarmStatus.textContent = isOn ? 'Aktiveret' : 'Deaktiveret';
+        alarmStatus.className = 'security-status ' + (isOn ? 'active' : '');
+      }
+      
+      // Visual feedback on floor plan
+      if (isOn) {
+        showNotification('🚨 Alarm system aktiveret', 'security');
+        pulseSecurityDevices();
+      } else {
+        showNotification('🔓 Alarm system deaktiveret', 'info');
+      }
+      break;
+      
+    case 'auto-lock':
+      if (isOn) {
+        // Lock all doors
+        deviceStates['front-door'] = true;
+        updateFloorPlanDevice('front-door', true);
+        showNotification('🔒 Alle døre låst automatisk', 'security');
+      }
+      break;
+      
+    case 'ventilation':
+      // Sync ventilation with bathroom-fan on floor plan
+      deviceStates['bathroom-fan'] = isOn;
+      updateDeviceIcon('bathroom-fan', isOn);
+      
+      if (isOn) {
+        showNotification('🌪️ Ventilation aktiveret', 'success');
+      } else {
+        showNotification('🌪️ Ventilation stoppet', 'info');
+      }
+      break;
+      
+    case 'bathroom-fan':
+      // Sync bathroom-fan with ventilation control panel
+      deviceStates['ventilation'] = isOn;
+      updateDeviceUI('ventilation', isOn);
+      break;
+      
+    case 'automation-master':
+      const ruleCount = document.getElementById('ruleCount');
+      if (ruleCount) {
+        if (isOn) {
+          ruleCount.textContent = `${automationRules.length} aktive regler`;
+          showNotification('🤖 Automation aktiveret', 'success');
+        } else {
+          ruleCount.textContent = 'Automation deaktiveret';
+          showNotification('⏸️ Automation sat på pause', 'info');
+        }
+      }
+      break;
+  }
+}
+
+function updateDeviceUI(deviceId, isOn) {
+  // Update the toggle button - specifically find the button in the control panel
+  const toggleButton = document.querySelector(`.smart-home-control-panel .device-toggle[data-device="${deviceId}"]`);
+  if (toggleButton) {
+    if (isOn) {
+      toggleButton.classList.add('on');
+    } else {
+      toggleButton.classList.remove('on');
+    }
+    console.log('🎛️ Device UI updated:', deviceId, isOn ? 'ON' : 'OFF');
+  } else {
+    console.warn('⚠️ Device toggle not found:', deviceId);
+  }
+}
+
+// Smart home scenarios
+function executeScenario(scenarioId) {
+  console.log('🎬 Executing scenario:', scenarioId);
+  
+  // Clear previous active scenario
+  document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
+  
+  // Mark current scenario as active
+  const scenarioBtn = document.querySelector(`[data-scenario="${scenarioId}"]`);
+  if (scenarioBtn) {
+    scenarioBtn.classList.add('active');
+    
+    // Remove active class after animation
+    setTimeout(() => {
+      scenarioBtn.classList.remove('active');
+    }, 2000);
+  }
+  
+  activeScenario = scenarioId;
+  
+  switch(scenarioId) {
+    case 'good-morning':
+      executeGoodMorningScenario();
+      break;
+    case 'leaving-home':
+      executeLeavingHomeScenario();
+      break;
+    case 'good-night':
+      executeGoodNightScenario();
+      break;
+    case 'coming-home':
+      executeComingHomeScenario();
+      break;
+  }
+}
+
+function executeGoodMorningScenario() {
+  showNotification('🌅 God Morgen rutine startet', 'scenario');
+  
+  const sequence = [
+    () => { setDevice('bedroom-light', true); },
+    () => { setDevice('kitchen-light', true); },
+    () => { setDevice('dining-light', true); },
+    () => { deviceStates.temperature = 22; updateTemperatureUI(); },
+    () => { setDevice('ventilation', true); },
+    () => { setDevice('alarm-system', false); }
+  ];
+  
+  executeSequence(sequence, 800);
+}
+
+function executeLeavingHomeScenario() {
+  showNotification('🏃 Forlader hjem rutine startet', 'scenario');
+  
+  const sequence = [
+    () => { setAllLights(false); },
+    () => { setDevice('alarm-system', true); },
+    () => { setDevice('auto-lock', true); },
+    () => { setDevice('ventilation', false); },
+    () => { deviceStates.temperature = 18; updateTemperatureUI(); }
+  ];
+  
+  executeSequence(sequence, 600);
+}
+
+function executeGoodNightScenario() {
+  showNotification('🌙 God Nat rutine startet', 'scenario');
+  
+  const sequence = [
+    () => { setAllLights(false); },
+    () => { setDevice('alarm-system', true); },
+    () => { setDevice('auto-lock', true); },
+    () => { deviceStates.temperature = 19; updateTemperatureUI(); },
+    () => { setDevice('ventilation', false); }
+  ];
+  
+  executeSequence(sequence, 1000);
+}
+
+function executeComingHomeScenario() {
+  showNotification('🏠 Velkommen hjem rutine startet', 'scenario');
+  
+  const sequence = [
+    () => { setDevice('alarm-system', false); },
+    () => { setDevice('living-room-light', true); },
+    () => { setDevice('kitchen-light', true); },
+    () => { deviceStates.temperature = 21; updateTemperatureUI(); },
+    () => { setDevice('ventilation', true); }
+  ];
+  
+  executeSequence(sequence, 700);
+}
+
+function executeSequence(actions, delay) {
+  actions.forEach((action, index) => {
+    setTimeout(action, index * delay);
+  });
+}
+
+function setDevice(deviceId, state) {
+  if (deviceStates.hasOwnProperty(deviceId)) {
+    console.log('🔧 Setting device via automation:', deviceId, 'to', state);
+    deviceStates[deviceId] = state;
+    updateDeviceUI(deviceId, state);
+    updateDeviceIcon(deviceId, state);
+    handleSpecialDeviceLogic(deviceId, state);
+    
+    // Don't trigger automation rules when set via automation (prevent loops)
+    // Only trigger when manually toggled
+  }
+}
+
+function setAllLights(state) {
+  const lightDevices = ['bedroom-light', 'living-room-light', 'dining-light', 'kitchen-light', 'bathroom-light'];
+  lightDevices.forEach(deviceId => {
+    setDevice(deviceId, state);
+  });
+}
+
+function updateTemperatureUI() {
+  const tempSlider = document.getElementById('tempSlider');
+  const currentTempDisplay = document.getElementById('currentTemp');
+  
+  if (tempSlider) tempSlider.value = deviceStates.temperature;
+  if (currentTempDisplay) currentTempDisplay.textContent = deviceStates.temperature;
+  
+  updateThermostatIcon(deviceStates.temperature);
+}
+
+function updateDeviceIcon(deviceId, isOn) {
+  // Find the device icon on the floor plan - specifically the smart-device element
+  const deviceIcon = document.querySelector(`.floor-plan-background .smart-device[data-device="${deviceId}"]`);
+  if (deviceIcon) {
+    // Handle special cases for door locks
+    if (deviceId === 'front-door') {
+      deviceIcon.classList.toggle('on', isOn);  // on = locked
+      deviceIcon.classList.toggle('off', !isOn); // off = unlocked
+    } else if (deviceId === 'outdoor-temp' || deviceId === 'humidity-sensor') {
+      // Sensors don't use on/off - they use value-based classes set by updateSensorIcon
+      console.log('🌡️ Sensor icon skipped - managed by updateSensorIcon:', deviceId);
+      return;
+    } else {
+      deviceIcon.classList.toggle('on', isOn);
+      deviceIcon.classList.remove('off');
+    }
+    
+    console.log('🎯 Device icon updated:', deviceId, isOn ? 'glowing' : 'normal');
+  } else {
+    console.warn('⚠️ Device icon not found:', deviceId);
+  }
+}
+
+function showDeviceStatusNotification(deviceId, isOn) {
+  let message = '';
+  let type = 'info';
+  
+  switch(deviceId) {
+    // Lights
+    case 'bedroom-light':
+    case 'living-room-light':
+    case 'dining-light':
+    case 'kitchen-light':
+    case 'bathroom-light':
+      const roomName = deviceId.replace('-light', '').replace('-', ' ');
+      message = `💡 ${roomName} lys ${isOn ? 'tændt' : 'slukket'}`;
+      type = isOn ? 'success' : 'info';
+      break;
+      
+    // Sensors (PIR/Motion)
+    case 'entrance-motion':
+    case 'living-motion':
+    case 'motion-kitchen':
+      const sensorLocation = deviceId.replace('-motion', '').replace('motion-', '');
+      message = `👁️ ${sensorLocation} bevægelse ${isOn ? 'detekteret' : 'ikke aktiv'}`;
+      type = isOn ? 'security' : 'info';
+      break;
+      
+    // Cameras
+    case 'entrance-camera':
+    case 'balcony-camera':
+      const cameraLocation = deviceId.replace('-camera', '');
+      message = `📹 ${cameraLocation} kamera ${isOn ? 'optager' : 'standby'}`;
+      type = isOn ? 'info' : 'info';
+      break;
+      
+    // Windows/Doors
+    case 'bedroom-window':
+    case 'balcony-door':
+      const windowLocation = deviceId.replace('-window', '').replace('-door', '');
+      message = `🪟 ${windowLocation} ${isOn ? 'åben' : 'lukket'}`;
+      type = isOn ? 'security' : 'info';
+      break;
+      
+    case 'front-door':
+      message = `🔐 Hoveddør ${isOn ? 'låst' : 'ulåst'}`;
+      type = isOn ? 'security' : 'success';
+      break;
+      
+    // Audio
+    case 'living-speaker':
+      message = `🔊 Højttaler ${isOn ? 'tændt' : 'slukket'}`;
+      type = isOn ? 'info' : 'info';
+      break;
+      
+    // Fans
+    case 'bathroom-fan':
+      message = `🌪️ Badeværelse blæser ${isOn ? 'kører' : 'stoppet'}`;
+      type = isOn ? 'success' : 'info';
+      break;
+      
+    // Safety
+    case 'smoke-detector':
+      message = `💨 Røgdetektor ${isOn ? 'ALARM!' : 'normal'}`;
+      type = isOn ? 'security' : 'success';
+      break;
+      
+    default:
+      message = `🔧 ${deviceId} ${isOn ? 'aktiveret' : 'deaktiveret'}`;
+      type = 'info';
+  }
+  
+  showNotification(message, type);
+}
+
+// Helper functions for floor plan updates
+function updateFloorPlanDevice(deviceId, state) {
+  updateDeviceIcon(deviceId, state);
+}
+
+function updateThermostatIcon(temperature) {
+  const thermostatIcon = document.querySelector('.smart-device[data-device="thermostat"]');
+  if (thermostatIcon) {
+    // Visual temperature feedback
+    if (temperature > 23) {
+      thermostatIcon.style.borderColor = '#ef4444'; // Red for hot
+    } else if (temperature < 19) {
+      thermostatIcon.style.borderColor = '#3b82f6'; // Blue for cold
+    } else {
+      thermostatIcon.style.borderColor = '#10b981'; // Green for optimal
+    }
+    
+    // Add pulsing effect when temperature changes
+    thermostatIcon.style.animation = 'tempPulse 1s ease-in-out';
+    setTimeout(() => {
+      thermostatIcon.style.animation = '';
+    }, 1000);
+  }
+}
+
+function pulseSecurityDevices() {
+  const securityDevices = document.querySelectorAll('.smart-device.camera, .smart-device.sensor, .smart-device.lock');
+  securityDevices.forEach((device, index) => {
+    setTimeout(() => {
+      device.style.animation = 'securityPulse 0.5s ease-in-out';
+      setTimeout(() => {
+        device.style.animation = '';
+      }, 500);
+    }, index * 200);
+  });
+}
+
+// Notification system
+function showNotification(message, type = 'info') {
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = `notification notification-${type}`;
+  notification.innerHTML = `
+    <div class="notification-content">
+      <span class="notification-message">${message}</span>
+      <button class="notification-close">×</button>
+    </div>
+  `;
+  
+  // Add to page
+  document.body.appendChild(notification);
+  
+  // Auto remove after 4 seconds
+  setTimeout(() => {
+    notification.classList.add('fade-out');
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 300);
+  }, 4000);
+  
+  // Close button functionality
+  const closeBtn = notification.querySelector('.notification-close');
+  closeBtn.addEventListener('click', () => {
+    notification.classList.add('fade-out');
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 300);
+  });
+}
+
+// Automation rule engine
+function checkAutomationTriggers(deviceId, state) {
+  console.log('🔍 Checking automation triggers for:', deviceId, 'state:', state);
+  console.log('🤖 Automation master enabled:', deviceStates['automation-master']);
+  console.log('📋 Available rules:', automationRules.length);
+  
+  if (!deviceStates['automation-master']) {
+    console.log('⏸️ Automation master is disabled');
+    return;
+  }
+  
+  automationRules.forEach((rule, index) => {
+    if (!rule.enabled) return;
+    
+    const trigger = rule.trigger;
+    let ruleTriggered = false;
+    
+    if (trigger.device === deviceId) {
+      if (trigger.type === 'boolean') {
+        // Boolean triggers (original logic)
+        ruleTriggered = (trigger.state === state);
+      } else if (trigger.type === 'numeric') {
+        // Numeric triggers for sensors
+        const value = parseFloat(state);
+        console.log('🔢 Numeric trigger check:', trigger.device, 'current value:', value, 'operator:', trigger.operator, 'threshold:', trigger.threshold);
+        switch(trigger.operator) {
+          case 'greater':
+            ruleTriggered = (value > trigger.threshold);
+            break;
+          case 'less':
+            ruleTriggered = (value < trigger.threshold);
+            break;
+          case 'equals':
+            ruleTriggered = (value === trigger.threshold);
+            break;
+          case 'between':
+            ruleTriggered = (value >= trigger.min && value <= trigger.max);
+            break;
+        }
+        console.log('🎯 Numeric trigger result:', ruleTriggered);
+      }
+      
+      if (ruleTriggered) {
+        console.log('✅ Rule triggered:', rule.name, 'by', deviceId, 'with value:', state);
+        executeAutomationRule(rule);
+      }
+    }
+  });
+}
+
+function executeAutomationRule(rule) {
+  console.log('🤖 Executing automation rule:', rule.name);
+  console.log('🎯 Rule actions:', rule.actions);
+  
+  showNotification(`🤖 ${rule.name} aktiveret`, 'automation');
+  
+  // Execute rule actions
+  rule.actions.forEach((action, index) => {
+    console.log(`⏰ Scheduling action ${index}:`, action, 'delay:', action.delay || 0);
+    
+    setTimeout(() => {
+      console.log(`▶️ Executing action ${index}:`, action);
+      
+      if (action.type === 'device') {
+        setDevice(action.device, action.state);
+      } else if (action.type === 'allLights') {
+        setAllLights(action.state);
+      } else if (action.type === 'scenario') {
+        executeScenario(action.scenario);
+      } else if (action.type === 'temperature') {
+        deviceStates.temperature = action.value;
+        updateTemperatureUI();
+      } else if (action.type === 'notification') {
+        showNotification(action.message || 'Wiresheet notification', 'automation');
+      }
+    }, action.delay || 0);
+  });
+}
+
+function addAutomationRule(rule) {
+  automationRules.push(rule);
+  updateRuleList();
+  updateRuleCount();
+  console.log('🤖 Added automation rule:', rule.name);
+}
+
+function updateRuleList() {
+  const ruleList = document.getElementById('activeRules');
+  if (!ruleList) return;
+  
+  ruleList.innerHTML = '';
+  
+  automationRules.forEach((rule, index) => {
+    const ruleElement = document.createElement('div');
+    ruleElement.className = 'rule-item';
+    ruleElement.innerHTML = `
+      <div class="rule-info">
+        <div class="rule-name">${rule.name}</div>
+        <div class="rule-description">${rule.description}</div>
+      </div>
+      <div class="rule-controls">
+        <button class="rule-toggle ${rule.enabled ? 'on' : ''}" data-rule-index="${index}"></button>
+        <button class="rule-delete" data-rule-index="${index}" title="Slet regel">🗑</button>
+      </div>
+    `;
+    
+    // Add toggle functionality
+    const toggle = ruleElement.querySelector('.rule-toggle');
+    toggle.addEventListener('click', () => {
+      rule.enabled = !rule.enabled;
+      toggle.classList.toggle('on', rule.enabled);
+      console.log('🤖 Rule', rule.name, rule.enabled ? 'enabled' : 'disabled');
+      updateRuleCount();
+    });
+    
+    // Add delete functionality
+    const deleteBtn = ruleElement.querySelector('.rule-delete');
+    deleteBtn.addEventListener('click', () => {
+      deleteAutomationRule(index, rule.name);
+    });
+    
+    ruleList.appendChild(ruleElement);
+  });
+}
+
+function updateRuleCount() {
+  const ruleCount = document.getElementById('ruleCount');
+  if (ruleCount && deviceStates['automation-master']) {
+    const enabledRules = automationRules.filter(rule => rule.enabled).length;
+    ruleCount.textContent = `${enabledRules} aktive regler`;
+  }
+}
+
+function deleteAutomationRule(index, ruleName) {
+  console.log('🗑️ Deleting automation rule:', ruleName, 'at index:', index);
+  
+  // Vis bekræftelses dialog
+  const confirmDelete = confirm(`Er du sikker på at du vil slette reglen "${ruleName}"?\n\nDenne handling kan ikke fortrydes.`);
+  
+  if (confirmDelete) {
+    // Fjern reglen fra array
+    automationRules.splice(index, 1);
+    
+    // Opdater UI
+    updateRuleList();
+    updateRuleCount();
+    
+    // Vis success notification
+    showNotification(`🗑️ Regel "${ruleName}" er slettet`, 'info');
+    
+    console.log('✅ Rule deleted successfully. Remaining rules:', automationRules.length);
+  } else {
+    console.log('❌ Rule deletion cancelled by user');
+  }
+}
+
+// Example automation rules
+function initializeDefaultRules() {
+  console.log('🏗️ Initializing default automation rules...');
+  
+  // Prædefinerede regler fjernet - brugere kan nu kun lave deres egne regler
+  
+  console.log('✅ Default rules initialized:', automationRules.length, 'rules');
+}
+
+// === WIRESHEET ↔ HOME AUTOMATION BRIDGE ===
+
+// Global function accessible from wiresheet
+window.addHomeAutomationRule = function(rule) {
+  console.log('🌉 Bridge: Receiving rule from wiresheet:', rule);
+  
+  // Set new rules as disabled by default
+  rule.enabled = false;
+  
+  // Add to automation rules
+  addAutomationRule(rule);
+  
+  // Update UI immediately
+  updateRuleList();
+  updateRuleCount();
+  
+  console.log('✅ Rule added to home automation system (disabled by default)');
+}
+
+// Make other functions globally accessible for wiresheet
+window.showNotification = showNotification;
+
+// Function to simulate device triggers for testing
+window.simulateDeviceTrigger = function(deviceId, state) {
+  console.log('🎮 Simulating device trigger:', deviceId, state);
+  
+  if (deviceStates['automation-master']) {
+    checkAutomationTriggers(deviceId, state);
+  } else {
+    console.log('⏸️ Automation master is disabled');
+  }
+}
+
+// Function to test wiresheet integration
+window.testWiresheetIntegration = function() {
+  console.log('🧪 Testing wiresheet integration...');
+  
+  // Simulate a wiresheet rule
+  var testRule = {
+    name: 'Test Wiresheet Regel',
+    description: 'Test regel fra wiresheet integration',
+    enabled: true,
+    trigger: { device: 'entrance-motion', state: true },
+    actions: [
+      { type: 'device', device: 'kitchen-light', state: true, delay: 0 }
+    ]
+  };
+  
+  window.addHomeAutomationRule(testRule);
+  showNotification('🧪 Test regel tilføjet fra wiresheet', 'automation');
+}
 </script>
 
 </body>
