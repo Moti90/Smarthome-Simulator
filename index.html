@@ -5617,13 +5617,27 @@ html {
               <label for="setLastName">Efternavn</label>
               <input id="setLastName" type="text" placeholder="Dit efternavn" class="styled-input">
             </div>
+
+            
             <div class="setting-item">
-              <label for="setEmail">Email (valgfrit)</label>
-              <input id="setEmail" type="email" placeholder="din@email.dk" class="styled-input">
+              <label for="setSchoolId">Vælg din skole</label>
+              <select id="setSchoolId" class="styled-input">
+                <option value="">Indlæser skoler...</option>
+              </select>
+              <span class="setting-description">Vælg den skole du går på</span>
             </div>
+            
             <div class="setting-item">
-              <button id="btnSaveName" class="btn-primary">💾 Gem dit navn</button>
-              <span class="setting-description">Dette navn bruges når du fuldfører opgaver (beta test)</span>
+              <label for="setClassId">Vælg din klasse</label>
+              <select id="setClassId" class="styled-input">
+                <option value="">Vælg først en skole</option>
+              </select>
+              <span class="setting-description">Vælg den klasse du går i</span>
+            </div>
+            
+            <div class="setting-item">
+              <button id="btnSaveName" class="btn-primary">💾 Gem dit navn og klasse</button>
+              <span class="setting-description">Dette navn og klasse bruges når du fuldfører opgaver</span>
             </div>
           </div>
 
@@ -11061,24 +11075,36 @@ html {
   async function saveStudentName() {
     const firstName = document.getElementById('setFirstName').value.trim();
     const lastName = document.getElementById('setLastName').value.trim();
-    const email = document.getElementById('setEmail').value.trim();
+    const schoolId = document.getElementById('setSchoolId').value.trim();
+    const classId = document.getElementById('setClassId').value.trim();
     
     if (!firstName || !lastName) {
       alert('Indtast venligst både fornavn og efternavn');
       return;
     }
     
+    if (!schoolId || !classId) {
+      alert('Indtast venligst både Skole ID og Klasse ID');
+      return;
+    }
+    
     const studentName = {
       firstName: firstName,
       lastName: lastName,
-      email: email || 'ingen@email.dk'
+      email: 'ingen@email.dk',
+      schoolId: schoolId,
+      classId: classId
     };
     
-    // Gem elevnavn lokalt
+    // Gem elevnavn og klasse lokalt
     localStorage.setItem('student_name', JSON.stringify(studentName));
     
+    // Gem også klasse information separat for nem adgang
+    localStorage.setItem('student_school_id', schoolId);
+    localStorage.setItem('student_class_id', classId);
+    
     // Opdater UI
-    alert(`✅ Dit navn er gemt: ${firstName} ${lastName}`);
+    alert(`✅ Dit navn og klasse er gemt!\n\nNavn: ${firstName} ${lastName}\nSkole: ${schoolId}\nKlasse: ${classId}`);
     
     // Genindlæs navn i felterne
     loadStudentName();
@@ -11094,8 +11120,17 @@ html {
     if (studentName.lastName) {
       document.getElementById('setLastName').value = studentName.lastName;
     }
-    if (studentName.email) {
-      document.getElementById('setEmail').value = studentName.email;
+    
+    // Indlæs skoler og klasser fra Firebase
+    await loadSchoolsForStudents();
+    
+    // Sæt gemte værdier hvis de findes
+    if (studentName.schoolId) {
+      document.getElementById('setSchoolId').value = studentName.schoolId;
+      await loadClassesForSchool(studentName.schoolId);
+    }
+    if (studentName.classId) {
+      document.getElementById('setClassId').value = studentName.classId;
     }
   }
   
@@ -11305,13 +11340,33 @@ html {
       createdAt: new Date().toISOString(),
       teacherId: localStorage.getItem('teacher_logged_in') === 'true' ? 'teacher' : 'unknown'
     };
+
+    // Tjek Firebase tilladelser først
+    let firebaseAvailable = false;
+    if (window.db && isFirebaseAvailable) {
+      try {
+        // Test Firebase tilladelser med en simpel læse-operation
+        await window.db.collection('classes').limit(1).get();
+        firebaseAvailable = true;
+        console.log('✅ Firebase tilladelser OK');
+      } catch (permissionError) {
+        console.warn('⚠️ Firebase tilladelser mangler:', permissionError.message);
+        firebaseAvailable = false;
+      }
+    }
     
     try {
       // Gem i Firebase hvis tilgængelig
       if (window.db && isFirebaseAvailable) {
-        console.log('🌐 Gemmer klasse i Firebase...');
-        await window.db.collection('classes').add(newClass);
-        console.log('✅ Klasse gemt i Firebase');
+        try {
+          console.log('🌐 Gemmer klasse i Firebase...');
+          await window.db.collection('classes').add(newClass);
+          console.log('✅ Klasse gemt i Firebase');
+          newClass.firebaseId = true; // Marker som gemt i Firebase
+        } catch (firebaseError) {
+          console.warn('⚠️ Firebase fejl - bruger localStorage som fallback:', firebaseError.message);
+          newClass.firebaseId = false;
+        }
       }
       
       // Gem også lokalt som backup
@@ -11381,12 +11436,14 @@ html {
           const snapshot = await window.db.collection('classes').get();
           const firebaseClasses = snapshot.docs.map(doc => ({
             ...doc.data(),
-            id: doc.id
+            id: doc.id,
+            firebaseId: true
           }));
           allClasses = allClasses.concat(firebaseClasses);
           console.log('✅ Hentet', firebaseClasses.length, 'klasser fra Firebase');
         } catch (error) {
-          console.warn('⚠️ Kunne ikke hente fra Firebase:', error);
+          console.warn('⚠️ Kunne ikke hente fra Firebase - bruger kun localStorage:', error.message);
+          // Fortsæt med kun localStorage data
         }
       }
       
@@ -11479,9 +11536,13 @@ html {
     try {
       // Slet fra Firebase hvis tilgængelig
       if (firebaseId && window.db && isFirebaseAvailable) {
-        console.log('🌐 Sletter klasse fra Firebase...');
-        await window.db.collection('classes').doc(firebaseId).delete();
-        console.log('✅ Klasse slettet fra Firebase');
+        try {
+          console.log('🌐 Sletter klasse fra Firebase...');
+          await window.db.collection('classes').doc(firebaseId).delete();
+          console.log('✅ Klasse slettet fra Firebase');
+        } catch (firebaseError) {
+          console.warn('⚠️ Firebase fejl ved sletning - fortsætter med lokal sletning:', firebaseError.message);
+        }
       }
       
       // Slet fra localStorage
@@ -11502,6 +11563,121 @@ html {
     } catch (error) {
       console.error('❌ Fejl ved sletning af klasse:', error);
       alert(`❌ Fejl ved sletning af klasse: ${error.message}`);
+    }
+  }
+
+  // === ELEV KLASSE VÆLGER ===
+  
+  async function loadSchoolsForStudents() {
+    const schoolSelect = document.getElementById('setSchoolId');
+    const classSelect = document.getElementById('setClassId');
+    
+    if (!schoolSelect || !classSelect) return;
+    
+    try {
+      let allClasses = [];
+      
+      // Hent fra Firebase hvis tilgængelig
+      if (window.db && isFirebaseAvailable) {
+        try {
+          console.log('🌐 Henter skoler fra Firebase for elever...');
+          const snapshot = await window.db.collection('classes').get();
+          const firebaseClasses = snapshot.docs.map(doc => ({
+            ...doc.data(),
+            id: doc.id
+          }));
+          allClasses = allClasses.concat(firebaseClasses);
+          console.log('✅ Hentet', firebaseClasses.length, 'klasser fra Firebase');
+        } catch (error) {
+          console.warn('⚠️ Kunne ikke hente fra Firebase - bruger kun localStorage:', error.message);
+        }
+      }
+      
+      // Hent fra localStorage som backup
+      const localClasses = JSON.parse(localStorage.getItem('smarthome_classes') || '[]');
+      allClasses = allClasses.concat(localClasses);
+      
+      // Fjern duplikater og få unikke skoler
+      const uniqueSchools = [...new Set(allClasses.map(cls => cls.schoolId))];
+      uniqueSchools.sort(); // Sorter alfabetisk
+      
+      // Opdater skole dropdown
+      schoolSelect.innerHTML = '<option value="">Vælg din skole</option>';
+      uniqueSchools.forEach(schoolId => {
+        const option = document.createElement('option');
+        option.value = schoolId;
+        option.textContent = schoolId === 'default' ? 'Standard' : schoolId;
+        schoolSelect.appendChild(option);
+      });
+      
+      // Tilføj event listener til skole dropdown
+      schoolSelect.onchange = function() {
+        loadClassesForSchool(this.value);
+      };
+      
+      // Indlæs gemt skole hvis den findes
+      const savedStudent = JSON.parse(localStorage.getItem('student_name') || '{}');
+      if (savedStudent.schoolId) {
+        schoolSelect.value = savedStudent.schoolId;
+        loadClassesForSchool(savedStudent.schoolId);
+      }
+      
+    } catch (error) {
+      console.error('❌ Fejl ved indlæsning af skoler:', error);
+      schoolSelect.innerHTML = '<option value="">Fejl ved indlæsning</option>';
+    }
+  }
+  
+  async function loadClassesForSchool(schoolId) {
+    const classSelect = document.getElementById('setClassId');
+    if (!classSelect || !schoolId) return;
+    
+    try {
+      let allClasses = [];
+      
+      // Hent fra Firebase hvis tilgængelig
+      if (window.db && isFirebaseAvailable) {
+        try {
+          const snapshot = await window.db.collection('classes').get();
+          const firebaseClasses = snapshot.docs.map(doc => ({
+            ...doc.data(),
+            id: doc.id
+          }));
+          allClasses = allClasses.concat(firebaseClasses);
+        } catch (error) {
+          console.warn('⚠️ Kunne ikke hente klasser fra Firebase:', error.message);
+        }
+      }
+      
+      // Hent fra localStorage som backup
+      const localClasses = JSON.parse(localStorage.getItem('smarthome_classes') || '[]');
+      allClasses = allClasses.concat(localClasses);
+      
+      // Filtrer klasser for den valgte skole
+      const schoolClasses = allClasses.filter(cls => cls.schoolId === schoolId);
+      schoolClasses.sort((a, b) => a.classId.localeCompare(b.classId)); // Sorter alfabetisk
+      
+      // Opdater klasse dropdown
+      classSelect.innerHTML = '<option value="">Vælg din klasse</option>';
+      schoolClasses.forEach(cls => {
+        const option = document.createElement('option');
+        option.value = cls.classId;
+        option.textContent = cls.classId === 'default' ? 'Standard' : cls.classId;
+        if (cls.className && cls.className !== `${cls.schoolId}_${cls.classId}`) {
+          option.textContent += ` - ${cls.className}`;
+        }
+        classSelect.appendChild(option);
+      });
+      
+      // Indlæs gemt klasse hvis den findes
+      const savedStudent = JSON.parse(localStorage.getItem('student_name') || '{}');
+      if (savedStudent.classId && savedStudent.schoolId === schoolId) {
+        classSelect.value = savedStudent.classId;
+      }
+      
+    } catch (error) {
+      console.error('❌ Fejl ved indlæsning af klasser:', error);
+      classSelect.innerHTML = '<option value="">Fejl ved indlæsning</option>';
     }
   }
   
@@ -12060,6 +12236,11 @@ html {
       
       console.log('🔍 Firebase database tilgængelig, forsøger at gemme...');
       
+                       // Hent elevens klasse information
+                       const studentInfo = JSON.parse(localStorage.getItem('student_name') || '{}');
+                       const studentSchoolId = studentInfo.schoolId || 'default';
+                       const studentClassId = studentInfo.classId || 'default';
+                       
                        await window.db.collection('user_progress').add({
           userId: userId,
           userFirstName: currentUser.firstName || 'Ukendt',
@@ -12069,8 +12250,8 @@ html {
           taskName: taskName,
           completedAt: completedAt,
           timestamp: new Date().toISOString(),
-          schoolId: 'default', // Kan tilpasses senere
-          classId: 'default'   // Kan tilpasses senere
+          schoolId: studentSchoolId,
+          classId: studentClassId
         });
       console.log('✅ Progress gemt i cloud database');
       return true;
@@ -12139,6 +12320,11 @@ html {
     
     for (const item of pendingSync) {
       try {
+                     // Hent elevens klasse information
+                     const studentInfo = JSON.parse(localStorage.getItem('student_name') || '{}');
+                     const studentSchoolId = studentInfo.schoolId || 'default';
+                     const studentClassId = studentInfo.classId || 'default';
+                     
                      await window.db.collection('user_progress').add({
                userId: item.userId,
                userFirstName: item.userFirstName || 'Ukendt',
@@ -12148,8 +12334,8 @@ html {
                taskName: item.taskName,
                completedAt: item.completedAt,
                timestamp: new Date().toISOString(),
-               schoolId: 'default',
-               classId: 'default',
+               schoolId: studentSchoolId,
+               classId: studentClassId,
                syncedFromLocal: true
              });
       } catch (error) {
