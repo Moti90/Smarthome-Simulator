@@ -4334,6 +4334,12 @@ body.crimson-theme .difficulty.hard {
 }
 
 /* Login background image + translucent card === */
+
+/* Skjul header når login siden vises */
+#loginView:not([style*="display: none"]) ~ header,
+#loginView:not([style*="display: none"]) + header {
+  display: none !important;
+}
 </style>
 
   <!-- WebView2-bro -->
@@ -10281,8 +10287,30 @@ html {
       // Efter fade-out, skjul intro og vis hovedapp
       setTimeout(() => {
         introView.style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-        document.querySelector('.appbar').style.display = 'flex';
+        
+        // Vis navigation, tabs og header
+        const mainnav = document.querySelector('.mainnav');
+        const tabs = document.querySelector('.tabs');
+        const header = document.querySelector('header');
+        
+        if (mainnav) {
+          mainnav.style.display = 'flex';
+          console.log('✅ Navigation vist igen');
+        }
+        
+        if (tabs) {
+          tabs.style.display = 'block';
+          console.log('✅ Tabs vist igen');
+        }
+        
+        if (header) {
+          header.style.display = 'block';
+          header.style.visibility = 'visible';
+          header.style.opacity = '1';
+          console.log('✅ Header vist igen efter login');
+        } else {
+          console.log('⚠️ Header element ikke fundet ved login');
+        }
         
         // Tilføj fade-in effekt til hovedapp
         const mainApp = document.getElementById('mainApp');
@@ -10291,8 +10319,13 @@ html {
         
         setTimeout(() => {
           mainApp.style.opacity = '1';
-          // Vis simulator view som standard
-          show('view-sim');
+          // Vis forside som standard
+          show('view-forside');
+          
+          // Dobbelttjek at header er synlig
+          if (header) {
+            console.log('🔍 Dobbelttjek header efter show():', header.style.display, header.style.visibility);
+          }
         }, 100);
       }, 500);
       
@@ -10342,23 +10375,29 @@ html {
     mainApp.style.transition = 'opacity 0.5s ease-out';
     mainApp.style.opacity = '0';
     
-    // Efter fade-out, skjul hovedapp og vis intro
-    setTimeout(() => {
-      mainApp.style.display = 'none';
-      document.querySelector('.appbar').style.display = 'none';
-      
-      // Vis intro med fade-in effekt
-      const introView = document.getElementById('loginView');
-      introView.style.display = 'flex';
-      introView.style.opacity = '0';
-      introView.style.transition = 'opacity 0.5s ease-in';
-      
+          // Efter fade-out, skjul hovedapp og vis intro
       setTimeout(() => {
-        introView.style.opacity = '1';
-        // Opdater UI baseret på om der er eksisterende brugere
-        checkExistingUsers();
-      }, 100);
-    }, 500);
+        // Skjul navigation, tabs og header
+        document.querySelector('.mainnav').style.display = 'none';
+        document.querySelector('.tabs').style.display = 'none';
+        const header = document.querySelector('header');
+        if (header) {
+          header.style.display = 'none';
+          console.log('✅ Header skjult igen ved logout');
+        }
+        
+        // Vis intro med fade-in effekt
+        const introView = document.getElementById('loginView');
+        introView.style.display = 'flex';
+        introView.style.opacity = '0';
+        introView.style.transition = 'opacity 0.5s ease-in';
+        
+        setTimeout(() => {
+          introView.style.opacity = '1';
+          // Opdater UI baseret på om der er eksisterende brugere
+          checkExistingUsers();
+        }, 100);
+      }, 500);
     
     // Vis lærer login knap igen og skjul dashboard knap
     const btnTeacherLogin = document.getElementById('btnTeacherLogin');
@@ -12447,30 +12486,19 @@ html {
   }
 
            function saveToLocalStorage(userId, taskId, taskName, completedAt, currentUser) {
-           // Brug den lokale saveUserProgressLocal funktion i stedet
-           const progressData = {
-             completedTasks: [{
-               taskId: taskId,
-               taskName: taskName,
-               completedAt: completedAt,
-               timestamp: new Date().toISOString()
-             }]
-           };
-           
            // Gem til bruger-specifik localStorage
            const userProgress = JSON.parse(localStorage.getItem(`user_${userId}_progress`) || '{}');
-           const updatedProgress = { ...userProgress, ...progressData };
            
            // Tilføj til eksisterende completedTasks hvis de findes
-           if (updatedProgress.completedTasks) {
-             updatedProgress.completedTasks.push({
+           if (userProgress.completedTasks) {
+             userProgress.completedTasks.push({
                taskId: taskId,
                taskName: taskName,
                completedAt: completedAt,
                timestamp: new Date().toISOString()
              });
            } else {
-             updatedProgress.completedTasks = [{
+             userProgress.completedTasks = [{
                taskId: taskId,
                taskName: taskName,
                completedAt: completedAt,
@@ -12478,8 +12506,29 @@ html {
              }];
            }
            
-           localStorage.setItem(`user_${userId}_progress`, JSON.stringify(updatedProgress));
+           localStorage.setItem(`user_${userId}_progress`, JSON.stringify(userProgress));
            console.log('💾 Progress gemt lokalt til bruger-specifik storage');
+           
+           // Opret pending_sync data med elevens navn
+           const pendingSync = JSON.parse(localStorage.getItem('pending_sync') || '[]');
+           pendingSync.push({
+             userId: userId,
+             userFirstName: currentUser.firstName || 'Ukendt',
+             userLastName: currentUser.lastName || 'Bruger',
+             userEmail: currentUser.email || 'ingen@email.dk',
+             taskId: taskId,
+             taskName: taskName,
+             completedAt: completedAt,
+             timestamp: new Date().toISOString()
+           });
+           localStorage.setItem('pending_sync', JSON.stringify(pendingSync));
+           console.log('📝 Pending sync data oprettet med elevens navn:', currentUser.firstName, currentUser.lastName);
+           
+           // Prøv at synce data til cloud hvis online
+           if (navigator.onLine && !isLocalEnvironment) {
+             console.log('🌐 Online - forsøger at synce pending data');
+             setTimeout(() => syncPendingData(), 1000); // Vent 1 sekund før sync
+           }
          }
 
   async function syncPendingData() {
@@ -12959,6 +13008,13 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('📄 Fjernede home-active klasse fra body');
     }
     
+    // Sikre at header er synlig når vi skifter views
+    const header = document.querySelector('header');
+    if (header && header.style.display === 'none') {
+      header.style.display = 'block';
+      console.log('🔧 Header genvist i show() funktionen');
+    }
+    
     ids.forEach(x => {
       const el = document.getElementById(x);
       if(el){ 
@@ -12992,12 +13048,57 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
   
-  // initial
-  let start = null;
-  try{ start = localStorage.getItem('smarthome_simulator.activeView'); }catch(e){}
-  if(!ids.includes(start)) start = ids[0];
-  console.log('🚀 Starter med tab:', start);
-  show(start);
+  // Tjek om brugeren er logget ind først
+  const currentUser = localStorage.getItem('simUser');
+  if (!currentUser) {
+    // Ingen bruger logget ind - vis login siden
+    console.log('🔑 Ingen bruger logget ind - viser login siden');
+    document.getElementById('loginView').style.display = 'flex';
+    // Skjul alle andre views
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    // Skjul navigation og header
+    document.querySelector('.mainnav').style.display = 'none';
+    document.querySelector('.tabs').style.display = 'none';
+    
+    // Skjul header
+    const header = document.querySelector('header');
+    if (header) {
+      header.style.display = 'none';
+      console.log('✅ Header skjult på login skærm');
+    } else {
+      console.log('⚠️ Header element ikke fundet');
+    }
+    
+    // Skjul også alle lærer login knapper specifikt
+    const teacherButtons = document.querySelectorAll('button[id*="Teacher"]');
+    teacherButtons.forEach(btn => {
+      btn.style.display = 'none';
+      btn.style.visibility = 'hidden';
+    });
+    
+    // Skjul også knapper med "Lærer" tekst
+    const allButtons = document.querySelectorAll('button');
+    allButtons.forEach(btn => {
+      if (btn.textContent.includes('Lærer')) {
+        btn.style.display = 'none';
+        btn.style.visibility = 'hidden';
+        console.log('✅ Skjult lærer knap:', btn.textContent);
+      }
+    });
+    
+    console.log('✅ Alle lærer knapper skjult');
+  } else {
+    // Bruger er logget ind - start med normal tab
+    console.log('✅ Bruger logget ind:', currentUser, '- starter med normal tab');
+    let start = null;
+    try{ start = localStorage.getItem('smarthome_simulator.activeView'); }catch(e){}
+    if(!ids.includes(start)) start = ids[0];
+    console.log('🚀 Starter med tab:', start);
+    show(start);
+  }
   
   // Setup drag and drop for smart devices
   setupSmartDeviceDragAndDrop();
