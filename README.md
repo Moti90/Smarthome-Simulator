@@ -144,3 +144,12 @@ For questions or support:
 **Version**: 2.0 (Educational Release)  
 **Status**: Active Development
 
+
+# Smarthome Simulator
+
+Dette projekt er privat, og koden er underlagt fuld ophavsret.
+Alle rettigheder forbeholdt. Ingen del af dette projekt, inklusive koden,
+må kopieres, reproduceres, distribueres eller modificeres uden forudgående
+skriftlig tilladelse fra ophavsmanden.
+
+Copyright © 2025 Rasmus Jakobsen
