@@ -10478,8 +10478,8 @@ html {
         
         setTimeout(() => {
           mainApp.style.opacity = '1';
-          // Vis forside som standard
-          show('view-forside');
+          // Starter altid på login skærm i stedet for at huske sidste tab
+          showLoginView();
           
           // Dobbelttjek at header er synlig
           if (header) {
@@ -10574,6 +10574,32 @@ html {
   function startSimulator() {
     console.log('🚀 Start Simulator knap klikket - starter login proces...');
     doLogin();
+  }
+
+  // Vis login skærm funktion
+  function showLoginView() {
+    console.log('🔐 Viser login skærm som standard...');
+    
+    // Skjul navigation, tabs og header
+    const mainnav = document.querySelector('.mainnav');
+    const tabs = document.querySelector('.tabs');
+    const header = document.querySelector('header');
+    
+    if (mainnav) mainnav.style.display = 'none';
+    if (tabs) tabs.style.display = 'none';
+    if (header) header.style.display = 'none';
+    
+    // Vis login view
+    const loginView = document.getElementById('loginView');
+    if (loginView) {
+      loginView.style.display = 'flex';
+      loginView.style.opacity = '1';
+      
+      // Opdater UI baseret på om der er eksisterende brugere
+      checkExistingUsers();
+      
+      console.log('✅ Login skærm vist som standard');
+    }
   }
 
   // Hjælpefunktioner til brugerdata
