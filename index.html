@@ -3307,22 +3307,38 @@ input:focus, select:focus, textarea:focus{
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.3);
   z-index: 10000;
   display: none;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(0.5px);
+  pointer-events: none;
+}
+
+.onboarding-overlay .onboarding-step {
+  pointer-events: auto;
+}
+
+/* Make content more visible during onboarding */
+.onboarding-active .view.active {
+  opacity: 0.9;
+  filter: brightness(1.1);
+}
+
+.onboarding-active .card {
+  opacity: 0.95;
+  filter: brightness(1.05);
 }
 
 .onboarding-step {
   position: absolute;
-  background: linear-gradient(180deg, rgba(26, 36, 48, 0.6), rgba(15, 20, 28, 0.6));
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  background: linear-gradient(180deg, rgba(26, 36, 48, 0.95), rgba(15, 20, 28, 0.95));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 2px solid #2ab0ff;
   border-radius: 12px;
   padding: 16px;
   max-width: 320px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
   color: #e5e9f0;
   z-index: 10001;
   animation: onboardingFadeIn 0.3s ease-out;
@@ -4926,24 +4942,24 @@ html {
   <!-- Welcome Screen -->
   <div id="onboardingWelcome" class="onboarding-welcome" style="display:none;">
             <h2>🎉 Velkommen til SmartHome Simulator!</h2>
-    <p>Lær at bygge smart home automation med denne interaktive simulator. Du kan teste regler, generere LUA-kode til Fibaro HC3 og se hvordan det hele fungerer sammen.</p>
+    <p>Din komplette platform til at lære om IoT og smart home automation. Udforsk sensorer, byg automation regler og se hvordan det hele fungerer sammen i en interaktiv simulator.</p>
     
     <div class="features">
       <div class="feature">
+        <div class="icon">🏡</div>
+        <span>Forside med overblik</span>
+      </div>
+      <div class="feature">
+        <div class="icon">📊</div>
+        <span>Sensorer & Regler simulator</span>
+      </div>
+      <div class="feature">
         <div class="icon">🏠</div>
-        <span>Simulator med sensorer & aktører</span>
-      </div>
-      <div class="feature">
-        <div class="icon">🧩</div>
-        <span>Visual Flow Editor (Wiresheet)</span>
-      </div>
-      <div class="feature">
-        <div class="icon">⚡</div>
-        <span>LUA-kode generering til HC3</span>
+        <span>Smart Home plantegning</span>
       </div>
       <div class="feature">
         <div class="icon">🚀</div>
-        <span>Praktiske opgaver & øvelser</span>
+        <span>Guidede opgaver & øvelser</span>
       </div>
       <div class="feature">
         <div class="icon">📚</div>
@@ -4951,7 +4967,7 @@ html {
       </div>
       <div class="feature">
         <div class="icon">⚙️</div>
-        <span>Tilpasningsmuligheder</span>
+        <span>Indstillinger & tilpasning</span>
       </div>
     </div>
     
@@ -5011,10 +5027,13 @@ html {
       </div>
       <div class="steps">
         <ol>
-          <li>Gå til "Simulator" fanen</li>
-          <li>Klik "Sæt: Breached" under PIR</li>
+          <li>Gå til "📊 Sensorer & Regler" fanen</li>
+          <li>Scroll ned til "Z-Wave sensorer" sektionen</li>
+          <li>Vælg "PIR (bevægelse)" fra dropdown</li>
+          <li>Sæt værdi til "Breached"</li>
+          <li>Klik "Sæt (buffer)"</li>
           <li>Klik "Aktivér ændringer"</li>
-          <li>Gå til "Regler" sektionen</li>
+          <li>Scroll ned til "Regler" sektionen</li>
           <li>Vælg "IF PIR bliver Breached" som trigger</li>
           <li>Vælg "THEN Lys → Tænd" som action</li>
           <li>Klik "Tilføj regel"</li>
@@ -8440,55 +8459,43 @@ html {
     var onboardingSteps = [
       {
         title: 'Velkommen til SmartHome Simulator',
-        content: 'Her kan du simulere sensorer og se hvordan de påvirker dine regler. Prøv at gå til "Z-Wave sensorer" sektionen og tilføj en PIR-sensor.',
-        target: '#zwAdd',
+        content: 'Dette er din komplette platform til at lære om IoT og smart home automation. Start med at udforske de forskellige faner i navigationen.',
+        target: '.mainnav',
         position: 'bottom'
       },
       {
-        title: 'Aktiver ændringer',
-        content: 'Når du ændrer sensorer via Z-Wave systemet, bliver de først "buffered". Klik "Aktivér ændringer" for at anvende dem og køre reglerne.',
-        target: '#applyPending',
-        position: 'top'
-      },
-      {
-        title: 'Regler sektion',
-        content: 'Her bygger du dine automation regler. Vælg en trigger (IF), tilføj betingelser (AND) og vælg en handling (THEN).',
-        target: '#triggerType',
+        title: '🏡 Forside',
+        content: 'Forside giver dig et overblik over platformen og hurtig adgang til de vigtigste funktioner. Her kan du også se din seneste aktivitet.',
+        target: '[data-target="view-forside"]',
         position: 'bottom'
       },
       {
-        title: 'Tilføj regel',
-        content: 'Når du har konfigureret din regel, klik "Tilføj regel" for at gemme den. Den vises derefter i listen nedenfor.',
-        target: '#addRule',
-        position: 'top'
-      },
-      {
-        title: 'Kør regler',
-        content: 'Klik "Kør regler (RUN)" for at evaluere alle regler mod de aktuelle sensor-tilstande og se resultatet i loggen.',
-        target: '#runAll',
-        position: 'top'
-      },
-      {
-        title: 'LUA generering for HC3',
-        content: 'Åbn LUA-menuen og vælg "Generér LUA" for at få kode til Fibaro Home Center 3. Koden deles op i to paneler: "ERKLÆRINGER" (venstre) og "HANDLINGER" (højre) for nemmere kopiering til HC3.',
-        target: '#luaBtn',
+        title: '📊 Sensorer & Regler',
+        content: 'I denne fane kan du simulere sensorer og bygge automation regler. Prøv at tilføj en PIR-sensor og opret din første regel.',
+        target: '[data-target="view-sim"]',
         position: 'bottom'
       },
       {
-        title: 'Wiresheet Editor',
-        content: 'Prøv Wiresheet-fanen for en visuel måde at bygge regler på. Træk noder rundt og forbind dem for at skabe komplekse automationer. Toolbar\'et er blevet optimeret for bedre brugeroplevelse.',
-        target: '#tabFlow',
+        title: '🏠 Smart Home',
+        content: 'Smart Home fanen giver dig en visuel plantegning hvor du kan placere og styre virtuelle enheder. Prøv at tænde lyset eller justere dimmeren.',
+        target: '[data-target="view-home"]',
         position: 'bottom'
       },
       {
-        title: 'Opgaver & Læring',
-        content: 'Besøg "Opgaver" fanen for at få praktiske øvelser og "Læring" fanen for at udforske avancerede koncepter.',
+        title: '🚀 Opgaver',
+        content: 'Opgaver fanen indeholder guidede øvelser sorteret efter sværhedsgrad. Start med de nemme opgaver og arbejd dig op til de avancerede.',
         target: '[data-target="view-tasks"]',
         position: 'bottom'
       },
       {
-        title: 'Indstillinger',
-        content: 'I Indstillinger kan du tilpasse tema, nulstille onboarding og administrere din brugerkonto.',
+        title: '📚 Læring',
+        content: 'Læring fanen indeholder dybdegående materiale om IoT koncepter, sensor typer og automation teknikker. Perfekt til at forstå teorien bag praksis.',
+        target: '[data-target="view-learning"]',
+        position: 'bottom'
+      },
+      {
+        title: '⚙️ Indstillinger',
+        content: 'I Indstillinger kan du tilpasse tema, administrere din brugerkonto, nulstille onboarding og få adgang til avancerede funktioner.',
         target: '[data-target="view-settings"]',
         position: 'bottom'
       }
@@ -8593,14 +8600,14 @@ html {
         stepEl.style.top = top + 'px';
       }, 0);
 
-      // Highlight target with better visibility
-      target.style.outline = '4px solid #2ab0ff';
-      target.style.outlineOffset = '4px';
-      target.style.boxShadow = '0 0 25px rgba(42, 176, 255, 0.6), inset 0 0 10px rgba(42, 176, 255, 0.1)';
+      // Highlight target with subtle but visible effect
+      target.style.outline = '3px solid #2ab0ff';
+      target.style.outlineOffset = '2px';
+      target.style.boxShadow = '0 0 20px rgba(42, 176, 255, 0.4)';
       target.style.zIndex = '10000';
       target.style.position = 'relative';
-      target.style.backgroundColor = 'rgba(42, 176, 255, 0.05)';
-      target.style.borderRadius = '4px';
+      target.style.backgroundColor = 'rgba(42, 176, 255, 0.08)';
+      target.style.borderRadius = '6px';
     }
 
     function nextOnboardingStep() {
@@ -8619,6 +8626,21 @@ html {
       }
       
       currentStep++;
+      
+      // Automatically switch to relevant tab for next step
+      if (currentStep < onboardingSteps.length) {
+        var nextStep = onboardingSteps[currentStep];
+        if (nextStep.target.includes('data-target')) {
+          var targetView = nextStep.target.match(/data-target="([^"]+)"/);
+          if (targetView && targetView[1]) {
+            // Switch to the target view
+            if (typeof window.show === 'function') {
+              window.show(targetView[1]);
+            }
+          }
+        }
+      }
+      
       showOnboardingStep(currentStep);
     }
 
@@ -8638,6 +8660,7 @@ html {
       resumeBtn.onclick = function() {
         document.getElementById('resumeOnboarding').remove();
         overlay.style.display = 'block';
+        document.body.classList.add('onboarding-active');
       };
       document.body.appendChild(resumeBtn);
     }
@@ -8668,6 +8691,7 @@ html {
       }
 
       document.getElementById('onboardingOverlay').style.display = 'none';
+      document.body.classList.remove('onboarding-active');
       onboardingActive = false;
       localStorage.setItem('smarthome_simulator.onboarding_completed', 'true');
     }
@@ -8676,6 +8700,7 @@ html {
       document.getElementById('onboardingWelcome').style.display = 'none';
       currentStep = 0;
       onboardingActive = true;
+      document.body.classList.add('onboarding-active');
       showOnboardingStep(0);
     }
 
@@ -8687,12 +8712,13 @@ html {
       'ganglys': {
         name: 'Ganglys Basic',
         steps: [
-          'Gå til "Z-Wave sensorer" sektionen',
+          'Gå til "📊 Sensorer & Regler" fanen',
+          'Scroll ned til "Z-Wave sensorer" sektionen',
           'Vælg "PIR (bevægelse)" fra dropdown',
           'Sæt værdi til "Breached"',
           'Klik "Sæt (buffer)"',
           'Klik "Aktivér ændringer"',
-          'Gå til "Regler" sektionen',
+          'Scroll ned til "Regler" sektionen',
           'Vælg "IF PIR bliver Breached" som trigger',
           'Vælg "THEN Lys → Tænd" som action',
           'Klik "Tilføj regel"'
@@ -9276,12 +9302,7 @@ html {
     window.taskCriteria = taskCriteria;
     window.getCurrentUser = getCurrentUser;
 
-    // Check if first time user
-    if (!localStorage.getItem('smarthome_simulator.onboarding_completed')) {
-      setTimeout(function() {
-        document.getElementById('onboardingWelcome').style.display = 'block';
-      }, 1000);
-    }
+    // Onboarding will be started after successful login instead of here
   })();
 
 
@@ -10318,7 +10339,7 @@ html {
   async function tryLogin(u,p){ 
     // Simpel localStorage login
     console.log('🔍 Logger ind med localStorage...');
-    const users = JSON.parse(localStorage.getItem('ibi_users') || '[]');
+    const users = JSON.parse(localStorage.getItem('smarthome_simulator_users') || '[]');
     const registeredUser = users.find(user => user.username === u && user.password === p);
     
     if (registeredUser) {
@@ -10478,12 +10499,13 @@ html {
         
         setTimeout(() => {
           mainApp.style.opacity = '1';
-          // Starter altid på login skærm i stedet for at huske sidste tab
-          showLoginView();
+          mainApp.style.display = 'block';
+          // Efter login skal brugeren til hovedapplikationen, ikke tilbage til login
+          console.log('✅ Login fuldført - bruger sendt til hovedapp');
           
           // Dobbelttjek at header er synlig
           if (header) {
-            console.log('🔍 Dobbelttjek header efter show():', header.style.display, header.style.visibility);
+            console.log('🔍 Dobbelttjek header efter login:', header.style.display, header.style.visibility);
           }
         }, 100);
       }, 500);
@@ -10509,7 +10531,7 @@ html {
           createdAt: new Date().toISOString(),
           lastLogin: new Date().toISOString()
         });
-        localStorage.setItem('ibi_users', JSON.stringify(users));
+        localStorage.setItem('smarthome_simulator_users', JSON.stringify(users));
         
         alert('✅ Bruger oprettet lokalt: ' + u + '\nDu kan nu logge ind!');
         
@@ -10607,7 +10629,7 @@ html {
 
   // Tjek om der allerede er brugere i systemet og opdater UI
   function checkExistingUsers() {
-    const users = JSON.parse(localStorage.getItem('ibi_users') || '[]');
+    const users = JSON.parse(localStorage.getItem('smarthome_simulator_users') || '[]');
     const hasUsers = users.length > 0;
     
     const loginTitle = document.getElementById('loginTitle');
@@ -13290,6 +13312,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if(!ids.includes(start)) start = ids[0];
     console.log('🚀 Starter med tab:', start);
     show(start);
+    
+    // Start onboarding for nye brugere efter login
+    setTimeout(function() {
+      const currentUser = localStorage.getItem('simUser');
+      if (currentUser && !localStorage.getItem('smarthome_simulator.onboarding_completed')) {
+        console.log('🎯 Starter onboarding for ny bruger:', currentUser);
+        document.getElementById('onboardingWelcome').style.display = 'block';
+      }
+    }, 1500);
   }
   
   // Setup drag and drop for smart devices
