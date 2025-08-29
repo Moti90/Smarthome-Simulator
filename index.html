@@ -96,6 +96,94 @@
     .view{display:none;background:var(--bg-primary)}
     .view.active{display:block}
 
+    /* Settings Tabs */
+    .settings-tabs {
+      display: flex;
+      gap: 4px;
+      margin: 0 16px 16px 16px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 4px;
+      border: 1px solid var(--border-color);
+    }
+
+    .settings-tab {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      border-radius: 8px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .settings-tab:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+    }
+
+    .settings-tab.active {
+      background: var(--accent-color);
+      color: var(--text-primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .settings-content {
+      display: none;
+    }
+
+    .settings-content.active {
+      display: block;
+    }
+
+    /* Checkbox styling */
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      padding: 8px 0;
+      color: var(--text-primary);
+      font-size: 14px;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      display: none;
+    }
+
+    .checkmark {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border-color);
+      border-radius: 4px;
+      background: var(--bg-primary);
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .checkbox-label:hover .checkmark {
+      border-color: var(--accent-color);
+    }
+
+    .checkbox-label input[type="checkbox"]:checked + .checkmark {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+
+    .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
     /* 3-kolonne layout inde i Simulator - balanceret plads */
 .wrap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
     .card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:10px;overflow:visible}
@@ -5743,109 +5831,206 @@ html {
     
     <!-- ===== View: Indstillinger ===== -->
     <section id="view-settings" class="view">
-      <div class="card">
-        <h2>⚙️ Indstillinger</h2>
-        <div class="body">
-          
-          <!-- Tema indstillinger -->
-          <div class="settings-section">
-            <h3>🎨 Udseende</h3>
-            <div class="setting-item">
-              <label for="themeSelect">Tema</label>
-              <select id="themeSelect" class="styled-select">
-                <option value="dark">Mørkt tema</option>
-                <option value="ocean">Ocean Blue</option>
-                <option value="forest">Forest Green</option>
-                <option value="sunset">Sunset Orange</option>
-                <option value="purple">Purple Night</option>
-                                        <option value="ruby">Ruby Red</option>
-                        <option value="golden">Golden Yellow</option>
-              </select>
-              <span class="setting-description">Vælg mellem forskellige temaer. Dit valg gemmes automatisk.</span>
+      
+      <!-- Settings Navigation Tabs -->
+      <div class="settings-tabs">
+        <button class="settings-tab active" data-tab="profile">👤 Profil</button>
+        <button class="settings-tab" data-tab="appearance">🎨 Udseende</button>
+        <button class="settings-tab" data-tab="account">🔐 Konto</button>
+        <button class="settings-tab" data-tab="system">⚙️ System</button>
+      </div>
+
+      <!-- Profile Tab -->
+      <div class="settings-content active" id="profile-tab">
+        <div class="card">
+          <h2>👤 Din Profil</h2>
+          <div class="body">
+            <div class="settings-section">
+              <h3>📝 Personlige oplysninger</h3>
+              <div class="setting-item">
+                <label for="setFirstName">Fornavn</label>
+                <input id="setFirstName" type="text" placeholder="Dit fornavn" class="styled-input">
+              </div>
+              <div class="setting-item">
+                <label for="setLastName">Efternavn</label>
+                <input id="setLastName" type="text" placeholder="Dit efternavn" class="styled-input">
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="settings-section">
+              <h3>🏫 Skole & Klasse</h3>
+              <div class="setting-item">
+                <label for="setSchoolId">Vælg din skole</label>
+                <select id="setSchoolId" class="styled-input">
+                  <option value="">Indlæser skoler...</option>
+                </select>
+                <span class="setting-description">Vælg den skole du går på</span>
+              </div>
+              <div class="setting-item">
+                <label for="setClassId">Vælg din klasse</label>
+                <select id="setClassId" class="styled-input">
+                  <option value="">Vælg først en skole</option>
+                </select>
+                <span class="setting-description">Vælg den klasse du går i</span>
+              </div>
+              <div class="setting-item">
+                <button id="btnSaveName" class="btn-primary">💾 Gem profil</button>
+                <span class="setting-description">Dette navn og klasse bruges når du fuldfører opgaver</span>
+              </div>
             </div>
           </div>
-
-
-
-          <div class="divider"></div>
-
-          <!-- Brugerindstillinger -->
-          <div class="settings-section">
-            <h3>👤 Bruger</h3>
-            <div class="setting-item">
-              <label for="setUser">Brugernavn</label>
-              <input id="setUser" type="text" placeholder="Indtast nyt brugernavn" class="styled-input">
-            </div>
-            <div class="setting-item">
-              <label for="setPass">Adgangskode</label>
-              <input id="setPass" type="password" placeholder="Indtast ny adgangskode" class="styled-input">
-            </div>
-            <div class="setting-item">
-              <button id="btnSaveCreds" class="btn-primary">💾 Gem brugerindstillinger</button>
-              <span class="setting-description">Standard er <code>admin</code> / <code>1234</code>, indtil du gemmer nye.</span>
-            </div>
-            <div class="setting-item">
-              <button id="clearStorageBtn" class="btn-danger">🗑️ Ryd localStorage</button>
-              <span class="setting-description">Slet alle brugere fra localStorage (kan ikke fortrydes!)</span>
-            </div>
-          </div>
-
-          <!-- Elev navn (beta) -->
-          <div class="settings-section">
-            <h3>📝 Dit navn (beta)</h3>
-            <div class="setting-item">
-              <label for="setFirstName">Fornavn</label>
-              <input id="setFirstName" type="text" placeholder="Dit fornavn" class="styled-input">
-            </div>
-            <div class="setting-item">
-              <label for="setLastName">Efternavn</label>
-              <input id="setLastName" type="text" placeholder="Dit efternavn" class="styled-input">
-            </div>
-
-            
-            <div class="setting-item">
-              <label for="setSchoolId">Vælg din skole</label>
-              <select id="setSchoolId" class="styled-input">
-                <option value="">Indlæser skoler...</option>
-              </select>
-              <span class="setting-description">Vælg den skole du går på</span>
-            </div>
-            
-            <div class="setting-item">
-              <label for="setClassId">Vælg din klasse</label>
-              <select id="setClassId" class="styled-input">
-                <option value="">Vælg først en skole</option>
-              </select>
-              <span class="setting-description">Vælg den klasse du går i</span>
-            </div>
-            
-            <div class="setting-item">
-              <button id="btnSaveName" class="btn-primary">💾 Gem dit navn og klasse</button>
-              <span class="setting-description">Dette navn og klasse bruges når du fuldfører opgaver</span>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- App indstillinger -->
-          <div class="settings-section">
-            <h3>🔧 App</h3>
-            <div class="setting-item">
-              <button id="btnResetOnboarding" class="btn-secondary">🔄 Reset onboarding</button>
-              <span class="setting-description">Start forfra med onboarding guiden</span>
-            </div>
-            <div class="setting-item">
-              <button id="btnLogout" class="btn-danger">🚪 Log ud</button>
-              <span class="setting-description">Log ud og vis login-skærmen igen</span>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-
-
         </div>
       </div>
+
+      <!-- Appearance Tab -->
+      <div class="settings-content" id="appearance-tab">
+        <div class="card">
+          <h2>🎨 Udseende</h2>
+          <div class="body">
+            <div class="settings-section">
+              <h3>🎨 Tema</h3>
+              <div class="setting-item">
+                <label for="themeSelect">Vælg tema</label>
+                <select id="themeSelect" class="styled-select">
+                  <option value="dark">🌙 Mørkt tema</option>
+                  <option value="ocean">🌊 Ocean Blue</option>
+                  <option value="forest">🌲 Forest Green</option>
+                  <option value="sunset">🌅 Sunset Orange</option>
+                  <option value="purple">🌌 Purple Night</option>
+                  <option value="ruby">💎 Ruby Red</option>
+                  <option value="golden">⭐ Golden Yellow</option>
+                </select>
+                <span class="setting-description">Vælg mellem forskellige temaer. Dit valg gemmes automatisk.</span>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="settings-section">
+              <h3>🔧 Visning</h3>
+              <div class="setting-item">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="compactMode">
+                  <span class="checkmark"></span>
+                  Kompakt visning
+                </label>
+                <span class="setting-description">Reducer mellemrum og gør interface mere kompakt</span>
+              </div>
+              <div class="setting-item">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="animationsEnabled">
+                  <span class="checkmark"></span>
+                  Aktiver animationer
+                </label>
+                <span class="setting-description">Vis smooth overgange og animationer</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Account Tab -->
+      <div class="settings-content" id="account-tab">
+        <div class="card">
+          <h2>🔐 Konto</h2>
+          <div class="body">
+            <div class="settings-section">
+              <h3>🔑 Login oplysninger</h3>
+              <div class="setting-item">
+                <label for="setUser">Brugernavn</label>
+                <input id="setUser" type="text" placeholder="Indtast nyt brugernavn" class="styled-input">
+              </div>
+              <div class="setting-item">
+                <label for="setPass">Adgangskode</label>
+                <input id="setPass" type="password" placeholder="Indtast ny adgangskode" class="styled-input">
+              </div>
+              <div class="setting-item">
+                <button id="btnSaveCreds" class="btn-primary">💾 Gem login oplysninger</button>
+                <span class="setting-description">Opdater dine login oplysninger</span>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="settings-section">
+              <h3>📊 Data & Fremskridt</h3>
+              <div class="setting-item">
+                <button id="exportDataBtn" class="btn-secondary">📤 Eksporter data</button>
+                <span class="setting-description">Download dit fremskridt som backup</span>
+              </div>
+              <div class="setting-item">
+                <button id="importDataBtn" class="btn-secondary">📥 Importer data</button>
+                <span class="setting-description">Gendan fremskridt fra backup</span>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="settings-section">
+              <h3>⚠️ Farlige handlinger</h3>
+              <div class="setting-item">
+                <button id="clearStorageBtn" class="btn-danger">🗑️ Ryd alle data</button>
+                <span class="setting-description">Slet alle brugere og data fra localStorage (kan ikke fortrydes!)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Tab -->
+      <div class="settings-content" id="system-tab">
+        <div class="card">
+          <h2>⚙️ System</h2>
+          <div class="body">
+            <div class="settings-section">
+              <h3>🔄 App indstillinger</h3>
+              <div class="setting-item">
+                <button id="btnResetOnboarding" class="btn-secondary">🔄 Reset onboarding</button>
+                <span class="setting-description">Start forfra med onboarding guiden</span>
+              </div>
+              <div class="setting-item">
+                <button id="clearCacheBtn" class="btn-secondary">🧹 Ryd cache</button>
+                <span class="setting-description">Ryd midlertidige filer og forbedre ydeevne</span>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="settings-section">
+              <h3>🔧 Avancerede indstillinger</h3>
+              <div class="setting-item">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="debugMode">
+                  <span class="checkmark"></span>
+                  Debug mode
+                </label>
+                <span class="setting-description">Vis ekstra debug information i konsollen</span>
+              </div>
+              <div class="setting-item">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="autoSave">
+                  <span class="checkmark"></span>
+                  Auto-save
+                </label>
+                <span class="setting-description">Gem automatisk fremskridt hver 30 sekunder</span>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="settings-section">
+              <h3>🚪 Session</h3>
+              <div class="setting-item">
+                <button id="btnLogout" class="btn-danger">🚪 Log ud</button>
+                <span class="setting-description">Log ud og vis login-skærmen igen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </section>
     
     <!-- ===== View: Opgaver ===== -->
@@ -13031,6 +13216,26 @@ html {
   function setupSettingsEvents() {
     console.log('Setting up settings events...');
     
+    // Settings tabs functionality
+    const settingsTabs = document.querySelectorAll('.settings-tab');
+    const settingsContents = document.querySelectorAll('.settings-content');
+    
+    settingsTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const targetTab = tab.dataset.tab;
+        
+        // Remove active class from all tabs and contents
+        settingsTabs.forEach(t => t.classList.remove('active'));
+        settingsContents.forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked tab and corresponding content
+        tab.classList.add('active');
+        document.getElementById(`${targetTab}-tab`).classList.add('active');
+        
+        console.log('Settings tab switched to:', targetTab);
+      });
+    });
+    
     // Tema selector
     const themeSelect = document.getElementById('themeSelect');
     if(themeSelect) {
@@ -13048,6 +13253,106 @@ html {
         console.log('Theme changed to:', theme);
         applyTheme(theme);
       });
+    }
+    
+    // Checkbox handlers
+    const compactMode = document.getElementById('compactMode');
+    if(compactMode) {
+      compactMode.checked = localStorage.getItem('smarthome_simulator.compactMode') === 'true';
+      compactMode.addEventListener('change', (e) => {
+        localStorage.setItem('smarthome_simulator.compactMode', e.target.checked);
+        applyCompactMode(e.target.checked);
+      });
+    }
+    
+    const animationsEnabled = document.getElementById('animationsEnabled');
+    if(animationsEnabled) {
+      animationsEnabled.checked = localStorage.getItem('smarthome_simulator.animationsEnabled') !== 'false';
+      animationsEnabled.addEventListener('change', (e) => {
+        localStorage.setItem('smarthome_simulator.animationsEnabled', e.target.checked);
+        applyAnimations(e.target.checked);
+      });
+    }
+    
+    const debugMode = document.getElementById('debugMode');
+    if(debugMode) {
+      debugMode.checked = localStorage.getItem('smarthome_simulator.debugMode') === 'true';
+      debugMode.addEventListener('change', (e) => {
+        localStorage.setItem('smarthome_simulator.debugMode', e.target.checked);
+        applyDebugMode(e.target.checked);
+      });
+    }
+    
+    const autoSave = document.getElementById('autoSave');
+    if(autoSave) {
+      autoSave.checked = localStorage.getItem('smarthome_simulator.autoSave') !== 'false';
+      autoSave.addEventListener('change', (e) => {
+        localStorage.setItem('smarthome_simulator.autoSave', e.target.checked);
+        applyAutoSave(e.target.checked);
+      });
+    }
+    
+    // Clear cache button
+    const clearCacheBtn = document.getElementById('clearCacheBtn');
+    if(clearCacheBtn) {
+      clearCacheBtn.onclick = () => {
+        if(confirm('Er du sikker på, at du vil rydde cache? Dette kan forbedre ydeevnen.')) {
+          // Clear various cache items
+          localStorage.removeItem('smarthome_simulator.tempData');
+          localStorage.removeItem('smarthome_simulator.cache');
+          alert('Cache ryddet!');
+        }
+      };
+    }
+    
+    // Export/Import buttons (placeholder functionality)
+    const exportDataBtn = document.getElementById('exportDataBtn');
+    if(exportDataBtn) {
+      exportDataBtn.onclick = () => {
+        const userData = {
+          progress: localStorage.getItem('user_progress'),
+          simulator: localStorage.getItem('user_simulator'),
+          learning: localStorage.getItem('user_learning')
+        };
+        const dataStr = JSON.stringify(userData, null, 2);
+        const dataBlob = new Blob([dataStr], {type: 'application/json'});
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'smarthome_simulator_backup.json';
+        link.click();
+        URL.revokeObjectURL(url);
+        alert('Data eksporteret!');
+      };
+    }
+    
+    const importDataBtn = document.getElementById('importDataBtn');
+    if(importDataBtn) {
+      importDataBtn.onclick = () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = (e) => {
+          const file = e.target.files[0];
+          if(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              try {
+                const data = JSON.parse(e.target.result);
+                if(data.progress) localStorage.setItem('user_progress', data.progress);
+                if(data.simulator) localStorage.setItem('user_simulator', data.simulator);
+                if(data.learning) localStorage.setItem('user_learning', data.learning);
+                alert('Data importeret! Siden vil genindlæses.');
+                setTimeout(() => window.location.reload(), 1000);
+              } catch(error) {
+                alert('Fejl ved import: ' + error.message);
+              }
+            };
+            reader.readAsText(file);
+          }
+        };
+        input.click();
+      };
     }
     
     // Onboarding reset
@@ -13072,6 +13377,51 @@ html {
           }, 1000);
         }
       };
+    }
+  }
+
+  // === Settings utility functions ===
+  function applyCompactMode(enabled) {
+    if(enabled) {
+      document.body.classList.add('compact-mode');
+    } else {
+      document.body.classList.remove('compact-mode');
+    }
+  }
+  
+  function applyAnimations(enabled) {
+    if(enabled) {
+      document.body.classList.remove('no-animations');
+    } else {
+      document.body.classList.add('no-animations');
+    }
+  }
+  
+  function applyDebugMode(enabled) {
+    if(enabled) {
+      console.log('🔧 Debug mode enabled');
+      window.debugMode = true;
+    } else {
+      console.log('🔧 Debug mode disabled');
+      window.debugMode = false;
+    }
+  }
+  
+  function applyAutoSave(enabled) {
+    if(enabled) {
+      console.log('💾 Auto-save enabled');
+      // Start auto-save interval
+      if(window.autoSaveInterval) clearInterval(window.autoSaveInterval);
+      window.autoSaveInterval = setInterval(() => {
+        // Auto-save logic here
+        console.log('💾 Auto-saving...');
+      }, 30000); // Every 30 seconds
+    } else {
+      console.log('💾 Auto-save disabled');
+      if(window.autoSaveInterval) {
+        clearInterval(window.autoSaveInterval);
+        window.autoSaveInterval = null;
+      }
     }
   }
 
