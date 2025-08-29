@@ -10478,8 +10478,8 @@ html {
         
         setTimeout(() => {
           mainApp.style.opacity = '1';
-          // Vis simulator fanen som standard efter login
-          show('view-sim');
+          // Starter altid på login skærm i stedet for at huske sidste tab
+          showLoginView();
           
           // Dobbelttjek at header er synlig
           if (header) {
@@ -10710,6 +10710,13 @@ html {
     if(btnSaveCreds) {
       btnSaveCreds.onclick = updateCreds;
       console.log('✅ Save credentials button found and configured');
+    }
+    
+    // Opret bruger knap
+    const btnCreateUser = document.getElementById('btnCreateUser');
+    if(btnCreateUser) {
+      btnCreateUser.onclick = createUser;
+      console.log('✅ Create user button found and configured');
     }
     
     // Gem elev navn knap
@@ -12878,7 +12885,7 @@ html {
     }
     
     // Tjek om brugernavn allerede eksisterer
-    const existingUsers = JSON.parse(localStorage.getItem('ibi_users') || '[]');
+    const existingUsers = JSON.parse(localStorage.getItem('smarthome_simulator_users') || '[]');
     if (existingUsers.some(user => user.username === username)) {
       document.getElementById('registerError').innerText = 'Brugernavn findes allerede!';
       return;
@@ -13222,7 +13229,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(`🔘 Knap ${x} active:`, btn.classList.contains('active'));
       }
     });
-    // Fjernet localStorage gemning af active view - app starter altid på login
+    try{ localStorage.setItem('smarthome_simulator.activeView', id); }catch(e){}
   }
   
   buttons.forEach(b => {
@@ -13233,45 +13240,57 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
   
-  // App starter altid på login skærmen - fjern automatisk login
-  console.log('🔑 App starter altid på login skærmen');
-  document.getElementById('loginView').style.display = 'flex';
-  // Skjul alle andre views
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-  });
-  // Skjul navigation og header
-  document.querySelector('.mainnav').style.display = 'none';
-  document.querySelector('.tabs').style.display = 'none';
-  
-  // Skjul header
-  const header = document.querySelector('header');
-  if (header) {
-    header.style.display = 'none';
-    console.log('✅ Header skjult på login skærm');
-  } else {
-    console.log('⚠️ Header element ikke fundet');
-  }
-  
-  // Skjul også alle lærer login knapper specifikt
-  const teacherButtons = document.querySelectorAll('button[id*="Teacher"]');
-  teacherButtons.forEach(btn => {
-    btn.style.display = 'none';
-    btn.style.visibility = 'hidden';
-  });
-  
-  // Skjul også knapper med "Lærer" tekst
-  const allButtons = document.querySelectorAll('button');
-  allButtons.forEach(btn => {
-    if (btn.textContent.includes('Lærer')) {
+  // Tjek om brugeren er logget ind først
+  const currentUser = localStorage.getItem('simUser');
+  if (!currentUser) {
+    // Ingen bruger logget ind - vis login siden
+    console.log('🔑 Ingen bruger logget ind - viser login siden');
+    document.getElementById('loginView').style.display = 'flex';
+    // Skjul alle andre views
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    // Skjul navigation og header
+    document.querySelector('.mainnav').style.display = 'none';
+    document.querySelector('.tabs').style.display = 'none';
+    
+    // Skjul header
+    const header = document.querySelector('header');
+    if (header) {
+      header.style.display = 'none';
+      console.log('✅ Header skjult på login skærm');
+    } else {
+      console.log('⚠️ Header element ikke fundet');
+    }
+    
+    // Skjul også alle lærer login knapper specifikt
+    const teacherButtons = document.querySelectorAll('button[id*="Teacher"]');
+    teacherButtons.forEach(btn => {
       btn.style.display = 'none';
       btn.style.visibility = 'hidden';
-      console.log('✅ Skjult lærer knap:', btn.textContent);
-    }
-  });
-  
-  console.log('✅ Alle lærer knapper skjult');
+    });
+    
+    // Skjul også knapper med "Lærer" tekst
+    const allButtons = document.querySelectorAll('button');
+    allButtons.forEach(btn => {
+      if (btn.textContent.includes('Lærer')) {
+        btn.style.display = 'none';
+        btn.style.visibility = 'hidden';
+        console.log('✅ Skjult lærer knap:', btn.textContent);
+      }
+    });
+    
+    console.log('✅ Alle lærer knapper skjult');
+  } else {
+    // Bruger er logget ind - start med normal tab
+    console.log('✅ Bruger logget ind:', currentUser, '- starter med normal tab');
+    let start = null;
+    try{ start = localStorage.getItem('smarthome_simulator.activeView'); }catch(e){}
+    if(!ids.includes(start)) start = ids[0];
+    console.log('🚀 Starter med tab:', start);
+    show(start);
+  }
   
   // Setup drag and drop for smart devices
   setupSmartDeviceDragAndDrop();

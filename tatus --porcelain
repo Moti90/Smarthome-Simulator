@@ -1,0 +1,72 @@
+[33mbe47509[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Merge branch 'main' of https://github.com/Moti90/Smarthome-Simulator
+[33m9b44658[m Fix: App starter nu altid på login skærmen - Fjernet automatisk login baseret på localStorage - App husker ikke længere hvilken tab brugeren havde åben - Efter login vises simulator fanen som standard
+[33mebc17a2[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Update README.md
+[33m29223bf[m Fix: App starter nu altid på login skærm i stedet for at huske sidste åbne tab
+[33m6d0b014[m Tilføjet Ruby Red og Golden Yellow temaer - Erstattet Minimal White med Ruby Red tema - Tilføjet Golden Yellow tema med varm gul farvepalette - Opdateret tema-system med smooth transitions - Alle temaer nu tilgængelige under Indstillinger
+[33m54f964f[m Fix lærer login knap synlighed og elevnavn visning - Lærer login knap skjult på login skærm - Elevnavn vises korrekt i stedet for 'Ukendt Bruger' - Header vises korrekt efter login - Forbedret fejlhåndtering og debugging
+[33m4e93214[m  Fix ReferenceError i loadClassesForTeacherSchool funktionen
+[33m4fce751[m  Implementeret lærer dropdown menuer og forbedret klasse administration
+[33mfc78506[m  Implementeret elev klasse-vælger med dropdown menuer
+[33m85b0187[m  Implementeret komplet klasse-system med Firebase integration
+[33m44dca84[m Opdateret baggrundsfarve til header farve og fjernet scroll
+[33mf60ebc2[m Bruger rigtig plantegning som baggrund i stedet for kompliceret SVG kode
+[33m6657e9b[m Tilføjet realistisk plantegning med møbler, rum layout og visuelle effekter til Smart Home Simulator
+[33m7ff9782[m Tilføjet komplet Smart Home Simulator med interaktiv plantegning, kontrolpanel og animationer
+[33me17c64f[m Tilføjet notifikation når Yellow tema låses op og rettet tema tilgængelighed check
+[33m4c4e667[m Fjernet simulation funktion og rettet Firebase projekt ID til ibi-simulator-f6ebe
+[33m30ae528[m Tilføjet Crimson tema og løst Firebase fejl ved lokal kørsel
+[33m33e400d[m Tilføjet Yellow tema og forbedret opgavevisning - separate bokse og skjulte trin
+[33m68b61ec[m Organize tasks by difficulty in 3 columns - left column for easy tasks, middle for medium, right for hard tasks with colored headers
+[33m4a006af[m Fix Tasks layout to use 3-column grid like Learning tab - remove difficulty sections, arrange all tasks in single 3-column grid layout
+[33m32017c7[m Improve Tasks layout with grid system - replace long column with organized grid by difficulty level, add task cards with hover effects, implement show/hide task details functionality
+[33m56deb1e[m Convert Tasks from popup to proper tab view - add view-tasks section with all tasks, update navigation and tab system, remove old popup functionality
+[33mc883e69[m Update onboarding to include new features: HC3 LUA panels, improved Wiresheet, updated project name, and better tab organization
+[33m5dd1a27[m Swap positions of Settings and Tasks tabs in navigation
+[33m6078e83[m Improve Wiresheet UI: Compact toolbar design for better UX
+[33m0d45fe2[m Rename project from IBI to SmartHome Simulator - update all references
+[33m5dd52dc[m Improve LUA output: Split into left/right panels for better HC3 workflow
+[33mb9e9f4f[m Fix tab navigation issue - buttons now work correctly after returning to simulator
+[33mb698b34[m Fix missing .id property in user objects - Firebase userId was undefined
+[33m4938a69[m Fix duplicate getCurrentUser functions - use the one that returns user object with .id
+[33mc499c29[m Fix function name conflict - rename local saveUserProgress to saveUserProgressLocal
+[33mbd11246[m Fix Firebase userId issue - bruger brugernavn i stedet for undefined id
+[33ma4bbf0f[m Initial commit: SmartHome Simulator med brugerhåndtering og Firebase integration
+[33m93fcc50[m Tilføjet animationerede intro effekter til login siden - logo glow, Wi-Fi bølger og animeret tekst
+[33md95cf5e[m Korrigeret terminologi fra 'Total signalstyrke' til 'Total signaltab' - mere præcis beskrivelse af Z-Wave beregninger
+[33m2f608db[m Tilføjet professionel README.md med roadmap for at gøre appen mere professionel og stabil til undervisning
+[33meccc4d6[m Ændret auto-reset tid fra 10 til 5 sekunder - hurtigere feedback på regel systemet
+[33mcc25116[m Tilføjet auto-reset system - aktører vender tilbage til standard værdi efter 10 sekunder når regler ikke længere matcher
+[33m3175527[m Tilføjet UI opdatering efter regler kører - nu opdateres lampe og ventilator status korrekt når regler aktiveres
+[33m6d40594[m Ændret sensor logging til kun at logge når der er faktiske ændringer - ingen spam hvert sekund længere
+[33mfeeb908[m Tilføjet 5 sekunders cooldown til regler for at undgå spam i chatten - regler kan kun køre én gang hver 5. sekund
+[33m0e2f76e[m Slettet den gamle simulation knap fra header'en - nu kun den nye knap i overskriften
+[33mf5ba265[m Flyttet simulation knap til at sidde på samme linje som 'Virtuelle sensorer & tilstande' overskrift - nu til højre i boksen
+[33m0f74216[m Øget vind basis fra 2 til 5 m/s for realistiske danske vindforhold - spænder nu 2-8 m/s
+[33mba61b47[m Øget temperatur spændvidde fra 3.5°C til 8.5C for større dag/nat udsving
+[33maa87288[m Reduceret PIR og dør sensor aktivitet drastisk - 0.5% og 0.2% chance for at undgå spam
+[33me3694f7[m Tilføjet simulation log dashboard og fixet temperatur sensor - nu opdateres den korrekt i realtid
+[33ma448cf6[m Gjort simulation objektet globalt med window. prefix - løser alle scope problemer
+[33m23d4d49[m Forbedret simulation: reduceret PIR frekvens, fixet negativ vind, bedre lys om dagen, automatisk alarm 22:00-06:00
+[33m88a5d2f[m Gjort alle simulation funktioner globale ved at tilføje window. prefix - løser onclick scope problemer
+[33m95eab5e[m Komplet omskrivning af simulation event listeners - bruger nu onclick attributter i HTML i stedet for JavaScript event listeners
+[33m73716f7[m Flyttet simulation event listeners direkte ind i simulation knap onclick funktionen for at undgå scope problemer
+[33m7afbffc[m Rettet jQuery fejl i simulation funktioner - erstattet $ med document.getElementById
+[33md7a83ce[m Tilføjet setupSimulationEventListeners funktion der sætter event listeners op når simulation dashboard vises
+[33mce61810[m Rettet tilbage til simulator knappen og live sensor værdier - tilføjet updateSimulationDisplay funktion
+[33m0aedb94[m Tilføjet simulation knap lige ved siden af lærer knappen i toppen af siden
+[33m72a5234[m Flyttet simulation fane til bunden af navigationen ved siden af indstillinger
+[33m0386e91[m Tilføjet dedikeret simulation fane med live sensor display og fjernet simulation indstillinger fra settings
+[33m3325e8c[m Tilføjet live sensor værdier visning og test regler funktion til simulation mode
+[33m76970a7[m Flyttet simulation mode indstillinger fra lærer dashboard til bruger indstillinger
+[33m5504b43[m Rettet simulation mode - fjernet reference til ikke-eksisterende UI elementer og tilføjet logging
+[33mf7b3627[m Implementeret Simulation Mode med tids acceleration, realistiske sensor mønstre og automatisk regel kørsel
+[33md749494[m Tilføjet alarmArmed og alarmHome til diagnose funktionen - fixer 'Ukendt condition type' fejl
+[33m3376630[m Flyttet 'ikke implementeret' note ind i valider knappen
+[33m8d1102d[m Tilføjet note om at valider funktionen ikke er implementeret endnu
+[33m4077e30[m Implementeret fuld Undo/Redo/Copy/Paste funktionalitet til wiresheet editor med state management
+[33m4916f98[m Tilføjet moderne wiresheet toolbar med kategorier, verktøjer og forbedret styling
+[33m043f185[m Ryddet op i duplikeret Firebase kode - gendannet Firebase Firestore funktionalitet
+[33m66ebbc7[m Fjernet Firebase Authentication - gået tilbage til simpel localStorage login, men beholder Firestore til progress tracking
+[33mee3e8a9[m Fixet Firebase test forbindelse - bruger nu tilladte user_progress collection
+[33mfb56e04[m Tilføjet 'Ryd localStorage' funktionalitet til at slette alle brugere
+[33ma6bd6e3[m Fixet Fire
