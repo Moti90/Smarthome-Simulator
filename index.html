@@ -184,6 +184,226 @@
       font-weight: bold;
     }
 
+    /* Compact Mode Styles */
+    .compact-mode .card {
+      margin-bottom: 8px;
+    }
+
+    .compact-mode .card h2 {
+      padding: 6px 10px;
+      font-size: 13px;
+    }
+
+    .compact-mode .card .body {
+      padding: 6px 10px;
+    }
+
+    .compact-mode .setting-item {
+      margin-bottom: 6px;
+    }
+
+    .compact-mode .setting-item label {
+      font-size: 11px;
+      margin-bottom: 2px;
+    }
+
+    .compact-mode .styled-input,
+    .compact-mode .styled-select {
+      padding: 6px 8px;
+      font-size: 12px;
+    }
+
+    .compact-mode .setting-description {
+      font-size: 10px;
+      margin-top: 2px;
+    }
+
+    .compact-mode button {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
+    .compact-mode .divider {
+      margin: 6px 0;
+    }
+
+    .compact-mode .settings-section h3 {
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    /* Compact mode for main navigation */
+    .compact-mode .mainnav button {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
+    /* Compact mode for tabs */
+    .compact-mode .tabs {
+      margin: 4px 16px 0 16px;
+    }
+
+    .compact-mode .tabs button {
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+
+    /* Compact mode for cards in other views */
+    .compact-mode .card:not(#view-forside .card) {
+      margin-bottom: 8px;
+    }
+
+    .compact-mode .card h2:not(#view-forside .card h2) {
+      padding: 6px 10px;
+      font-size: 13px;
+    }
+
+    .compact-mode .card .body:not(#view-forside .card .body) {
+      padding: 6px 10px;
+    }
+
+    .compact-mode .sp {
+      height: 4px;
+    }
+
+    .compact-mode .kpi .box {
+      padding: 4px 6px;
+    }
+
+    .compact-mode .log {
+      height: 180px;
+      font-size: 11px;
+    }
+
+    .compact-mode textarea {
+      height: 200px;
+      font-size: 11px;
+    }
+
+    /* No Animations Mode */
+    .no-animations *,
+    .no-animations *::before,
+    .no-animations *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+
+    /* Preserve essential transforms for layout */
+    .no-animations .card[style*="transform: translate(-50%, -50%)"] {
+      transform: translate(-50%, -50%) !important;
+    }
+
+    .no-animations .smart-device[style*="transform"] {
+      transform: inherit !important;
+    }
+
+    /* Preserve appbar transforms */
+    .no-animations .appbar .mainnav {
+      transform: translateY(-50%) !important;
+    }
+
+    .no-animations .appbar .brand {
+      transform: none !important;
+    }
+
+    .no-animations .onboarding-step {
+      animation: none !important;
+    }
+
+    .no-animations .card {
+      transition: none !important;
+    }
+
+    .no-animations button {
+      transition: none !important;
+    }
+
+    .no-animations button:hover {
+      transform: none !important;
+    }
+
+    .no-animations .mainnav button:hover {
+      transform: none !important;
+    }
+
+    .no-animations .settings-tab {
+      transition: none !important;
+    }
+
+    .no-animations .settings-tab:hover {
+      transform: none !important;
+    }
+
+    .no-animations .checkbox-label .checkmark {
+      transition: none !important;
+    }
+
+    .no-animations .checkbox-label:hover .checkmark {
+      border-color: var(--border-color) !important;
+    }
+
+    .no-animations .checkbox-label input[type="checkbox"]:checked + .checkmark {
+      transition: none !important;
+    }
+
+    .no-animations .onboardingFadeIn {
+      animation: none !important;
+    }
+
+    .no-animations .highlightPulse {
+      animation: none !important;
+    }
+
+    .no-animations .smart-device {
+      transition: none !important;
+    }
+
+    .no-animations .smart-device:hover {
+      transform: none !important;
+    }
+
+    .no-animations .task-card {
+      transition: none !important;
+    }
+
+    .no-animations .task-card:hover {
+      transform: none !important;
+    }
+
+    /* Debug Mode Styling */
+    .debug-mode * {
+      outline: 1px solid rgba(255, 0, 0, 0.1) !important;
+    }
+
+    .debug-mode .card {
+      outline: 2px solid rgba(255, 0, 0, 0.3) !important;
+    }
+
+    .debug-mode button {
+      outline: 1px solid rgba(0, 255, 0, 0.3) !important;
+    }
+
+    .debug-mode input,
+    .debug-mode select {
+      outline: 1px solid rgba(0, 0, 255, 0.3) !important;
+    }
+
+    .no-animations .fade-in {
+      animation: none !important;
+    }
+
+    .no-animations .slide-in {
+      animation: none !important;
+    }
+
+    .no-animations .bounce {
+      animation: none !important;
+    }
+
+    .no-animations .pulse {
+      animation: none !important;
+    }
+
     /* 3-kolonne layout inde i Simulator - balanceret plads */
 .wrap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
     .card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:10px;overflow:visible}
@@ -13259,6 +13479,8 @@ html {
     const compactMode = document.getElementById('compactMode');
     if(compactMode) {
       compactMode.checked = localStorage.getItem('smarthome_simulator.compactMode') === 'true';
+      // Apply compact mode on load if it was previously enabled
+      applyCompactMode(compactMode.checked);
       compactMode.addEventListener('change', (e) => {
         localStorage.setItem('smarthome_simulator.compactMode', e.target.checked);
         applyCompactMode(e.target.checked);
@@ -13268,6 +13490,8 @@ html {
     const animationsEnabled = document.getElementById('animationsEnabled');
     if(animationsEnabled) {
       animationsEnabled.checked = localStorage.getItem('smarthome_simulator.animationsEnabled') !== 'false';
+      // Apply animations setting on load
+      applyAnimations(animationsEnabled.checked);
       animationsEnabled.addEventListener('change', (e) => {
         localStorage.setItem('smarthome_simulator.animationsEnabled', e.target.checked);
         applyAnimations(e.target.checked);
@@ -13300,7 +13524,20 @@ html {
           // Clear various cache items
           localStorage.removeItem('smarthome_simulator.tempData');
           localStorage.removeItem('smarthome_simulator.cache');
-          alert('Cache ryddet!');
+          localStorage.removeItem('smarthome_simulator.autoSave');
+          localStorage.removeItem('smarthome_simulator.lastBackup');
+          localStorage.removeItem('smarthome_simulator.sessionData');
+          
+          // Clear browser cache for this site
+          if('caches' in window) {
+            caches.keys().then(names => {
+              names.forEach(name => {
+                caches.delete(name);
+              });
+            });
+          }
+          
+          alert('Cache ryddet! Ydeevnen skulle være forbedret.');
         }
       };
     }
@@ -13310,9 +13547,24 @@ html {
     if(exportDataBtn) {
       exportDataBtn.onclick = () => {
         const userData = {
+          exportDate: new Date().toISOString(),
+          version: '1.0',
+          user: localStorage.getItem('currentUser'),
           progress: localStorage.getItem('user_progress'),
           simulator: localStorage.getItem('user_simulator'),
-          learning: localStorage.getItem('user_learning')
+          learning: localStorage.getItem('user_learning'),
+          completedTasks: localStorage.getItem('completed_tasks'),
+          settings: {
+            theme: localStorage.getItem('smarthome_simulator.theme'),
+            compactMode: localStorage.getItem('smarthome_simulator.compactMode'),
+            animationsEnabled: localStorage.getItem('smarthome_simulator.animationsEnabled'),
+            debugMode: localStorage.getItem('smarthome_simulator.debugMode'),
+            autoSave: localStorage.getItem('smarthome_simulator.autoSave')
+          },
+          onboarding: {
+            completed: localStorage.getItem('smarthome_simulator.onboarding_completed'),
+            step: localStorage.getItem('smarthome_simulator.onboardingStep')
+          }
         };
         const dataStr = JSON.stringify(userData, null, 2);
         const dataBlob = new Blob([dataStr], {type: 'application/json'});
@@ -13339,9 +13591,29 @@ html {
             reader.onload = (e) => {
               try {
                 const data = JSON.parse(e.target.result);
+                
+                // Import basic data
                 if(data.progress) localStorage.setItem('user_progress', data.progress);
                 if(data.simulator) localStorage.setItem('user_simulator', data.simulator);
                 if(data.learning) localStorage.setItem('user_learning', data.learning);
+                if(data.completedTasks) localStorage.setItem('completed_tasks', data.completedTasks);
+                if(data.user) localStorage.setItem('currentUser', data.user);
+                
+                // Import settings
+                if(data.settings) {
+                  if(data.settings.theme) localStorage.setItem('smarthome_simulator.theme', data.settings.theme);
+                  if(data.settings.compactMode) localStorage.setItem('smarthome_simulator.compactMode', data.settings.compactMode);
+                  if(data.settings.animationsEnabled) localStorage.setItem('smarthome_simulator.animationsEnabled', data.settings.animationsEnabled);
+                  if(data.settings.debugMode) localStorage.setItem('smarthome_simulator.debugMode', data.settings.debugMode);
+                  if(data.settings.autoSave) localStorage.setItem('smarthome_simulator.autoSave', data.settings.autoSave);
+                }
+                
+                // Import onboarding
+                if(data.onboarding) {
+                  if(data.onboarding.completed) localStorage.setItem('smarthome_simulator.onboarding_completed', data.onboarding.completed);
+                  if(data.onboarding.step) localStorage.setItem('smarthome_simulator.onboardingStep', data.onboarding.step);
+                }
+                
                 alert('Data importeret! Siden vil genindlæses.');
                 setTimeout(() => window.location.reload(), 1000);
               } catch(error) {
@@ -13384,16 +13656,20 @@ html {
   function applyCompactMode(enabled) {
     if(enabled) {
       document.body.classList.add('compact-mode');
+      console.log('📱 Kompakt visning aktiveret');
     } else {
       document.body.classList.remove('compact-mode');
+      console.log('📱 Kompakt visning deaktiveret');
     }
   }
   
   function applyAnimations(enabled) {
     if(enabled) {
       document.body.classList.remove('no-animations');
+      console.log('🎬 Animationer aktiveret');
     } else {
       document.body.classList.add('no-animations');
+      console.log('🎬 Animationer deaktiveret');
     }
   }
   
@@ -13401,9 +13677,23 @@ html {
     if(enabled) {
       console.log('🔧 Debug mode enabled');
       window.debugMode = true;
+      
+      // Vis debug information
+      console.group('🔧 Debug Information');
+      console.log('Current user:', localStorage.getItem('currentUser'));
+      console.log('Onboarding completed:', localStorage.getItem('smarthome_simulator.onboarding_completed'));
+      console.log('Completed tasks:', localStorage.getItem('completed_tasks'));
+      console.log('Theme:', localStorage.getItem('smarthome_simulator.theme'));
+      console.log('Compact mode:', localStorage.getItem('smarthome_simulator.compactMode'));
+      console.log('Animations:', localStorage.getItem('smarthome_simulator.animationsEnabled'));
+      console.groupEnd();
+      
+      // Tilføj debug styling
+      document.body.classList.add('debug-mode');
     } else {
       console.log('🔧 Debug mode disabled');
       window.debugMode = false;
+      document.body.classList.remove('debug-mode');
     }
   }
   
@@ -13413,8 +13703,24 @@ html {
       // Start auto-save interval
       if(window.autoSaveInterval) clearInterval(window.autoSaveInterval);
       window.autoSaveInterval = setInterval(() => {
-        // Auto-save logic here
-        console.log('💾 Auto-saving...');
+        // Auto-save user progress and settings
+        const autoSaveData = {
+          timestamp: new Date().toISOString(),
+          user: localStorage.getItem('currentUser'),
+          progress: localStorage.getItem('user_progress'),
+          simulator: localStorage.getItem('user_simulator'),
+          learning: localStorage.getItem('user_learning'),
+          completedTasks: localStorage.getItem('completed_tasks'),
+          settings: {
+            theme: localStorage.getItem('smarthome_simulator.theme'),
+            compactMode: localStorage.getItem('smarthome_simulator.compactMode'),
+            animationsEnabled: localStorage.getItem('smarthome_simulator.animationsEnabled'),
+            debugMode: localStorage.getItem('smarthome_simulator.debugMode')
+          }
+        };
+        
+        localStorage.setItem('smarthome_simulator.autoSave', JSON.stringify(autoSaveData));
+        console.log('💾 Auto-saved at:', new Date().toLocaleTimeString());
       }, 30000); // Every 30 seconds
     } else {
       console.log('💾 Auto-save disabled');
