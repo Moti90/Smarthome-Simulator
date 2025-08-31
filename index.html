@@ -12425,17 +12425,46 @@ html {
           allClasses = allClasses.concat(firebaseClasses);
           console.log('✅ Hentet', firebaseClasses.length, 'klasser fra Firebase');
         } catch (error) {
-          console.warn('⚠️ Kunne ikke hente fra Firebase - bruger kun localStorage:', error.message);
+          console.error('❌ Firebase fejl ved hentning af skoler:', error);
+          console.error('🔍 Fejl kode:', error.code);
+          console.error('🔍 Fejl besked:', error.message);
+          
+          // Hvis det er permission-denied, giv specifik hjælp
+          if (error.code === 'permission-denied') {
+            console.error('🚫 Permission denied - Firebase sikkerhedsregler tillader ikke læsning af klasser');
+            console.error('💡 Løsning: Gå til Firebase Console → Firestore → Rules');
+            console.error('💡 Tilføj regel: allow read: if true; for classes collection');
+          }
+          
+          console.warn('⚠️ Bruger kun localStorage som fallback');
         }
+      } else {
+        console.log('🏠 Firebase ikke tilgængelig - bruger kun localStorage');
       }
       
-      // Hent fra localStorage som backup
+      // Hent fra localStorage som backup og primær kilde lokalt
       const localClasses = JSON.parse(localStorage.getItem('smarthome_classes') || '[]');
+      console.log('🏠 Henter klasser fra localStorage:', localClasses.length, 'klasser');
       allClasses = allClasses.concat(localClasses);
+      
+      // Hvis vi kører lokalt og ikke har klasser, opret en standard
+      if (isLocalEnvironment && localClasses.length === 0) {
+        console.log('🏠 Opretter standard klasser for lokalt kørsel...');
+        const defaultClasses = [
+          { schoolId: 'default', classId: 'default', className: 'Standard Klasse' },
+          { schoolId: 'test', classId: '9a', className: '9. Klasse A' },
+          { schoolId: 'test', classId: '10b', className: '10. Klasse B' }
+        ];
+        localStorage.setItem('smarthome_classes', JSON.stringify(defaultClasses));
+        allClasses = allClasses.concat(defaultClasses);
+        console.log('✅ Standard klasser oprettet');
+      }
       
       // Fjern duplikater og få unikke skoler
       const uniqueSchools = [...new Set(allClasses.map(cls => cls.schoolId))];
       uniqueSchools.sort(); // Sorter alfabetisk
+      
+      console.log('🏫 Fandt skoler:', uniqueSchools);
       
       // Opdater skole dropdown
       schoolSelect.innerHTML = '<option value="">Vælg din skole</option>';
@@ -12474,23 +12503,40 @@ html {
       // Hent fra Firebase hvis tilgængelig
       if (window.db && isFirebaseAvailable) {
         try {
+          console.log('🌐 Forsøger at hente klasser fra Firebase...');
           const snapshot = await window.db.collection('classes').get();
           const firebaseClasses = snapshot.docs.map(doc => ({
             ...doc.data(),
             id: doc.id
           }));
           allClasses = allClasses.concat(firebaseClasses);
+          console.log('✅ Hentet', firebaseClasses.length, 'klasser fra Firebase for skole:', schoolId);
         } catch (error) {
-          console.warn('⚠️ Kunne ikke hente klasser fra Firebase:', error.message);
+          console.error('❌ Firebase fejl ved hentning af klasser:', error);
+          console.error('🔍 Fejl kode:', error.code);
+          console.error('🔍 Fejl besked:', error.message);
+          
+          // Hvis det er permission-denied, giv specifik hjælp
+          if (error.code === 'permission-denied') {
+            console.error('🚫 Permission denied - Firebase sikkerhedsregler tillader ikke læsning af klasser');
+            console.error('💡 Løsning: Gå til Firebase Console → Firestore → Rules');
+            console.error('💡 Tilføj regel: allow read: if true; for classes collection');
+          }
+          
+          console.warn('⚠️ Bruger kun localStorage som fallback');
         }
+      } else {
+        console.log('🏠 Firebase ikke tilgængelig - bruger kun localStorage');
       }
       
-      // Hent fra localStorage som backup
+      // Hent fra localStorage som backup og primær kilde lokalt
       const localClasses = JSON.parse(localStorage.getItem('smarthome_classes') || '[]');
+      console.log('🏠 Henter klasser fra localStorage for skole:', schoolId, '-', localClasses.length, 'klasser totalt');
       allClasses = allClasses.concat(localClasses);
       
       // Filtrer klasser for den valgte skole
       const schoolClasses = allClasses.filter(cls => cls.schoolId === schoolId);
+      console.log('🏫 Fandt', schoolClasses.length, 'klasser for skole:', schoolId, ':', schoolClasses.map(c => c.classId));
       schoolClasses.sort((a, b) => a.classId.localeCompare(b.classId)); // Sorter alfabetisk
       
       // Opdater klasse dropdown
@@ -12519,6 +12565,47 @@ html {
   
 
 
+  // === Test Firebase connectivity ===
+  async function testFirebaseConnection() {
+    if (!window.db || !isFirebaseAvailable) {
+      console.log('🏠 Firebase ikke tilgængelig - kører lokalt');
+      return false;
+    }
+    
+    try {
+      console.log('🧪 Tester Firebase forbindelse...');
+      const testSnapshot = await window.db.collection('classes').limit(1).get();
+      console.log('✅ Firebase forbindelse virker - kan læse klasser');
+      return true;
+    } catch (error) {
+      console.error('❌ Firebase forbindelse fejler:', error);
+      console.error('🔍 Fejl kode:', error.code);
+      console.error('🔍 Fejl besked:', error.message);
+      return false;
+    }
+  }
+
+  // === Test klasser for lokalt kørsel ===
+  function createDefaultClassesIfNeeded() {
+    if (isLocalEnvironment) {
+      const existingClasses = JSON.parse(localStorage.getItem('smarthome_classes') || '[]');
+      if (existingClasses.length === 0) {
+        console.log('🏠 Opretter standard klasser for lokalt kørsel...');
+        const defaultClasses = [
+          { schoolId: 'default', classId: 'default', className: 'Standard Klasse' },
+          { schoolId: 'test', classId: '9a', className: '9. Klasse A' },
+          { schoolId: 'test', classId: '10b', className: '10. Klasse B' },
+          { schoolId: 'demo', classId: 'demo1', className: 'Demo Klasse 1' },
+          { schoolId: 'demo', classId: 'demo2', className: 'Demo Klasse 2' }
+        ];
+        localStorage.setItem('smarthome_classes', JSON.stringify(defaultClasses));
+        console.log('✅ Standard klasser oprettet:', defaultClasses.length, 'klasser');
+        return defaultClasses;
+      }
+    }
+    return [];
+  }
+
   // === Firebase konfiguration ===
   console.log('🔍 Firebase konfiguration startet');
   
@@ -12540,6 +12627,14 @@ html {
     if (window.location.hash === '#learning' || document.querySelector('#view-learning.active')) {
       setTimeout(forceLearningLayout, 100);
     }
+    
+    // Opret standard klasser hvis nødvendigt
+    createDefaultClassesIfNeeded();
+    
+    // Test Firebase forbindelse
+    setTimeout(() => {
+      testFirebaseConnection();
+    }, 1000);
   });
   // Firebase konfiguration (kun til progress tracking)
   const firebaseConfig = {
