@@ -14532,6 +14532,12 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Setup drag and drop for smart devices
   setupSmartDeviceDragAndDrop();
+  
+  // Indlæs gemte automation rules
+  loadAutomationRules();
+  
+  // Indlæs gemte device positioner
+  loadDevicePositions();
 });
 
 // Smart Device Drag and Drop Functionality
@@ -14612,6 +14618,9 @@ function setupSmartDeviceDragAndDrop() {
         
         draggedDevice.style.left = clampedX + '%';
         draggedDevice.style.top = clampedY + '%';
+        
+        // Gem position til localStorage
+        saveDevicePosition(draggedDevice.dataset.device, clampedX, clampedY);
       }
     }
   });
@@ -14624,6 +14633,37 @@ function setupSmartDeviceDragAndDrop() {
       isDragging = false;
     }
   });
+}
+
+// Gem device position til localStorage
+function saveDevicePosition(deviceId, x, y) {
+  try {
+    const positions = JSON.parse(localStorage.getItem('devicePositions') || '{}');
+    positions[deviceId] = { x, y };
+    localStorage.setItem('devicePositions', JSON.stringify(positions));
+    console.log('💾 Device position saved:', deviceId, 'at', x + '%,', y + '%');
+  } catch (e) {
+    console.error('❌ Could not save device position:', e.message);
+  }
+}
+
+// Indlæs device positioner fra localStorage
+function loadDevicePositions() {
+  try {
+    const positions = JSON.parse(localStorage.getItem('devicePositions') || '{}');
+    
+    Object.keys(positions).forEach(deviceId => {
+      const device = document.querySelector(`[data-device="${deviceId}"]`);
+      if (device && positions[deviceId]) {
+        const { x, y } = positions[deviceId];
+        device.style.left = x + '%';
+        device.style.top = y + '%';
+        console.log('📂 Device position loaded:', deviceId, 'at', x + '%,', y + '%');
+      }
+    });
+  } catch (e) {
+    console.error('❌ Could not load device positions:', e.message);
+  }
 }
 </script>
 
@@ -16185,6 +16225,15 @@ function pulseSecurityDevices() {
 
 // Notification system
 function showNotification(message, type = 'info') {
+  // Delay mellem beskeder for at undgå spam
+  if (window.lastNotificationTime && Date.now() - window.lastNotificationTime < 4000) {
+    setTimeout(() => showNotification(message, type), 4000);
+    return;
+  }
+  
+  // Opdater sidste besked tid
+  window.lastNotificationTime = Date.now();
+  
   // Create notification element
   const notification = document.createElement('div');
   notification.className = `notification notification-${type}`;
@@ -16303,7 +16352,34 @@ function addAutomationRule(rule) {
   automationRules.push(rule);
   updateRuleList();
   updateRuleCount();
+  saveAutomationRules(); // Gem automatisk når regler tilføjes
   console.log('🤖 Added automation rule:', rule.name);
+}
+
+// Gem automation rules til localStorage
+function saveAutomationRules() {
+  try {
+    localStorage.setItem('automationRules', JSON.stringify(automationRules));
+    console.log('💾 Automation rules saved to localStorage');
+  } catch (e) {
+    console.error('❌ Could not save automation rules:', e.message);
+  }
+}
+
+// Indlæs automation rules fra localStorage
+function loadAutomationRules() {
+  try {
+    const savedRules = localStorage.getItem('automationRules');
+    if (savedRules) {
+      automationRules = JSON.parse(savedRules);
+      console.log('📂 Automation rules loaded from localStorage:', automationRules.length, 'rules');
+      updateRuleList();
+      updateRuleCount();
+    }
+  } catch (e) {
+    console.error('❌ Could not load automation rules:', e.message);
+    automationRules = []; // Reset hvis der er fejl
+  }
 }
 
 function updateRuleList() {
@@ -16333,6 +16409,7 @@ function updateRuleList() {
       toggle.classList.toggle('on', rule.enabled);
       console.log('🤖 Rule', rule.name, rule.enabled ? 'enabled' : 'disabled');
       updateRuleCount();
+      saveAutomationRules(); // Gem automatisk når regler ændres
     });
     
     // Add delete functionality
@@ -16366,6 +16443,9 @@ function deleteAutomationRule(index, ruleName) {
     // Opdater UI
     updateRuleList();
     updateRuleCount();
+    
+    // Gem automatisk når regler slettes
+    saveAutomationRules();
     
     // Vis success notification
     showNotification(`🗑️ Regel "${ruleName}" er slettet`, 'info');
