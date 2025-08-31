@@ -10,8 +10,8 @@ echo 💾 Committing changes...
 git commit -m "Fix brugeroprettelse problem - Rettet localStorage keys og tilføjet event handler"
 
 echo.
-echo 📤 Pushing to GitHub...
-git push origin main
+echo 📤 Pushing to GitHub (force with lease)...
+git push --force-with-lease origin main
 
 echo.
 echo ✅ Done! Check https://github.com/Moti90/Smarthome-Simulator
