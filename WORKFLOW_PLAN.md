@@ -82,6 +82,8 @@
 #### B. Quality Checks
 - [ ] **Code review** - Tjek egen kode
 - [ ] **Security check** - Sikkerhedsregler følgt
+- [ ] **Snyk security scan** - Kør `npm run security:scan`
+- [ ] **Vulnerability check** - Tjek for sikkerhedshuller
 - [ ] **Performance check** - Ingen unødvendig overhead
 - [ ] **Compatibility check** - Virker med eksisterende kode
 
@@ -97,6 +99,32 @@
 - [ ] **Update todo.md** - Marker opgave som færdig
 - [ ] **Log lærdomme** - Hvad gik godt/dårligt?
 - [ ] **Plan næste skridt** - Hvad skal der laves nu?
+
+### 5. **SMART BACKUP PHASE** - Kun backup fungerende kode
+
+#### A. Backup Verification Process
+- [ ] **Efter hver større feature** - Spørg: "Virker denne feature som forventet?"
+- [ ] **Efter bug fixes** - Spørg: "Er problemet løst?"
+- [ ] **Efter refactoring** - Spørg: "Virker alt stadig som før?"
+- [ ] **Efter security updates** - Spørg: "Virker sikkerheden som forventet?"
+
+#### B. Backup Decision Logic
+- [ ] **Ved "Ja" svar** - Lav backup commit med beskrivende besked
+- [ ] **Ved "Nej" svar** - Fix problem først, spørg igen
+- [ ] **Ved "Delvist" svar** - Fix manglende dele, spørg igen
+- [ ] **Ved "Ved ikke" svar** - Test sammen, spørg igen
+
+#### C. Backup Commit Format
+```bash
+git add .
+git commit -m "BACKUP: [Feature/Bug/Refactor] - [Beskrivelse] - $(date)"
+# Eksempel: "BACKUP: Feature - Smart home automation rules - 2024-01-15"
+```
+
+#### D. Backup Frequency Guidelines
+- **Altid backup efter**: Ny feature, bug fix, security update
+- **Ikke backup**: Midlertidige ændringer, test kode, broken features
+- **Spørg altid**: "Skal jeg lave backup af disse ændringer?"
 
 ## 📋 Template for Task Planning
 

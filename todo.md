@@ -3,19 +3,47 @@
 ## 🚀 Current Sprint (Prioritet 1)
 
 ### Backend Planning & Architecture
-- [ ] **Diskutere backend mål og krav** - Hvad skal backend håndtere?
-  - Data persistence (regler, indstillinger, progress)
-  - Multi-user support (klasser/studerende)
-  - Real-time collaboration
-  - API til eksterne systemer
-- [ ] **Vælge backend teknologi stack**
-  - Database type (SQL vs NoSQL)
-  - Backend framework/sprog
-  - Authentication system
-- [ ] **Designe API endpoints**
-  - RESTful API struktur
-  - Data modeller
-  - Authentication flows
+- [x] **Frontend Code Analysis Complete** - ✅ Komplet analyse af applikationen
+  - Applikationsstruktur og kernefunktionalitet dokumenteret
+  - Data flows og state management analyseret
+  - Sikkerhedsproblemer identificeret og prioriteret
+  - Backend behov mappet baseret på nuværende funktionalitet
+- [x] **Backend Planning & Architecture Complete** - ✅ Komplet Firebase backend planlægning
+  - BACKEND_PLAN.md oprettet med Firebase cloud-baseret arkitektur
+  - API_DESIGN.md oprettet med Firebase Cloud Functions endpoints
+  - DATABASE_SCHEMA.md oprettet med Firestore collections
+  - Anbefalet teknologi stack: Firebase (Auth + Firestore + Functions + Hosting)
+- [x] **Teknologi Stack Valgt** - ✅ Firebase cloud-baseret løsning
+  - Ingen server administration nødvendig
+  - Gratis tier tilgængelig
+  - Real-time capabilities
+  - Automatisk skalering
+- [x] **Setup Firebase Project** - ✅ Firebase backend setup komplet
+  - Firebase konfigurationsfiler oprettet
+  - Authentication service implementeret
+  - Database service implementeret
+  - Firestore sikkerhedsregler opsat
+  - Firebase setup guide oprettet
+  - Næste skridt: Oprette Firebase projekt i Firebase Console
+- [ ] **Oprette Firebase Projekt** - Implementere Firebase backend
+  - Oprette projekt i Firebase Console
+  - Konfigurere Authentication, Firestore, Hosting
+  - Teste local emulators
+  - Integrere med frontend
+
+### Infrastructure & Setup
+- [x] **Backup & Version Control Setup** - ✅ Git repository oprettet
+  - Git repository initialiseret
+  - .gitignore konfigureret
+  - Backup scripts tilføjet
+  - Backup dokumentation oprettet
+  - Initial commit med alle filer
+- [x] **GitHub Upload Optimization** - ✅ Optimized for GitHub Pages
+  - Selective file upload (kun nødvendige filer)
+  - GitHub-specifik README oprettet
+  - Upload script optimeret
+  - Deployment guide oprettet
+  - .gitignore opdateret med ekskluderinger
 
 ### Frontend Forbedringer
 - [ ] **Optimere performance**
@@ -115,15 +143,33 @@
   - Data encryption plan
   - API security patterns
 - [x] **Security Tooling Setup** - ✅ package.json med sikkerhedsdependencies
-  - Snyk integration
+  - Snyk integration og konfiguration
   - ESLint security rules
   - Husky pre-commit hooks
   - Security testing scripts
+  - MCP setup guide oprettet
+  - Security risk analysis dokumenteret
 - [ ] **Frontend Security**
   - XSS protection implementation
   - CSRF protection
   - Content Security Policy (CSP)
   - Secure data handling
+  - **Fix Hardcoded Secret** - Firebase API nøgle i index.html (Snyk Score: 825)
+    - Fjern hårdkodet API nøgle fra linje 13124
+    - Implementer sikker konfiguration metode
+    - Test at progress tracking stadig virker
+  - **Fix XSS Vulnerability #1** - Unsanitized input i innerHTML (Snyk Score: 600)
+    - Linje 11161: `res.warn` variabel i innerHTML assignment
+    - Implementer input sanitization for `res.warn`
+    - Test at warning funktionalitet stadig virker
+  - **Fix XSS Vulnerability #2** - Unsanitized HTML assignment (Snyk Score: 600)
+    - Linje 12688: `container.innerHTML = html;`
+    - Implementer HTML sanitization for `html` variabel
+    - Test at container rendering stadig virker
+  - **Fix postMessage Validation** - Insufficient origin checking (Snyk Score: 425)
+    - Linje 5016: `window.chrome.webview.addEventListener('message', (e) => {`
+    - Implementer origin validation for postMessage
+    - Test at webview kommunikation stadig virker
 - [ ] **Infrastructure Security**
   - HTTPS/TLS configuration
   - Database security
@@ -193,6 +239,7 @@
 - **APPROVAL PHASE**: Vent på eksplicit godkendelse
 - **EXECUTION PHASE**: Følg planen præcist
 - **VALIDATION PHASE**: Verificer alle exit krav
+- **SMART BACKUP PHASE**: Spørg om funktionalitet virker før backup
 
 ### For hver opgave skal jeg:
 1. **Analysere** - Forstå scope og impact
@@ -200,4 +247,5 @@
 3. **Presentere** - Vis plan til godkendelse
 4. **Implementere** - Følg godkendt plan
 5. **Validere** - Tjek at alle krav er opfyldt
+6. **Smart Backup** - Spørg om funktionalitet virker før backup
 6. **Dokumentere** - Opdater todo.md og andre filer

@@ -111,3 +111,22 @@ jspm_packages/
 # Local development files
 local/
 dev/
+
+# GitHub deployment exclusions
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+firebase-debug.*.log
+# Development and backup files (not needed for GitHub Pages)
+todo.md
+WORKFLOW_PLAN.md
+BACKUP_README.md
+SECURITY_PLAN.md
+.eslintrc.security.js
+package.json
+upload_to_github.bat
+h --force-with-lease origin main
+t.html
