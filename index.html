@@ -13327,9 +13327,10 @@ html {
         migrateUserDataToFirebase(userCredential.user.uid);
 
     } catch (error) {
-        // Hvis login fejler, kan det være fordi brugeren ikke findes
-        if (error.code === 'auth/user-not-found') {
+        // Moderne Firebase bruger 'auth/invalid-credential' for både user-not-found og wrong-password
+        if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
             try {
+                console.log("🔄 Bruger ikke fundet - forsøger at oprette ny bruger...");
                 // Forsøger at oprette en ny bruger
                 const newUserCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
                 console.log("🎉 Ny bruger oprettet og logget ind:", newUserCredential.user.uid);
