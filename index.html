@@ -6,9 +6,10 @@
   <meta http-equiv="x-ua-compatible" content="IE=edge" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   
-  <!-- Firebase Firestore SDK (kun til progress tracking) -->
+  <!-- Firebase SDK (til progress tracking og authentication) -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   
   <!-- App Initialization -->
   <script>
@@ -86,6 +87,114 @@
     .theme-selector select:focus {
       outline: none;
       border-color: var(--accent-color);
+    }
+
+    /* Login View Styling */
+    #loginView {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      backdrop-filter: blur(10px);
+    }
+
+    .login-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .login-logo {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .login-title {
+      color: var(--text-primary);
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .login-input {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s ease;
+    }
+
+    .login-input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .login-button {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .login-button:hover {
+      background: #0d9488;
+    }
+
+    .login-button:disabled {
+      background: var(--border-color);
+      cursor: not-allowed;
+    }
+
+    .login-error {
+      color: #ef4444;
+      font-size: 12px;
+      margin-top: 8px;
+      min-height: 16px;
+    }
+
+    .login-info {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    /* Hide main app initially */
+    #mainApp {
+      display: none;
     }
 
     /* Faner (SPA) */
@@ -5295,6 +5404,46 @@ html {
 
 </head>
 <body>
+
+<!-- Login View -->
+<div id="loginView" style="display: flex;">
+  <div class="login-container">
+    <div class="login-logo">🏠</div>
+    <h1 class="login-title">Smart Home Simulator</h1>
+    <p class="login-subtitle">Log ind for at gemme dit fremskridt og få adgang til alle funktioner</p>
+    
+    <form class="login-form" onsubmit="doLogin(); return false;">
+      <input 
+        type="email" 
+        id="loginEmail" 
+        class="login-input" 
+        placeholder="Email adresse" 
+        required
+        autocomplete="email"
+      >
+      <input 
+        type="password" 
+        id="loginPassword" 
+        class="login-input" 
+        placeholder="Adgangskode" 
+        required
+        autocomplete="current-password"
+        minlength="6"
+      >
+      <button type="submit" class="login-button">Log ind</button>
+      <div id="loginError" class="login-error"></div>
+    </form>
+    
+    <div class="login-info">
+      <strong>Første gang?</strong><br>
+      Indtast bare din email og en adgangskode - kontoen oprettes automatisk!<br><br>
+      <strong>Sikkerhed:</strong> Dine data gemmes sikkert med Firebase Authentication
+    </div>
+  </div>
+</div>
+
+<!-- Main App (hidden initially) -->
+<div id="mainApp">
 
 <header class="appbar" style="display: flex;">
   <div class="brand">
@@ -13119,7 +13268,7 @@ html {
     // Setup toggle buttons
     setupToggleButtons();
   });
-  // Firebase konfiguration (kun til progress tracking)
+  // Firebase konfiguration (til progress tracking og authentication)
   const firebaseConfig = {
     apiKey: "AIzaSyCdXnszAUJfkC5uyv9n-kVE2Whv_0vZfLk",
     authDomain: "ibi-simulator-f6ebe.firebaseapp.com",
@@ -13129,6 +13278,174 @@ html {
     appId: "1:929875729041:web:d53f21685b20d63fb73d30",
     measurementId: "G-YR3XWP3RVH"
   };
+
+  // Initialiser Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  // === AUTHENTICATION SYSTEM ===
+  
+  // Håndterer login og brugeroprettelse
+  async function doLogin() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const errorDiv = document.getElementById('loginError');
+    const loginButton = document.querySelector('.login-button');
+
+    // Reset error message
+    errorDiv.textContent = '';
+    loginButton.disabled = true;
+    loginButton.textContent = 'Logger ind...';
+
+    try {
+        // Forsøger først at logge brugeren ind
+        const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+        console.log("✅ Logget ind med Firebase:", userCredential.user.uid);
+        
+        // Når login er succesfuldt, skjules login-boksen
+        document.getElementById('loginView').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+
+        // Migrer localStorage data til Firebase ved første login
+        migrateUserDataToFirebase(userCredential.user.uid);
+
+    } catch (error) {
+        // Hvis login fejler, kan det være fordi brugeren ikke findes
+        if (error.code === 'auth/user-not-found') {
+            try {
+                // Forsøger at oprette en ny bruger
+                const newUserCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+                console.log("🎉 Ny bruger oprettet og logget ind:", newUserCredential.user.uid);
+                
+                // Opdater UI til den nye bruger
+                document.getElementById('loginView').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+
+                // Migrer localStorage data til Firebase for ny bruger
+                migrateUserDataToFirebase(newUserCredential.user.uid);
+                
+            } catch (createError) {
+                console.error("❌ Kunne ikke oprette bruger:", createError.message);
+                errorDiv.textContent = getFirebaseErrorMessage(createError);
+            }
+        } else {
+            // Håndterer andre login-fejl
+            console.error("❌ Login-fejl:", error.message);
+            errorDiv.textContent = getFirebaseErrorMessage(error);
+        }
+    } finally {
+        // Reset button state
+        loginButton.disabled = false;
+        loginButton.textContent = 'Log ind';
+    }
+  }
+
+  // Konverter Firebase fejlkoder til brugervenlige beskeder
+  function getFirebaseErrorMessage(error) {
+    switch (error.code) {
+        case 'auth/user-not-found':
+            return 'Bruger ikke fundet - opretter automatisk ny konto...';
+        case 'auth/wrong-password':
+            return 'Forkert adgangskode. Prøv igen.';
+        case 'auth/invalid-email':
+            return 'Ugyldig email adresse.';
+        case 'auth/user-disabled':
+            return 'Denne bruger er deaktiveret.';
+        case 'auth/too-many-requests':
+            return 'For mange forsøg. Prøv igen senere.';
+        case 'auth/weak-password':
+            return 'Adgangskoden skal være mindst 6 tegn lang.';
+        case 'auth/email-already-in-use':
+            return 'Email adressen er allerede i brug.';
+        case 'auth/operation-not-allowed':
+            return 'Email/password login er ikke aktiveret.';
+        case 'auth/network-request-failed':
+            return 'Netværksfejl. Tjek din internetforbindelse.';
+        default:
+            return `Fejl: ${error.message}`;
+    }
+  }
+
+  // Migrer localStorage data til Firebase
+  async function migrateUserDataToFirebase(userId) {
+    try {
+        console.log('🔄 Migrerer localStorage data til Firebase...');
+        
+        // Hent data fra localStorage
+        const progressData = localStorage.getItem('taskProgress');
+        const settingsData = localStorage.getItem('appSettings');
+        const rulesData = localStorage.getItem('homeAutomationRules');
+        
+        if (progressData || settingsData || rulesData) {
+            const userDocRef = firebase.firestore().collection('users').doc(userId);
+            
+            const migrationData = {
+                migratedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                lastActive: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            if (progressData) {
+                migrationData.taskProgress = JSON.parse(progressData);
+            }
+            
+            if (settingsData) {
+                migrationData.appSettings = JSON.parse(settingsData);
+            }
+            
+            if (rulesData) {
+                migrationData.homeAutomationRules = JSON.parse(rulesData);
+            }
+            
+            await userDocRef.set(migrationData, { merge: true });
+            console.log('✅ Data migreret til Firebase succesfuldt');
+        }
+        
+    } catch (error) {
+        console.error('❌ Fejl ved data migration:', error);
+        // Fejl ved migration stopper ikke login processen
+    }
+  }
+
+  // Lytter efter login-status-ændringer
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+        // Brugeren er logget ind (fra en tidligere session)
+        console.log("✅ Allerede logget ind som:", user.uid);
+        document.getElementById('loginView').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        
+        // Opdater sidste aktivitet
+        updateUserActivity(user.uid);
+    } else {
+        // Brugeren er ikke logget ind
+        console.log("❌ Ikke logget ind.");
+        document.getElementById('loginView').style.display = 'flex';
+        document.getElementById('mainApp').style.display = 'none';
+    }
+  });
+
+  // Opdater brugerens sidste aktivitet
+  async function updateUserActivity(userId) {
+    try {
+        await firebase.firestore().collection('users').doc(userId).set({
+            lastActive: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+    } catch (error) {
+        console.log('ℹ️ Kunne ikke opdatere brugeraktivitet:', error.message);
+    }
+  }
+
+  // Logout funktion (kan tilføjes senere i UI)
+  async function doLogout() {
+    try {
+        await firebase.auth().signOut();
+        console.log('👋 Logget ud succesfuldt');
+    } catch (error) {
+        console.error('❌ Logout fejl:', error);
+    }
+  }
+
+  // Gør logout tilgængelig globalt (til senere brug)
+  window.doLogout = doLogout;
 
   // Tjek om vi kører lokalt (file:// eller localhost)
   const isLocalEnvironment = window.location.protocol === 'file:' || 
@@ -16530,6 +16847,8 @@ function setupToggleButtons() {
 // Make only essential functions globally accessible
 window.setupToggleButtons = setupToggleButtons;
 </script>
+
+</div> <!-- End mainApp -->
 
 </body>
 </html>
