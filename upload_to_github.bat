@@ -14,8 +14,8 @@ echo 💾 Committing changes...
 git commit -m "Update Smart Home Simulator - Full project with backend and security files"
 
 echo.
-echo 📤 Pushing to GitHub...
-git push origin main
+echo 📤 Pushing to GitHub (using force-with-lease to resolve conflicts)...
+git push --force-with-lease origin main
 
 echo.
 echo ✅ Done! Full project uploaded to GitHub
