@@ -14,7 +14,12 @@
       "**/node_modules/**",
       "**/functions/**",
       "**/firestore.rules",
-      "**/firestore.indexes.json"
+      "**/firestore.indexes.json",
+      "todo.md",
+      "WORKFLOW_PLAN.md",
+      "BACKUP_README.md",
+      "SECURITY_PLAN.md",
+      "*.md"
     ],
     "rewrites": [
       {

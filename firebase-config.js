@@ -2,15 +2,15 @@
 // This file contains Firebase initialization and service configuration
 
 // Firebase configuration object
-// Replace with your actual Firebase project config
+// Your actual Firebase project config
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID",
-  measurementId: "YOUR_MEASUREMENT_ID"
+  apiKey: "AIzaSyCdXnszAUJfkC5uyv9n-kVE2Whv_0vZfLk",
+  authDomain: "ibi-simulator-f6ebe.firebaseapp.com",
+  projectId: "ibi-simulator-f6ebe",
+  storageBucket: "ibi-simulator-f6ebe.firebasestorage.app",
+  messagingSenderId: "929875729041",
+  appId: "1:929875729041:web:d53f21685b20d63fb73d30",
+  measurementId: "G-YR3XWP3RVH"
 };
 
 // Initialize Firebase
