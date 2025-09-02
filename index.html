@@ -13291,6 +13291,24 @@ html {
     const errorDiv = document.getElementById('loginError');
     const loginButton = document.querySelector('.login-button');
 
+    // DEBUG: Tjek hvad vi faktisk læser fra inputfelterne
+    console.log("🔍 Email værdi:", email);
+    console.log("🔍 Password værdi:", password);
+    console.log("🔍 Password længde:", password ? password.length : 'undefined/null');
+
+    // Valider input før vi sender til Firebase
+    if (!email || !password) {
+        console.error("❌ Manglende input data");
+        errorDiv.textContent = 'Indtast både email og adgangskode';
+        return;
+    }
+
+    if (password.length < 6) {
+        console.error("❌ Password for kort");
+        errorDiv.textContent = 'Adgangskoden skal være mindst 6 tegn lang';
+        return;
+    }
+
     // Reset error message
     errorDiv.textContent = '';
     loginButton.disabled = true;
@@ -13365,43 +13383,17 @@ html {
     }
   }
 
-  // Migrer localStorage data til Firebase
+  // Migrer localStorage data til Firebase (kun hvis tilladelser er korrekte)
   async function migrateUserDataToFirebase(userId) {
     try {
-        console.log('🔄 Migrerer localStorage data til Firebase...');
+        console.log('🔄 Springer data migration over på grund af permission problemer');
+        console.log('ℹ️ Data forbliver i localStorage indtil Firestore rules er løst');
         
-        // Hent data fra localStorage
-        const progressData = localStorage.getItem('taskProgress');
-        const settingsData = localStorage.getItem('appSettings');
-        const rulesData = localStorage.getItem('homeAutomationRules');
-        
-        if (progressData || settingsData || rulesData) {
-            const userDocRef = firebase.firestore().collection('users').doc(userId);
-            
-            const migrationData = {
-                migratedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                lastActive: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            
-            if (progressData) {
-                migrationData.taskProgress = JSON.parse(progressData);
-            }
-            
-            if (settingsData) {
-                migrationData.appSettings = JSON.parse(settingsData);
-            }
-            
-            if (rulesData) {
-                migrationData.homeAutomationRules = JSON.parse(rulesData);
-            }
-            
-            await userDocRef.set(migrationData, { merge: true });
-            console.log('✅ Data migreret til Firebase succesfuldt');
-        }
+        // Skip Firebase data migration for nu - brug kun localStorage
+        // Dette forhindrer permission errors fra at ødelægge login experience
         
     } catch (error) {
-        console.error('❌ Fejl ved data migration:', error);
-        // Fejl ved migration stopper ikke login processen
+        console.log('ℹ️ Data migration fejl (forventet):', error.message);
     }
   }
 
@@ -13423,12 +13415,11 @@ html {
     }
   });
 
-  // Opdater brugerens sidste aktivitet
+  // Opdater brugerens sidste aktivitet (deaktiveret pga. permissions)
   async function updateUserActivity(userId) {
     try {
-        await firebase.firestore().collection('users').doc(userId).set({
-            lastActive: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true });
+        console.log('ℹ️ Springer brugeraktivitet opdatering over pga. permission problemer');
+        // Skip Firebase writes for nu
     } catch (error) {
         console.log('ℹ️ Kunne ikke opdatere brugeraktivitet:', error.message);
     }
