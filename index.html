@@ -13228,24 +13228,24 @@ html {
     }
   }
 
-  // Lytter efter login-status-ændringer
-  firebase.auth().onAuthStateChanged(user => {
-    if (user) {
-        // Brugeren er logget ind (fra en tidligere session)
-        console.log("✅ Allerede logget ind som:", user.uid);
-        // IKKE skjul login view automatisk - lad brugeren klikke login
-        // document.getElementById('loginView').style.display = 'none';
-        // document.getElementById('mainApp').style.display = 'block';
-        
-        // Opdater sidste aktivitet
-        updateUserActivity(user.uid);
-    } else {
-        // Brugeren er ikke logget ind
-        console.log("❌ Ikke logget ind.");
-        document.getElementById('loginView').style.display = 'flex';
-        document.getElementById('mainApp').style.display = 'none';
-    }
-  });
+  // Lytter efter login-status-ændringer - DEAKTIVERET
+  // firebase.auth().onAuthStateChanged(user => {
+  //   if (user) {
+  //       // Brugeren er logget ind (fra en tidligere session)
+  //       console.log("✅ Allerede logget ind som:", user.uid);
+  //       // IKKE skjul login view automatisk - lad brugeren klikke login
+  //       // document.getElementById('loginView').style.display = 'none';
+  //       // document.getElementById('mainApp').style.display = 'block';
+  //       
+  //       // Opdater sidste aktivitet
+  //       updateUserActivity(user.uid);
+  //   } else {
+  //       // Brugeren er ikke logget ind
+  //       console.log("❌ Ikke logget ind.");
+  //       document.getElementById('loginView').style.display = 'flex';
+  //       document.getElementById('mainApp').style.display = 'none';
+  //   }
+  // });
 
   // Opdater brugerens sidste aktivitet (deaktiveret pga. permissions)
   async function updateUserActivity(userId) {
