@@ -5445,21 +5445,7 @@ html {
 <!-- Main App (hidden initially) -->
 <div id="mainApp">
 
-<header class="appbar" style="display: flex;">
-  <div class="brand">
-    <img src="LOGO.png" alt="SMARTHOME SIMULATOR logo" height="50" style="margin-left: -900px;">
-    <span style="color: white; font-size: 24px; margin-left: 10px; font-weight: 500;">Smarthome Simulator</span>
-  </div>
-  
-  <nav class="mainnav">
-    <button type="button" data-target="view-forside">🏡 Forside</button>
-    <button type="button" data-target="view-sim">📊 Sensorer & Regler</button>
-    <button type="button" data-target="view-home">🏠 Smart Home</button>
-    <button type="button" data-target="view-learning">📚 Læring</button>
-    <button type="button" data-target="view-tasks" title="Kom godt i gang">🚀 Opgaver</button>
-    <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
-  </nav>
-</header>
+
 
 
 
@@ -5543,6 +5529,10 @@ html {
   </div>
 
   <div id="mainApp" style="display:none;">
+
+  
+
+
 
   <!-- Onboarding System -->
   <div id="onboardingOverlay" class="onboarding-overlay"></div>
@@ -5912,13 +5902,7 @@ html {
   </header>
 
   <!-- Faner -->
-  <div class="tabs">
-    <button id="tabSim"  class="active">Simulator</button>
-    <button id="tabFlow">Flow (beta)</button>
-    <button id="tabLearning">📚 Læring</button>
-    <button id="tabSettings">Indstillinger</button>
 
-  </div>
 
   <div class="views">
     <!-- ===== View: Forside ===== -->
@@ -13249,8 +13233,9 @@ html {
     if (user) {
         // Brugeren er logget ind (fra en tidligere session)
         console.log("✅ Allerede logget ind som:", user.uid);
-        document.getElementById('loginView').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
+        // IKKE skjul login view automatisk - lad brugeren klikke login
+        // document.getElementById('loginView').style.display = 'none';
+        // document.getElementById('mainApp').style.display = 'block';
         
         // Opdater sidste aktivitet
         updateUserActivity(user.uid);
