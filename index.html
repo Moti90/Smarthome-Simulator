@@ -5461,43 +5461,7 @@ html {
   </nav>
 </header>
 
-  <!-- SmartHome Simulator Intro -->
-  <div id="loginView" style="display:none;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
-    <div class="logo-container">
-      <img src="LOGO.png" alt="SmartHome Simulator Logo" class="logo">
-      <!-- Wi-Fi bølger (pulserende) -->
-      <div class="wifi"></div>
-      <div class="wifi"></div>
-      <div class="wifi"></div>
-    </div>
-    
-    <!-- Login/Brugeroprettelse Card -->
-    <div class="card login-card">
-      <div class="body">
-        <h3 id="loginTitle" style="text-align:center; margin-bottom:20px; color:#00f7ff;">Opret din brugerkonto</h3>
-        <p id="loginSubtitle" style="text-align:center; margin-bottom:20px; color:#9ca3af; font-size:14px;">Opret en konto for at gemme dit fremskridt og opgave-resultater</p>
-        
-        <div style="margin-bottom:16px;">
-          <label style="display:block; margin-bottom:6px; color:#9ca3af; font-size:14px;">Brugernavn</label>
-          <input id="loginUser" placeholder="Indtast dit brugernavn" autocomplete="username" style="width:100%; padding:10px; border-radius:8px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e9f0;">
-        </div>
-        
-        <div style="margin-bottom:20px;">
-          <label style="display:block; margin-bottom:6px; color:#9ca3af; font-size:14px;">Adgangskode</label>
-          <input id="loginPass" type="password" placeholder="Indtast din adgangskode" autocomplete="current-password" style="width:100%; padding:10px; border-radius:8px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e9f0;">
-        </div>
-        
-        <button id="btnLogin" class="success" style="width:100%; padding:12px; font-size:16px; border-radius:10px; margin-bottom:12px;">
-          🚀 Opret konto & Start Simulator
-        </button>
-        
-        <p id="loginError" style="color:#ef4444; text-align:center; margin-bottom:0; font-size:14px;"></p>
-      </div>
-    </div>
-    
-    <!-- Signature -->
-    <div class="login-signature">@ Rasmus Jakobsen</div>
-  </div>
+
 
   <!-- User Registration Modal -->
   <div id="registerModal" class="modal-overlay" style="display:none;">
@@ -5578,7 +5542,7 @@ html {
     </div>
   </div>
 
-  <div id="mainApp" style="display:block;">
+  <div id="mainApp" style="display:none;">
 
   <!-- Onboarding System -->
   <div id="onboardingOverlay" class="onboarding-overlay"></div>
@@ -11334,31 +11298,8 @@ html {
   })();
 })();
 
-  // === Login & credentials (localStorage) ===
-  function getStoredCreds(){
-    return { user: localStorage.getItem('simUser') || 'admin', pass: localStorage.getItem('simPass') || '1234' };
-  }
-  async function tryLogin(u,p){ 
-    // Simpel localStorage login
-    console.log('🔍 Logger ind med localStorage...');
-    const users = JSON.parse(localStorage.getItem('smarthome_simulator_users') || '[]');
-    const registeredUser = users.find(user => user.username === u && user.password === p);
-    
-    if (registeredUser) {
-      // Opdater lastLogin
-      registeredUser.lastLogin = new Date().toISOString();
-      const userIndex = users.findIndex(user => user.username === u);
-      if (userIndex !== -1) {
-        users[userIndex] = registeredUser;
-        localStorage.setItem('smarthome_simulator_users', JSON.stringify(users));
-      }
-      return true;
-    }
-    
-    // Ellers tjek standard login
-    const c=getStoredCreds(); 
-    return (u===c.user && p===c.pass); 
-  }
+
+
   async function doLogin(){
     console.log('🚀 doLogin function called');
     const u=document.getElementById('loginUser').value.trim();
@@ -11609,8 +11550,7 @@ html {
         
         setTimeout(() => {
           introView.style.opacity = '1';
-          // Opdater UI baseret på om der er eksisterende brugere
-          checkExistingUsers();
+
         }, 100);
       }, 500);
     
@@ -11626,108 +11566,14 @@ html {
     localStorage.removeItem('teacher_class_id');
   }
 
-  // Start Simulator funktion (opdateret til at bruge doLogin)
-  function startSimulator() {
-    console.log('🚀 Start Simulator knap klikket - starter login proces...');
-    doLogin();
-  }
 
-  // Vis login skærm funktion
-  function showLoginView() {
-    console.log('🔐 Viser login skærm som standard...');
-    
-    // Skjul navigation, tabs og header
-    const mainnav = document.querySelector('.mainnav');
-    const tabs = document.querySelector('.tabs');
-    const header = document.querySelector('header');
-    
-    if (mainnav) mainnav.style.display = 'none';
-    if (tabs) tabs.style.display = 'none';
-    if (header) header.style.display = 'none';
-    
-    // Vis login view
-    const loginView = document.getElementById('loginView');
-    if (loginView) {
-      loginView.style.display = 'flex';
-      loginView.style.opacity = '1';
-      
-      // Opdater UI baseret på om der er eksisterende brugere
-      checkExistingUsers();
-      
-      console.log('✅ Login skærm vist som standard');
-    }
-  }
 
-  // Hjælpefunktioner til brugerdata
-  // getCurrentUser funktionen er defineret længere nede i filen
 
-  // Tjek om der allerede er brugere i systemet og opdater UI
-  function checkExistingUsers() {
-    const users = JSON.parse(localStorage.getItem('smarthome_simulator_users') || '[]');
-    const hasUsers = users.length > 0;
-    
-    const loginTitle = document.getElementById('loginTitle');
-    const loginSubtitle = document.getElementById('loginSubtitle');
-    const btnLogin = document.getElementById('btnLogin');
-    const loginUser = document.getElementById('loginUser');
-    const loginPass = document.getElementById('loginPass');
-    
-    if (hasUsers) {
-      // Der er allerede brugere - vis login UI
-      loginTitle.textContent = 'Log ind på din konto';
-      loginSubtitle.textContent = 'Log ind for at fortsætte hvor du slap';
-      btnLogin.textContent = '🔓 Log ind & Start Simulator';
-      loginUser.placeholder = 'Indtast dit brugernavn';
-      loginPass.placeholder = 'Indtast din adgangskode';
-      loginPass.setAttribute('autocomplete', 'current-password');
-      console.log('ℹ️ Der er allerede brugere i systemet - viser login UI');
-    } else {
-      // Ingen brugere endnu - vis brugeroprettelse UI
-      loginTitle.textContent = 'Opret din brugerkonto';
-      loginSubtitle.textContent = 'Opret en konto for at gemme dit fremskridt og opgave-resultater';
-      btnLogin.textContent = '🚀 Opret konto & Start Simulator';
-      loginUser.placeholder = 'Vælg et brugernavn';
-      loginPass.placeholder = 'Vælg en adgangskode';
-      loginPass.setAttribute('autocomplete', 'new-password');
-      console.log('ℹ️ Ingen brugere i systemet endnu - viser brugeroprettelse UI');
-    }
-  }
-
-  function saveUserProgressLocal(progressData) {
-    const currentUser = getCurrentUser();
-    if (currentUser) {
-      const userProgress = JSON.parse(localStorage.getItem(`user_${currentUser}_progress`) || '{}');
-      const updatedProgress = { ...userProgress, ...progressData };
-      localStorage.setItem(`user_${currentUser}_progress`, JSON.stringify(updatedProgress));
-      console.log('💾 Bruger fremskridt gemt lokalt:', updatedProgress);
-    }
-  }
-
-  function saveUserSimulatorData(simulatorData) {
-    const currentUser = getCurrentUser();
-    if (currentUser) {
-      const userSimulator = JSON.parse(localStorage.getItem(`user_${currentUser}_simulator`) || '{}');
-      const updatedSimulator = { ...userSimulator, ...simulatorData };
-      localStorage.setItem(`user_${currentUser}_simulator`, JSON.stringify(updatedSimulator));
-      console.log('💾 Simulator data gemt:', updatedSimulator);
-    }
-  }
-
-  function saveUserLearningData(learningData) {
-    const currentUser = getCurrentUser();
-    if (currentUser) {
-      const userLearning = JSON.parse(localStorage.getItem(`user_${currentUser}_learning`) || '{}');
-      const updatedLearning = { ...userLearning, ...learningData };
-      localStorage.setItem(`user_${currentUser}_learning`, JSON.stringify(updatedLearning));
-      console.log('💾 Læringsdata gemt:', updatedLearning);
-    }
-  }
   // === Login event setup ===
   function setupLoginEvents() {
     console.log('🔑 Setting up login events...');
     
-    // Tjek om der allerede er brugere og opdater UI
-    checkExistingUsers();
+
     
     // Login knap
     const btnLogin = document.getElementById('btnLogin');
@@ -14734,10 +14580,7 @@ html {
   // Sikre at UI opdateres når siden indlæses
   window.addEventListener('load', () => {
     console.log('🌐 Window loaded - checking existing users...');
-    // Vent lidt for at sikre at alle elementer er klar
-    setTimeout(() => {
-      checkExistingUsers();
-    }, 100);
+
   });
 
 </script>
