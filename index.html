@@ -198,7 +198,7 @@
     }
 
     /* Faner (SPA) */
-    .tabs{display:flex;gap:8px;margin:12px 16px 0 16px}
+    .tabs{display:flex;gap:8px;margin:16px 16px 0 16px}
     .tabs button{background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:8px;padding:6px 10px;cursor:pointer}
     .tabs button.active{background:var(--accent-color);color:var(--text-primary)}
     .views{padding:8px 16px 16px 16px;background:var(--bg-primary)}
@@ -349,7 +349,7 @@
 
     /* Compact mode for tabs */
     .compact-mode .tabs {
-      margin: 8px 16px 0 16px;
+      margin: 12px 16px 0 16px;
     }
 
     .compact-mode .tabs button {
@@ -3848,8 +3848,7 @@ input:focus, select:focus, textarea:focus{
 /* Hide the old LUA menu in header only */
 #mainApp > header .menu { display: none !important; }
 
-/* Keep appbar hidden until login */
-.appbar { display: none; }
+/* Appbar is now controlled by mainApp visibility */
 
 /* Remove the yellow 'Simulator' title block in main area */
 #mainApp > header .brand { display: none !important; }
@@ -5442,14 +5441,7 @@ html {
   </div>
 </div>
 
-<!-- Main App (hidden initially) -->
-<div id="mainApp">
-
-
-
-
-
-  <!-- User Registration Modal -->
+<!-- User Registration Modal -->
   <div id="registerModal" class="modal-overlay" style="display:none;">
     <div class="modal-content">
       <div class="modal-header">
@@ -5530,9 +5522,29 @@ html {
 
   <div id="mainApp" style="display:none;">
 
-  
+    <!-- Main Navigation Header -->
+    <header class="appbar" style="display: flex;">
+      <div class="brand">
+        <img src="LOGO.png" alt="SMARTHOME SIMULATOR logo" height="50">
+        <span style="color: white; font-size: 24px; margin-left: 10px; font-weight: 500;">Smarthome Simulator</span>
+      </div>
+      <nav class="mainnav">
+        <button type="button" data-target="view-forside">🏡 Forside</button>
+        <button type="button" data-target="view-sim">📊 Sensorer & Regler</button>
+        <button type="button" data-target="view-home">🏠 Smart Home</button>
+        <button type="button" data-target="view-learning">📚 Læring</button>
+        <button type="button" data-target="view-tasks" title="Kom godt i gang">🚀 Opgaver</button>
+        <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
+      </nav>
+    </header>
 
-
+    <!-- Secondary Navigation Tabs -->
+    <div class="tabs">
+      <button id="tabSim" class="active">Simulator</button>
+      <button id="tabFlow">Flow (beta)</button>
+      <button id="tabLearning">📚 Læring</button>
+      <button id="tabSettings">Indstillinger</button>
+    </div>
 
   <!-- Onboarding System -->
   <div id="onboardingOverlay" class="onboarding-overlay"></div>
@@ -13150,11 +13162,63 @@ html {
         console.log("✅ Logget ind med Firebase:", userCredential.user.uid);
         
         // Når login er succesfuldt, skjules login-boksen
+        console.log("🔍 Skjuler login view...");
         document.getElementById('loginView').style.display = 'none';
+        console.log("🔍 Viser main app...");
         document.getElementById('mainApp').style.display = 'block';
+        console.log("🔍 Main app display style:", document.getElementById('mainApp').style.display);
+        console.log("🔍 Main app element:", document.getElementById('mainApp'));
+
+        // Gør header og navigation synlig igen
+        const header = document.querySelector('header');
+        if (header) {
+            header.style.display = 'flex';
+            console.log('✅ Header gjort synlig igen');
+        }
+        
+        const mainnav = document.querySelector('.mainnav');
+        if (mainnav) {
+            mainnav.style.display = 'flex';
+            console.log('✅ Navigation gjort synlig igen');
+        }
+        
+        const tabs = document.querySelector('.tabs');
+        if (tabs) {
+            tabs.style.display = 'flex';
+            console.log('✅ Tabs gjort synlig igen');
+        }
 
         // Migrer localStorage data til Firebase ved første login
         migrateUserDataToFirebase(userCredential.user.uid);
+        
+        // Naviger til Forside tab efter login
+        setTimeout(() => {
+            if (window.show) {
+                console.log("🎯 Navigerer til Forside tab...");
+                window.show('view-forside');
+            } else {
+                console.log("⚠️ show funktion ikke tilgængelig endnu");
+            }
+        }, 100);
+        
+        // Debug: Tjek alle CSS-egenskaber for mainApp
+        setTimeout(() => {
+            const mainApp = document.getElementById('mainApp');
+            if (mainApp) {
+                const computedStyle = window.getComputedStyle(mainApp);
+                console.log("🔍 Main app debug info:");
+                console.log("  - display:", computedStyle.display);
+                console.log("  - visibility:", computedStyle.visibility);
+                console.log("  - opacity:", computedStyle.opacity);
+                console.log("  - height:", computedStyle.height);
+                console.log("  - width:", computedStyle.width);
+                console.log("  - position:", computedStyle.position);
+                console.log("  - z-index:", computedStyle.zIndex);
+                console.log("  - Element HTML:", mainApp.outerHTML.substring(0, 200) + "...");
+            } else {
+                console.log("❌ Main app element ikke fundet!");
+            }
+        }, 100);
 
     } catch (error) {
         // Moderne Firebase bruger 'auth/invalid-credential' for både user-not-found og wrong-password
@@ -13166,11 +13230,62 @@ html {
                 console.log("🎉 Ny bruger oprettet og logget ind:", newUserCredential.user.uid);
                 
                 // Opdater UI til den nye bruger
+                console.log("🔍 Skjuler login view (ny bruger)...");
                 document.getElementById('loginView').style.display = 'none';
+                console.log("🔍 Viser main app (ny bruger)...");
                 document.getElementById('mainApp').style.display = 'block';
+                console.log("🔍 Main app display style (ny bruger):", document.getElementById('mainApp').style.display);
+
+                // Gør header og navigation synlig igen (ny bruger)
+                const header = document.querySelector('header');
+                if (header) {
+                    header.style.display = 'flex';
+                    console.log('✅ Header gjort synlig igen (ny bruger)');
+                }
+                
+                const mainnav = document.querySelector('.mainnav');
+                if (mainnav) {
+                    mainnav.style.display = 'flex';
+                    console.log('✅ Navigation gjort synlig igen (ny bruger)');
+                }
+                
+                const tabs = document.querySelector('.tabs');
+                if (tabs) {
+                    tabs.style.display = 'flex';
+                    console.log('✅ Tabs gjort synlig igen (ny bruger)');
+                }
 
                 // Migrer localStorage data til Firebase for ny bruger
                 migrateUserDataToFirebase(newUserCredential.user.uid);
+                
+                // Naviger til Forside tab efter oprettelse af ny bruger
+                setTimeout(() => {
+                    if (window.show) {
+                        console.log("🎯 Navigerer til Forside tab (ny bruger)...");
+                        window.show('view-forside');
+                    } else {
+                        console.log("⚠️ show funktion ikke tilgængelig endnu (ny bruger)");
+                    }
+                }, 100);
+                
+                // Debug: Tjek alle CSS-egenskaber for mainApp (ny bruger)
+                setTimeout(() => {
+                    const mainApp = document.getElementById('mainApp');
+                    if (mainApp) {
+                        const computedStyle = window.getComputedStyle(mainApp);
+                        console.log("🔍 Main app debug info (ny bruger):");
+                        console.log("  - display:", computedStyle.display);
+                        console.log("  - visibility:", computedStyle.visibility);
+                        console.log("  - opacity:", computedStyle.opacity);
+                        console.log("  - height:", computedStyle.height);
+                        console.log("  - width:", computedStyle.width);
+                        console.log("  - position:", computedStyle.position);
+                        console.log("  - z-index:", computedStyle.zIndex);
+                        console.log("  - Element HTML:", mainApp.outerHTML.substring(0, 200) + "...");
+                    } else {
+                        console.log("❌ Main app element ikke fundet (ny bruger)!");
+                    }
+                }, 100);
                 
             } catch (createError) {
                 console.error("❌ Kunne ikke oprette bruger:", createError.message);
@@ -13213,6 +13328,26 @@ html {
             return `Fejl: ${error.message}`;
     }
   }
+
+          // Logout funktion
+        async function doLogout() {
+            try {
+                await firebase.auth().signOut();
+                console.log("✅ Logget ud fra Firebase");
+                
+                // Vis login view og skjul main app
+                document.getElementById('loginView').style.display = 'flex';
+                document.getElementById('mainApp').style.display = 'none';
+                
+                // Ryd eventuelle fejl
+                const errorDiv = document.getElementById('loginError');
+                if (errorDiv) errorDiv.textContent = '';
+                
+                console.log("✅ UI opdateret efter logout");
+            } catch (error) {
+                console.error("❌ Fejl ved logout:", error);
+            }
+        }
 
   // Migrer localStorage data til Firebase (kun hvis tilladelser er korrekte)
   async function migrateUserDataToFirebase(userId) {
@@ -14637,59 +14772,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
   
-  // Tjek om brugeren er logget ind først
-  const currentUser = localStorage.getItem('simUser');
-  if (!currentUser) {
-    // Ingen bruger logget ind - vis login siden
-    console.log('🔑 Ingen bruger logget ind - viser login siden');
-    document.getElementById('loginView').style.display = 'flex';
-    // Skjul alle andre views
-    ids.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.style.display = 'none';
-    });
-    // Skjul navigation og header
-    document.querySelector('.mainnav').style.display = 'none';
-    document.querySelector('.tabs').style.display = 'none';
-    
-    // Skjul header
-    const header = document.querySelector('header');
-    if (header) {
-      header.style.display = 'none';
-      console.log('✅ Header skjult på login skærm');
-    } else {
-      console.log('⚠️ Header element ikke fundet');
-    }
-    
-    // Skjul også alle lærer login knapper specifikt
-    const teacherButtons = document.querySelectorAll('button[id*="Teacher"]');
-    teacherButtons.forEach(btn => {
-      btn.style.display = 'none';
-      btn.style.visibility = 'hidden';
-    });
-    
-    // Skjul også knapper med "Lærer" tekst
-    const allButtons = document.querySelectorAll('button');
-    allButtons.forEach(btn => {
-      if (btn.textContent.includes('Lærer')) {
-        btn.style.display = 'none';
-        btn.style.visibility = 'hidden';
-        console.log('✅ Skjult lærer knap:', btn.textContent);
-      }
-    });
-    
-    console.log('✅ Alle lærer knapper skjult');
-  } else {
-    // Bruger er logget ind - start med normal tab
-    console.log('✅ Bruger logget ind:', currentUser, '- starter med normal tab');
-    let start = null;
-    try{ start = localStorage.getItem('smarthome_simulator.activeView'); }catch(e){}
-    if(!ids.includes(start)) start = ids[0];
-    console.log('🚀 Starter med tab:', start);
-    show(start);
-    
-
-  }
+  // Start med login siden som standard
+  console.log('🔑 Starter med login siden som standard');
+  document.getElementById('loginView').style.display = 'flex';
+  document.getElementById('mainApp').style.display = 'none';
+  
+  // Skjul alle views og navigation som standard
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  
+  // Skjul navigation og header som standard
+  const mainnav = document.querySelector('.mainnav');
+  const tabs = document.querySelector('.tabs');
+  const header = document.querySelector('header');
+  
+  if (mainnav) mainnav.style.display = 'none';
+  if (tabs) tabs.style.display = 'none';
+  if (header) header.style.display = 'none';
+  
+  console.log('✅ Login UI vist, main app skjult som standard');
   
   // Setup drag and drop for smart devices
   setupSmartDeviceDragAndDrop();
