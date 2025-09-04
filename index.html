@@ -1853,7 +1853,7 @@
     .smart-home-control-panel {
       width: 300px;
       background: rgba(30, 41, 59, 0.95);
-      border: 2px solid rgba(16, 185, 129, 0.6);
+      border: 2px solid rgba(75, 85, 99, 0.4);
       border-radius: 10px;
       padding: 16px;
       height: calc(100vh - 120px);
@@ -1896,7 +1896,7 @@
 
     .smart-home-control-panel .device-control:hover {
       background: rgba(30, 41, 59, 0.8);
-      border-color: rgba(16, 185, 129, 0.4);
+      border-color: rgba(75, 85, 99, 0.6);
     }
 
     .smart-home-control-panel .device-info {
@@ -5786,7 +5786,9 @@ html {
         
         <div style="margin-bottom:24px;">
           <label style="display:block; margin-bottom:8px; color:#9ca3af; font-size:14px;">Adgangskode</label>
-          <input id="regPassword" type="password" placeholder="Vælg adgangskode" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e7eb;">
+          <form>
+            <input id="regPassword" type="password" placeholder="Vælg adgangskode" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e7eb;">
+          </form>
         </div>
         
         <button id="btnCreateUser" class="success" style="width:100%; padding:12px; font-size:16px; border-radius:12px; margin-bottom:16px;">
@@ -5813,7 +5815,9 @@ html {
         
         <div style="margin-bottom:16px;">
           <label style="display:block; margin-bottom:8px; color:#9ca3af; font-size:14px;">Lærer adgangskode</label>
-          <input id="teacherPassword" type="password" placeholder="Indtast lærer adgangskode" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e7eb;">
+          <form>
+            <input id="teacherPassword" type="password" placeholder="Indtast lærer adgangskode" style="width:100%; padding:12px; border-radius:10px; background:rgba(31,41,55,0.8); border:1px solid rgba(75,85,99,0.3); color:#e5e7eb;">
+          </form>
         </div>
         
         <div style="margin-bottom:16px;">
@@ -6521,7 +6525,7 @@ html {
           </div>
         </div>
       </div>
-      <div class="footer small">SmartHome Simulator v2.0 (WebView2 • SPA med faner @Rasmus Jakobsen)</div>
+      <div class="footer small">SmartHome Simulator Beta  (@Rasmus Jakobsen)</div>
     </section>
 
         
@@ -7518,14 +7522,14 @@ html {
             <div class="smart-device light" style="top: 61.8%; left: 46.5%;" data-device="living-room-light" title="Stue lys">💡</div>
             <div class="smart-device thermostat" style="top: 82.1%; left: 29.7%;" data-device="thermostat" title="Termostat">🌡️</div>
             <div class="smart-device speaker" style="top: 81.2%; left: 50.5%;" data-device="living-speaker" title="Smart højttaler">🔊</div>
-            <div class="smart-device sensor" style="top: 68.7%; left: 7.1%;" data-device="living-motion" title="Bevægelsessensor">👁️</div>
+            <div class="smart-device sensor" style="top: 68.7%; left: 7.1%;" data-device="living-motion" title="Altan Bevægelse">👁️</div>
             
             <!-- Spisebord -->
             <div class="smart-device light" style="top: 19.2%; left: 28.8%;" data-device="dining-light" title="Spisebord lys">💡</div>
             
             <!-- Køkken -->
             <div class="smart-device light" style="top: 23.7%; left: 49.8%;" data-device="kitchen-light" title="Køkken lys">💡</div>
-            <div class="smart-device sensor" style="top: 43.7%; left: 46.9%;" data-device="motion-kitchen" title="Bevægelsessensor">👁️</div>
+            <div class="smart-device sensor" style="top: 43.7%; left: 46.9%;" data-device="motion-kitchen" title="Køkken bevægelse">👁️</div>
             <div class="smart-device smoke" style="top: 8.8%; left: 43.8%;" data-device="smoke-detector" title="Røgdetektor">💨</div>
             
             <!-- Badeværelse -->
@@ -7754,7 +7758,7 @@ html {
                   </div>
                   
                   <div style="margin-left: auto;">
-                    <button id="wsValidate" class="ws-btn ws-btn-warning" style="padding: 8px 12px; font-size: 12px;" title="Valider (ikke implementeret)">✅ Validate</button>
+                    <button id="wsValidate" class="ws-btn ws-btn-warning" style="padding: 8px 12px; font-size: 12px;" title="Valider automation regler">✅ Validate</button>
                   </div>
                 </div>
                 
@@ -10615,7 +10619,7 @@ html {
       ['always','Ved aktivering'],
       // Bevægelsessensorer
       ['entranceMotion','🚪 Entré bevægelse'],
-      ['livingMotion','🛋️ Stue bevægelse'],
+      ['livingMotion','🛋️ Altan bevægelse'],
       ['kitchenMotion','🍳 Køkken bevægelse'],
       // Døre og vinduer
       ['frontDoorOpened','🔐 Hoveddør åbnet'],
@@ -11146,6 +11150,12 @@ html {
       }catch(e){ alert('Kunne ikke læse: '+e.message); }
     };
     
+    // Validate button functionality
+    var bValidate = document.getElementById('wsValidate');
+    if(bValidate) bValidate.onclick = function(){
+      validateWiresheet();
+    };
+    
     // New button handlers
     if(bUndo) bUndo.onclick = undo;
     if(bRedo) bRedo.onclick = redo;
@@ -11590,6 +11600,70 @@ html {
         });
         pv.textContent = lines.join('\\n');
       });
+    }
+    
+    // --- Validate Wiresheet functionality
+    function validateWiresheet(){
+      console.log('🔍 Validerer Wiresheet...');
+      
+      var errors = [];
+      var warnings = [];
+      var nodes = Object.values(WS.nodes);
+      var edges = WS.edges;
+      
+      // Check if there are any nodes
+      if(nodes.length === 0){
+        errors.push('Ingen noder fundet. Tilføj mindst én node for at bygge en automation.');
+      }
+      
+      // Check for isolated nodes (nodes without connections)
+      var connectedNodes = new Set();
+      edges.forEach(function(edge){
+        connectedNodes.add(edge.from);
+        connectedNodes.add(edge.to);
+      });
+      
+      nodes.forEach(function(node){
+        if(!connectedNodes.has(node.id)){
+          warnings.push('Node "' + (node.value || node.type) + '" er ikke forbundet til noget.');
+        }
+      });
+      
+      // Check for trigger nodes
+      var triggerNodes = nodes.filter(function(n){ return n.type === 'trig'; });
+      if(triggerNodes.length === 0 && nodes.length > 0){
+        warnings.push('Ingen trigger noder fundet. Automationer skal starte med en trigger.');
+      }
+      
+      // Check for action nodes
+      var actionNodes = nodes.filter(function(n){ return n.type === 'act'; });
+      if(actionNodes.length === 0 && nodes.length > 0){
+        warnings.push('Ingen action noder fundet. Automationer skal have mindst én action.');
+      }
+      
+      // Check for nodes without values
+      nodes.forEach(function(node){
+        if(node.type !== 'rule' && (!node.value || node.value.trim() === '')){
+          warnings.push('Node "' + node.type + '" mangler værdi.');
+        }
+      });
+      
+      // Display results
+      if(errors.length === 0 && warnings.length === 0){
+        window.log('✅ Wiresheet valideret succesfuldt! Ingen fejl eller advarsler fundet.');
+        alert('✅ Wiresheet valideret succesfuldt!\n\nIngen fejl eller advarsler fundet.');
+      } else {
+        var message = '';
+        if(errors.length > 0){
+          message += '❌ FEJL:\n' + errors.join('\n') + '\n\n';
+        }
+        if(warnings.length > 0){
+          message += '⚠️ ADVARSLER:\n' + warnings.join('\n');
+        }
+        
+        window.log('🔍 Validering færdig: ' + errors.length + ' fejl, ' + warnings.length + ' advarsler');
+        alert(message);
+      }
     }
 
     // initial
