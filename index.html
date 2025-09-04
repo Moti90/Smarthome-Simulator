@@ -13058,6 +13058,12 @@ html {
 
   // === Test Firebase connectivity ===
   async function testFirebaseConnection() {
+    // Hvis Firebase allerede er deaktiveret, skip test
+    if (!isFirebaseAvailable || !window.db) {
+      console.log('🏠 Firebase allerede deaktiveret - kører lokalt');
+      return false;
+    }
+    
     // Sikr at Firebase er initialiseret
     initializeFirebase();
     
@@ -13080,8 +13086,8 @@ html {
       console.error('🔍 Fejl besked:', error.message);
       
       // Hvis det er en permission fejl, deaktiver Firebase og kør lokalt
-      if (error.code === 'permission-denied' || error.message.includes('permissions')) {
-        console.log('🔒 Permission fejl - deaktiverer Firebase og kører lokalt');
+      if (error.code === 'permission-denied' || error.message.includes('permissions') || error.message.includes('Missing or insufficient permissions')) {
+        console.log('🔒 Permission fejl - deaktiverer Firebase permanent og kører lokalt');
         window.db = null;
         isFirebaseAvailable = false;
         
@@ -13879,6 +13885,7 @@ html {
       if (isLocalEnvironment) {
         console.log('🏠 Kører lokalt - deaktiverer Firebase for at undgå fejl');
         window.db = null;
+        isFirebaseAvailable = false;
         return false;
       }
       
@@ -13886,6 +13893,8 @@ html {
       
       if (typeof firebase === 'undefined') {
         console.error('❌ Firebase SDK ikke indlæst endnu');
+        window.db = null;
+        isFirebaseAvailable = false;
         return false;
       }
 
@@ -13896,12 +13905,12 @@ html {
       
       // Konfigurer Firestore for bedre online kompatibilitet
       if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-        // Online deployment - deaktiver offline persistence for at undgå permission fejl
+        // Online deployment - konfigurer Firestore med merge for at undgå warnings
         console.log('🌐 Online deployment - konfigurerer Firestore for bedre kompatibilitet');
         db.settings({
           cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
           ignoreUndefinedProperties: true
-        });
+        }, { merge: true });
       }
       
       console.log('✅ Firestore database klar til progress tracking');
@@ -13924,11 +13933,9 @@ html {
       console.error('❌ Firebase initialisering fejlede:', error);
       
       // Hvis Firebase fejler online, deaktiver det og kør lokalt
-      if (!isLocalEnvironment) {
-        console.log('🔄 Firebase fejler online - skifter til lokal tilstand');
-        window.db = null;
-        isFirebaseAvailable = false;
-      }
+      console.log('🔄 Firebase fejler - skifter til lokal tilstand');
+      window.db = null;
+      isFirebaseAvailable = false;
       
       return false;
     }
