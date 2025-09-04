@@ -11,9 +11,307 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   
-  <!-- App Initialization -->
+  <!-- Firebase konfiguration og doLogin funktion - defineret tidligt -->
   <script>
     console.log('🚀 App starter...');
+    
+    // Firebase konfiguration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCdXnszAUJfkC5uyv9n-kVE2Whv_0vZfLk",
+      authDomain: "ibi-simulator-f6ebe.firebaseapp.com",
+      projectId: "ibi-simulator-f6ebe",
+      storageBucket: "ibi-simulator-f6ebe.firebasestorage.app",
+      messagingSenderId: "929875729041",
+      appId: "1:929875729041:web:d53f21685b20d63fb73d30",
+      measurementId: "G-YR3XWP3RVH"
+    };
+
+    // doLogin funktion - defineret tidligt så den er tilgængelig
+    window.doLogin = async function doLogin() {
+      try {
+        console.log("🚀 doLogin funktion kaldt!");
+        
+        // Sikr at Firebase er initialiseret
+        if (typeof firebase !== 'undefined') {
+          try {
+            firebase.initializeApp(firebaseConfig);
+            console.log('✅ Firebase initialiseret korrekt');
+          } catch (error) {
+            console.error('❌ Fejl ved Firebase initialisering:', error);
+          }
+        }
+        
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        const errorDiv = document.getElementById('loginError');
+        const loginButton = document.querySelector('.login-button');
+
+        // DEBUG: Tjek hvad vi faktisk læser fra inputfelterne
+        console.log("🔍 Email værdi:", email);
+        console.log("🔍 Password værdi:", password);
+        console.log("🔍 Password længde:", password ? password.length : 'undefined/null');
+
+        // Valider input før vi sender til Firebase
+        if (!email || !password) {
+            console.error("❌ Manglende input data");
+            errorDiv.textContent = 'Indtast både email og adgangskode';
+            return;
+        }
+
+        if (password.length < 6) {
+            console.error("❌ Password for kort");
+            errorDiv.textContent = 'Adgangskoden skal være mindst 6 tegn lang';
+            return;
+        }
+
+        // Tjek at Firebase er tilgængelig
+        if (typeof firebase === 'undefined') {
+            console.error("❌ Firebase ikke tilgængelig");
+            errorDiv.textContent = 'Firebase ikke tilgængelig. Prøv igen.';
+            return;
+        }
+
+        // Reset error message
+        errorDiv.textContent = '';
+        loginButton.disabled = true;
+        loginButton.textContent = 'Logger ind...';
+
+        try {
+            // Forsøger først at logge brugeren ind
+            const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+            console.log("✅ Logget ind med Firebase:", userCredential.user.uid);
+            
+            // Når login er succesfuldt, skjules login-boksen
+            console.log("🔍 Skjuler login view...");
+            document.getElementById('loginView').style.display = 'none';
+            console.log("🔍 Viser main app...");
+            document.getElementById('mainApp').style.display = 'block';
+
+            // Gør header og navigation synlig igen
+            const header = document.querySelector('header');
+            if (header) {
+                header.style.display = 'flex';
+                console.log('✅ Header gjort synlig igen');
+            }
+            
+            const mainnav = document.querySelector('.mainnav');
+            if (mainnav) {
+                mainnav.style.display = 'flex';
+                console.log('✅ Navigation gjort synlig igen');
+            }
+            
+            const tabs = document.querySelector('.tabs');
+            if (tabs) {
+                tabs.style.display = 'flex';
+                console.log('✅ Tabs gjort synlig igen');
+            }
+
+            // Naviger til Forside tab
+            setTimeout(() => {
+                if (window.show) {
+                    console.log("🎯 Navigerer til Forside tab...");
+                    window.show('view-forside');
+                } else {
+                    console.log("⚠️ show funktion ikke tilgængelig endnu");
+                }
+            }, 100);
+
+        } catch (error) {
+            // Moderne Firebase bruger 'auth/invalid-credential' for både user-not-found og wrong-password
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                try {
+                    console.log("🔄 Bruger ikke fundet - forsøger at oprette ny bruger...");
+                    // Forsøger at oprette en ny bruger
+                    const newUserCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+                    console.log("🎉 Ny bruger oprettet og logget ind:", newUserCredential.user.uid);
+                    
+                    // Når ny bruger er oprettet, skjules login-boksen
+                    console.log("🔍 Skjuler login view (ny bruger)...");
+                    document.getElementById('loginView').style.display = 'none';
+                    console.log("🔍 Viser main app (ny bruger)...");
+                    document.getElementById('mainApp').style.display = 'block';
+
+                    // Gør header og navigation synlig igen
+                    const header = document.querySelector('header');
+                    if (header) {
+                        header.style.display = 'flex';
+                        console.log('✅ Header gjort synlig igen (ny bruger)');
+                    }
+                    
+                    const mainnav = document.querySelector('.mainnav');
+                    if (mainnav) {
+                        mainnav.style.display = 'flex';
+                        console.log('✅ Navigation gjort synlig igen (ny bruger)');
+                    }
+                    
+                    const tabs = document.querySelector('.tabs');
+                    if (tabs) {
+                        tabs.style.display = 'flex';
+                        console.log('✅ Tabs gjort synlig igen (ny bruger)');
+                    }
+
+                    // Naviger til Forside tab efter oprettelse af ny bruger
+                    setTimeout(() => {
+                        if (window.show) {
+                            console.log("🎯 Navigerer til Forside tab (ny bruger)...");
+                            window.show('view-forside');
+                        } else {
+                            console.log("⚠️ show funktion ikke tilgængelig endnu (ny bruger)");
+                        }
+                    }, 100);
+
+                } catch (createError) {
+                    console.error("❌ Fejl ved oprettelse af ny bruger:", createError);
+                    errorDiv.textContent = getFirebaseErrorMessage(createError);
+                }
+            } else {
+                console.error("❌ Fejl ved login:", error);
+                errorDiv.textContent = getFirebaseErrorMessage(error);
+            }
+        }
+
+      } catch (error) {
+        console.error("❌ Uventet fejl i doLogin:", error);
+        const errorDiv = document.getElementById('loginError');
+        if (errorDiv) {
+          errorDiv.textContent = 'Der opstod en uventet fejl. Prøv igen.';
+        }
+      } finally {
+        // Gendan knap tilstand
+        const loginButton = document.querySelector('.login-button');
+        if (loginButton) {
+          loginButton.disabled = false;
+          loginButton.textContent = 'Log ind';
+        }
+      }
+    }
+
+    // Hjælpefunktion til at oversætte Firebase fejlmeddelelser
+    function getFirebaseErrorMessage(error) {
+      switch (error.code) {
+          case 'auth/user-not-found':
+              return 'Bruger ikke fundet. Prøv at oprette en ny konto.';
+          case 'auth/wrong-password':
+              return 'Forkert adgangskode. Prøv igen.';
+          case 'auth/invalid-credential':
+              return 'Forkert email eller adgangskode. Prøv igen.';
+          case 'auth/invalid-email':
+              return 'Ugyldig email adresse.';
+          case 'auth/user-disabled':
+              return 'Denne bruger er deaktiveret.';
+          case 'auth/too-many-requests':
+              return 'For mange forsøg. Prøv igen senere.';
+          case 'auth/weak-password':
+              return 'Adgangskoden skal være mindst 6 tegn lang.';
+          case 'auth/email-already-in-use':
+              return 'Email adressen er allerede i brug.';
+          case 'auth/operation-not-allowed':
+              return 'Email/password login er ikke aktiveret.';
+          case 'auth/network-request-failed':
+              return 'Netværksfejl. Tjek din internetforbindelse.';
+          default:
+              return `Fejl: ${error.message}`;
+      }
+    }
+    
+    console.log('✅ doLogin funktion defineret og tilgængelig');
+    
+    // checkTeacherLogin funktion - defineret tidligt så den er tilgængelig
+    window.checkTeacherLogin = function checkTeacherLogin() {
+      const isTeacherLoggedIn = localStorage.getItem('teacher_logged_in') === 'true';
+      
+      if (isTeacherLoggedIn) {
+        // Vis lærer dashboard knap
+        const btnTeacherTab = document.getElementById('btnTeacherTab');
+        const btnTeacherLogin = document.getElementById('btnTeacherLogin');
+        if (btnTeacherTab) btnTeacherTab.style.display = 'inline-block';
+        if (btnTeacherLogin) btnTeacherLogin.style.display = 'none';
+        
+        // Indlæs elev progress
+        if (typeof loadTeacherProgress === 'function') {
+          loadTeacherProgress();
+        }
+      } else {
+        // Skjul lærer dashboard og knap
+        const viewTeacher = document.getElementById('view-teacher');
+        const btnTeacherTab = document.getElementById('btnTeacherTab');
+        const btnTeacherLogin = document.getElementById('btnTeacherLogin');
+        if (viewTeacher) viewTeacher.style.display = 'none';
+        if (btnTeacherTab) btnTeacherTab.style.display = 'none';
+        if (btnTeacherLogin) btnTeacherLogin.style.display = 'block';
+      }
+    };
+    
+    console.log('✅ checkTeacherLogin funktion defineret og tilgængelig');
+    
+    // getCurrentUser funktion - defineret tidligt så den er tilgængelig
+    window.getCurrentUser = function getCurrentUser() {
+      // Tjek om der er en bruger logget ind via Firebase
+      if (typeof firebase !== 'undefined' && firebase.auth().currentUser) {
+        const user = firebase.auth().currentUser;
+        return {
+          id: user.uid,
+          email: user.email,
+          username: user.email.split('@')[0],
+          firstName: user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0],
+          lastName: user.displayName ? user.displayName.split(' ').slice(1).join(' ') : 'Bruger'
+        };
+      }
+      
+      // Fallback til localStorage hvis Firebase ikke er tilgængelig
+      const username = localStorage.getItem('simUser');
+      if (username) {
+        return {
+          id: username,
+          username: username,
+          firstName: username,
+          lastName: 'Bruger',
+          email: username + '@smarthomesimulator.dk'
+        };
+      }
+      
+      return null;
+    };
+    
+    console.log('✅ getCurrentUser funktion defineret og tilgængelig');
+    
+    // isLocalEnvironment variabel - defineret tidligt så den er tilgængelig
+    window.isLocalEnvironment = window.location.protocol === 'file:' || 
+                               window.location.hostname === 'localhost' || 
+                               window.location.hostname === '127.0.0.1';
+    
+    console.log('✅ isLocalEnvironment variabel defineret:', window.isLocalEnvironment);
+    
+    // getLocalProgress funktion - defineret tidligt så den er tilgængelig
+    window.getLocalProgress = function getLocalProgress() {
+      try {
+        // Hent alle progress data fra localStorage
+        const allProgress = [];
+        
+        // Hent data fra forskellige localStorage keys
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+          if (key.startsWith('progress_') || key.startsWith('task_') || key.includes('progress')) {
+            try {
+              const data = JSON.parse(localStorage.getItem(key));
+              if (data && typeof data === 'object') {
+                allProgress.push(data);
+              }
+            } catch (e) {
+              // Ignorer ugyldig JSON
+            }
+          }
+        });
+        
+        console.log('🏠 Hentet lokale progress data:', allProgress.length, 'elementer');
+        return allProgress;
+      } catch (error) {
+        console.error('❌ Fejl ved hentning af lokale progress data:', error);
+        return [];
+      }
+    };
+    
+    console.log('✅ getLocalProgress funktion defineret og tilgængelig');
   </script>
 
   <style>
@@ -5408,7 +5706,7 @@ html {
     <h1 class="login-title">Smart Home Simulator</h1>
     <p class="login-subtitle">Log ind for at gemme dit fremskridt og få adgang til alle funktioner</p>
     
-    <form class="login-form" onsubmit="doLogin(); return false;">
+    <form class="login-form">
       <input 
         type="email" 
         id="loginEmail" 
@@ -5416,6 +5714,7 @@ html {
         placeholder="Email adresse" 
         required
         autocomplete="email"
+        onkeypress="if(event.key==='Enter') doLogin()"
       >
       <input 
         type="password" 
@@ -5425,8 +5724,9 @@ html {
         required
         autocomplete="current-password"
         minlength="6"
+        onkeypress="if(event.key==='Enter') doLogin()"
       >
-      <button type="submit" class="login-button">Log ind</button>
+      <button type="button" class="login-button" onclick="doLogin()">Log ind</button>
       <div id="loginError" class="login-error"></div>
     </form>
     
@@ -5436,9 +5736,9 @@ html {
       <strong>Sikkerhed:</strong> Dine data gemmes sikkert med Firebase Authentication
     </div>
   </div>
-</div>
+  </div>
 
-<!-- User Registration Modal -->
+  <!-- User Registration Modal -->
   <div id="registerModal" class="modal-overlay" style="display:none;">
     <div class="modal-content">
       <div class="modal-header">
@@ -11288,229 +11588,6 @@ html {
 
 
 
-  async function doLogin(){
-    console.log('🚀 doLogin function called');
-    const u=document.getElementById('loginUser').value.trim();
-    const p=document.getElementById('loginPass').value.trim();
-    console.log('🔐 Login attempt with user:', u, 'pass length:', p.length);
-    
-    if (!u || !p) {
-      document.getElementById('loginError').innerText='Udfyld både brugernavn og adgangskode.';
-      return;
-    }
-    
-    try {
-      // Tjek om brugeren allerede eksisterer
-      const users = JSON.parse(localStorage.getItem('smarthome_simulator_users') || '[]');
-      const existingUser = users.find(user => user.username === u);
-      
-      if (!existingUser) {
-        // Vis loading state for ny bruger
-        document.getElementById('loginError').innerText='Opretter bruger og starter simulator...';
-        
-        // Opret ny bruger med initial data struktur
-        const newUser = {
-          id: u, // Tilføj .id property
-          username: u,
-          password: p,
-          createdAt: new Date().toISOString(),
-          lastLogin: new Date().toISOString(),
-          // Initial fremskridt og opgave data
-          progress: {
-            completedTasks: [],
-            currentTask: null,
-            totalScore: 0,
-            learningPath: 'beginner'
-          },
-          // Sensor og simulator data
-          simulatorData: {
-            savedConfigurations: [],
-            sensorHistory: [],
-            ruleHistory: []
-          },
-          // Læringshistorik
-          learningHistory: {
-            completedLessons: [],
-            quizResults: [],
-            lastActivity: new Date().toISOString()
-          }
-        };
-        
-        users.push(newUser);
-        localStorage.setItem('smarthome_simulator_users', JSON.stringify(users));
-        console.log('✅ Ny bruger oprettet med initial data struktur:', u);
-        
-        // Opret bruger-specifikke localStorage keys
-        localStorage.setItem(`user_${u}_progress`, JSON.stringify(newUser.progress));
-        localStorage.setItem(`user_${u}_simulator`, JSON.stringify(newUser.simulatorData));
-        localStorage.setItem(`user_${u}_learning`, JSON.stringify(newUser.learningHistory));
-        
-      } else {
-        // Vis loading state for eksisterende bruger
-        document.getElementById('loginError').innerText='Logger ind og starter simulator...';
-        
-        // Tjek om adgangskoden matcher
-        if (existingUser.password !== p) {
-          document.getElementById('loginError').innerText='Forkert adgangskode for denne bruger.';
-          return;
-        }
-        
-        // Opdater lastLogin og sikre at .id property eksisterer
-        existingUser.lastLogin = new Date().toISOString();
-        if (!existingUser.id) {
-          existingUser.id = u; // Tilføj .id hvis den mangler
-          console.log('🔧 Tilføjet .id property til eksisterende bruger:', u);
-        }
-        
-        const userIndex = users.findIndex(user => user.username === u);
-        if (userIndex !== -1) {
-                  users[userIndex] = existingUser;
-        localStorage.setItem('smarthome_simulator_users', JSON.stringify(users));
-        }
-        console.log('✅ Eksisterende bruger logget ind:', u);
-        
-        // Indlæs bruger-specifikke data
-        const userProgress = localStorage.getItem(`user_${u}_progress`);
-        const userSimulator = localStorage.getItem(`user_${u}_simulator`);
-        const userLearning = localStorage.getItem(`user_${u}_learning`);
-        
-        if (userProgress) {
-          console.log('📊 Indlæst bruger fremskridt:', JSON.parse(userProgress));
-        }
-        if (userSimulator) {
-          console.log('🔧 Indlæst simulator data:', JSON.parse(userSimulator));
-        }
-        if (userLearning) {
-          console.log('📚 Indlæst læringshistorik:', JSON.parse(userLearning));
-        }
-      }
-      
-      // Gem brugerinfo lokalt som backup
-      localStorage.setItem('simUser', u);
-      localStorage.setItem('simPass', p);
-      console.log('🔍 localStorage simUser efter gem:', localStorage.getItem('simUser'));
-      
-      // Tilføj fade-out effekt til intro
-      const introView = document.getElementById('loginView');
-      introView.style.transition = 'opacity 0.5s ease-out';
-      introView.style.opacity = '0';
-      
-      // Efter fade-out, skjul intro og vis hovedapp
-      setTimeout(() => {
-        introView.style.display = 'none';
-        
-        // Vis navigation, tabs og header
-        const mainnav = document.querySelector('.mainnav');
-        const tabs = document.querySelector('.tabs');
-        const header = document.querySelector('header');
-        
-        if (mainnav) {
-          mainnav.style.display = 'flex';
-          console.log('✅ Navigation vist igen');
-        }
-        
-        if (tabs) {
-          tabs.style.display = 'block';
-          console.log('✅ Tabs vist igen');
-        }
-        
-        if (header) {
-          header.style.display = 'block';
-          header.style.visibility = 'visible';
-          header.style.opacity = '1';
-          console.log('✅ Header vist igen efter login');
-        } else {
-          console.log('⚠️ Header element ikke fundet ved login');
-        }
-        
-        // Tilføj fade-in effekt til hovedapp
-        const mainApp = document.getElementById('mainApp');
-        mainApp.style.opacity = '0';
-        mainApp.style.transition = 'opacity 0.5s ease-in';
-        
-        setTimeout(() => {
-          mainApp.style.opacity = '1';
-          mainApp.style.display = 'block';
-          // Efter login skal brugeren til hovedapplikationen, ikke tilbage til login
-          console.log('✅ Login fuldført - bruger sendt til hovedapp');
-          
-          // Dobbelttjek at header er synlig
-          if (header) {
-            console.log('🔍 Dobbelttjek header efter login:', header.style.display, header.style.visibility);
-          }
-          
-          // Aktivt skift til forside fane efter login
-          setTimeout(() => {
-            // Skjul alle views
-            document.querySelectorAll('.view').forEach(view => {
-              view.classList.remove('active');
-            });
-            
-            // Vis og aktiver forside view
-            const forsideView = document.getElementById('view-forside');
-            if (forsideView) {
-              forsideView.classList.add('active');
-              console.log('✅ Skiftet til forside fane efter login');
-            }
-            
-            // Opdater tab styling
-            document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
-            const forsideTab = document.getElementById('tabForside');
-            if (forsideTab) {
-              forsideTab.classList.add('active');
-              console.log('✅ Forside tab aktiveret');
-            }
-            
-            // Start onboarding for nye brugere
-            const currentUser = localStorage.getItem('simUser');
-            if (currentUser && !localStorage.getItem('smarthome_simulator.onboarding_completed')) {
-              console.log('🎯 Starter onboarding for ny bruger:', currentUser);
-              setTimeout(() => {
-                document.getElementById('onboardingWelcome').style.display = 'block';
-              }, 500);
-            }
-          }, 200);
-        }, 100);
-      }, 500);
-      
-    } catch (error) {
-      console.error('Login error:', error);
-      document.getElementById('loginError').innerText='Fejl ved login: ' + error.message;
-    }
-  }
-  async function updateCreds(){
-    const u=document.getElementById('setUser').value.trim();
-    const p=document.getElementById('setPass').value.trim();
-    if(u && p){
-      try {
-        // Opret bruger i localStorage
-        console.log('🔍 Opretter bruger i localStorage...');
-        
-        // Gem brugerdata lokalt
-        const users = JSON.parse(localStorage.getItem('smarthome_simulator_users') || '[]');
-        users.push({
-          username: u,
-          password: p,
-          createdAt: new Date().toISOString(),
-          lastLogin: new Date().toISOString()
-        });
-        localStorage.setItem('smarthome_simulator_users', JSON.stringify(users));
-        
-        alert('✅ Bruger oprettet lokalt: ' + u + '\nDu kan nu logge ind!');
-        
-        document.getElementById('setUser').value='';
-        document.getElementById('setPass').value='';
-        
-        // Vis ryd localStorage knap
-        showClearStorageButton();
-      } catch (error) {
-        console.error('Fejl ved oprettelse af bruger:', error);
-        alert('Fejl ved oprettelse af bruger: ' + error.message);
-      }
-    } else { 
-      alert('Udfyld både brugernavn og adgangskode.'); 
-    }
-  }
 
 
 
@@ -11546,26 +11623,8 @@ html {
     const btnLogout = document.getElementById('btnLogout');
     if(btnLogout) btnLogout.onclick = doLogout;
     
-    // Clear localStorage knap
-    const clearStorageBtn = document.getElementById('clearStorageBtn');
-    if(clearStorageBtn) {
-      clearStorageBtn.onclick = clearLocalStorage;
-      console.log('✅ Clear localStorage button found and configured');
-    }
     
-    // Gem brugerindstillinger knap
-    const btnSaveCreds = document.getElementById('btnSaveCreds');
-    if(btnSaveCreds) {
-      btnSaveCreds.onclick = updateCreds;
-      console.log('✅ Save credentials button found and configured');
-    }
     
-    // Opret bruger knap
-    const btnCreateUser = document.getElementById('btnCreateUser');
-    if(btnCreateUser) {
-      btnCreateUser.onclick = createUser;
-      console.log('✅ Create user button found and configured');
-    }
     
     // Gem elev navn knap
     const btnSaveName = document.getElementById('btnSaveName');
@@ -12988,6 +13047,9 @@ html {
 
   // === Test Firebase connectivity ===
   async function testFirebaseConnection() {
+    // Sikr at Firebase er initialiseret
+    initializeFirebase();
+    
     if (!window.db || !isFirebaseAvailable) {
       console.log('🏠 Firebase ikke tilgængelig - kører lokalt');
       return false;
@@ -13059,207 +13121,227 @@ html {
     
     // Setup toggle buttons
     setupToggleButtons();
+    
+    // Initialiser Firebase når siden er loaded
+    initializeFirebase();
+    
+    // Test at doLogin funktionen er tilgængelig
+    console.log('🔍 doLogin funktion tilgængelig:', typeof window.doLogin);
   });
-  // Firebase konfiguration (til progress tracking og authentication)
-  const firebaseConfig = {
-    apiKey: "AIzaSyCdXnszAUJfkC5uyv9n-kVE2Whv_0vZfLk",
-    authDomain: "ibi-simulator-f6ebe.firebaseapp.com",
-    projectId: "ibi-simulator-f6ebe",
-    storageBucket: "ibi-simulator-f6ebe.firebasestorage.app",
-    messagingSenderId: "929875729041",
-    appId: "1:929875729041:web:d53f21685b20d63fb73d30",
-    measurementId: "G-YR3XWP3RVH"
-  };
 
-  // Initialiser Firebase
-  firebase.initializeApp(firebaseConfig);
+  // Firebase konfiguration er allerede defineret i head
 
   // === AUTHENTICATION SYSTEM ===
   
-  // Håndterer login og brugeroprettelse
-  async function doLogin() {
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const errorDiv = document.getElementById('loginError');
-    const loginButton = document.querySelector('.login-button');
-
-    // DEBUG: Tjek hvad vi faktisk læser fra inputfelterne
-    console.log("🔍 Email værdi:", email);
-    console.log("🔍 Password værdi:", password);
-    console.log("🔍 Password længde:", password ? password.length : 'undefined/null');
-
-    // Valider input før vi sender til Firebase
-    if (!email || !password) {
-        console.error("❌ Manglende input data");
-        errorDiv.textContent = 'Indtast både email og adgangskode';
-        return;
-    }
-
-    if (password.length < 6) {
-        console.error("❌ Password for kort");
-        errorDiv.textContent = 'Adgangskoden skal være mindst 6 tegn lang';
-        return;
-    }
-
-    // Reset error message
-    errorDiv.textContent = '';
-    loginButton.disabled = true;
-    loginButton.textContent = 'Logger ind...';
-
+  // Håndterer login og brugeroprettelse - defineret tidligt så den er tilgængelig
+  window.doLogin = async function doLogin() {
     try {
-        // Forsøger først at logge brugeren ind
-        const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-        console.log("✅ Logget ind med Firebase:", userCredential.user.uid);
-        
-        // Når login er succesfuldt, skjules login-boksen
-        console.log("🔍 Skjuler login view...");
-        document.getElementById('loginView').style.display = 'none';
-        console.log("🔍 Viser main app...");
-        document.getElementById('mainApp').style.display = 'block';
-        console.log("🔍 Main app display style:", document.getElementById('mainApp').style.display);
-        console.log("🔍 Main app element:", document.getElementById('mainApp'));
+      console.log("🚀 doLogin funktion kaldt!");
+      
+      // Sikr at Firebase er initialiseret
+      if (typeof firebase !== 'undefined') {
+        try {
+          firebase.initializeApp(firebaseConfig);
+          console.log('✅ Firebase initialiseret korrekt');
+        } catch (error) {
+          console.error('❌ Fejl ved Firebase initialisering:', error);
+        }
+      }
+      
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const errorDiv = document.getElementById('loginError');
+      const loginButton = document.querySelector('.login-button');
 
-        // Gør header og navigation synlig igen
-        const header = document.querySelector('header');
-        if (header) {
-            header.style.display = 'flex';
-            console.log('✅ Header gjort synlig igen');
-        }
-        
-        const mainnav = document.querySelector('.mainnav');
-        if (mainnav) {
-            mainnav.style.display = 'flex';
-            console.log('✅ Navigation gjort synlig igen');
-        }
-        
-        const tabs = document.querySelector('.tabs');
-        if (tabs) {
-            tabs.style.display = 'flex';
-            console.log('✅ Tabs gjort synlig igen');
-        }
+      // DEBUG: Tjek hvad vi faktisk læser fra inputfelterne
+      console.log("🔍 Email værdi:", email);
+      console.log("🔍 Password værdi:", password);
+      console.log("🔍 Password længde:", password ? password.length : 'undefined/null');
 
-        // Migrer localStorage data til Firebase ved første login
-        migrateUserDataToFirebase(userCredential.user.uid);
-        
-        // Naviger til Forside tab efter login
-        setTimeout(() => {
-            if (window.show) {
-                console.log("🎯 Navigerer til Forside tab...");
-                window.show('view-forside');
-            } else {
-                console.log("⚠️ show funktion ikke tilgængelig endnu");
-            }
-        }, 100);
-        
-        // Debug: Tjek alle CSS-egenskaber for mainApp
-        setTimeout(() => {
-            const mainApp = document.getElementById('mainApp');
-            if (mainApp) {
-                const computedStyle = window.getComputedStyle(mainApp);
-                console.log("🔍 Main app debug info:");
-                console.log("  - display:", computedStyle.display);
-                console.log("  - visibility:", computedStyle.visibility);
-                console.log("  - opacity:", computedStyle.opacity);
-                console.log("  - height:", computedStyle.height);
-                console.log("  - width:", computedStyle.width);
-                console.log("  - position:", computedStyle.position);
-                console.log("  - z-index:", computedStyle.zIndex);
-                console.log("  - Element HTML:", mainApp.outerHTML.substring(0, 200) + "...");
-            } else {
-                console.log("❌ Main app element ikke fundet!");
-            }
-        }, 100);
+      // Valider input før vi sender til Firebase
+      if (!email || !password) {
+          console.error("❌ Manglende input data");
+          errorDiv.textContent = 'Indtast både email og adgangskode';
+          return;
+      }
+
+      if (password.length < 6) {
+          console.error("❌ Password for kort");
+          errorDiv.textContent = 'Adgangskoden skal være mindst 6 tegn lang';
+          return;
+      }
+
+      // Tjek at Firebase er tilgængelig
+      if (typeof firebase === 'undefined') {
+          console.error("❌ Firebase ikke tilgængelig");
+          errorDiv.textContent = 'Firebase ikke tilgængelig. Prøv igen.';
+          return;
+      }
+
+      // Reset error message
+      errorDiv.textContent = '';
+      loginButton.disabled = true;
+      loginButton.textContent = 'Logger ind...';
+
+      try {
+          // Forsøger først at logge brugeren ind
+          const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+          console.log("✅ Logget ind med Firebase:", userCredential.user.uid);
+          
+          // Når login er succesfuldt, skjules login-boksen
+          console.log("🔍 Skjuler login view...");
+          document.getElementById('loginView').style.display = 'none';
+          console.log("🔍 Viser main app...");
+          document.getElementById('mainApp').style.display = 'block';
+          console.log("🔍 Main app display style:", document.getElementById('mainApp').style.display);
+          console.log("🔍 Main app element:", document.getElementById('mainApp'));
+
+          // Gør header og navigation synlig igen
+          const header = document.querySelector('header');
+          if (header) {
+              header.style.display = 'flex';
+              console.log('✅ Header gjort synlig igen');
+          }
+          
+          const mainnav = document.querySelector('.mainnav');
+          if (mainnav) {
+              mainnav.style.display = 'flex';
+              console.log('✅ Navigation gjort synlig igen');
+          }
+          
+          const tabs = document.querySelector('.tabs');
+          if (tabs) {
+              tabs.style.display = 'flex';
+              console.log('✅ Tabs gjort synlig igen');
+          }
+
+          // Naviger til Forside tab
+          setTimeout(() => {
+              if (window.show) {
+                  console.log("🎯 Navigerer til Forside tab...");
+                  window.show('view-forside');
+              } else {
+                  console.log("⚠️ show funktion ikke tilgængelig endnu");
+              }
+          }, 100);
+
+          // Debug: Tjek alle CSS-egenskaber for mainApp
+          setTimeout(() => {
+              const mainApp = document.getElementById('mainApp');
+              if (mainApp) {
+                  const computedStyle = window.getComputedStyle(mainApp);
+                  console.log("🔍 Main app debug info:");
+                  console.log("  - display:", computedStyle.display);
+                  console.log("  - visibility:", computedStyle.visibility);
+                  console.log("  - opacity:", computedStyle.opacity);
+                  console.log("  - height:", computedStyle.height);
+                  console.log("  - width:", computedStyle.width);
+                  console.log("  - position:", computedStyle.position);
+                  console.log("  - z-index:", computedStyle.zIndex);
+                  console.log("  - Element HTML:", mainApp.outerHTML.substring(0, 200) + "...");
+              } else {
+                  console.log("❌ Main app element ikke fundet!");
+              }
+          }, 100);
+
+      } catch (error) {
+          // Moderne Firebase bruger 'auth/invalid-credential' for både user-not-found og wrong-password
+          if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+              try {
+                  console.log("🔄 Bruger ikke fundet - forsøger at oprette ny bruger...");
+                  // Forsøger at oprette en ny bruger
+                  const newUserCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+                  console.log("🎉 Ny bruger oprettet og logget ind:", newUserCredential.user.uid);
+                  
+                  // Når ny bruger er oprettet, skjules login-boksen
+                  console.log("🔍 Skjuler login view (ny bruger)...");
+                  document.getElementById('loginView').style.display = 'none';
+                  console.log("🔍 Viser main app (ny bruger)...");
+                  document.getElementById('mainApp').style.display = 'block';
+
+                  // Gør header og navigation synlig igen
+                  const header = document.querySelector('header');
+                  if (header) {
+                      header.style.display = 'flex';
+                      console.log('✅ Header gjort synlig igen (ny bruger)');
+                  }
+                  
+                  const mainnav = document.querySelector('.mainnav');
+                  if (mainnav) {
+                      mainnav.style.display = 'flex';
+                      console.log('✅ Navigation gjort synlig igen (ny bruger)');
+                  }
+                  
+                  const tabs = document.querySelector('.tabs');
+                  if (tabs) {
+                      tabs.style.display = 'flex';
+                      console.log('✅ Tabs gjort synlig igen (ny bruger)');
+                  }
+
+                  // Naviger til Forside tab efter oprettelse af ny bruger
+                  setTimeout(() => {
+                      if (window.show) {
+                          console.log("🎯 Navigerer til Forside tab (ny bruger)...");
+                          window.show('view-forside');
+                      } else {
+                          console.log("⚠️ show funktion ikke tilgængelig endnu (ny bruger)");
+                      }
+                  }, 100);
+                  
+                  // Debug: Tjek alle CSS-egenskaber for mainApp (ny bruger)
+                  setTimeout(() => {
+                      const mainApp = document.getElementById('mainApp');
+                      if (mainApp) {
+                          const computedStyle = window.getComputedStyle(mainApp);
+                          console.log("🔍 Main app debug info (ny bruger):");
+                          console.log("  - display:", computedStyle.display);
+                          console.log("  - visibility:", computedStyle.visibility);
+                          console.log("  - opacity:", computedStyle.opacity);
+                          console.log("  - height:", computedStyle.height);
+                          console.log("  - width:", computedStyle.width);
+                          console.log("  - position:", computedStyle.position);
+                          console.log("  - z-index:", computedStyle.zIndex);
+                          console.log("  - Element HTML:", mainApp.outerHTML.substring(0, 200) + "...");
+                      } else {
+                          console.log("❌ Main app element ikke fundet! (ny bruger)");
+                      }
+                  }, 100);
+
+              } catch (createError) {
+                  console.error("❌ Fejl ved oprettelse af ny bruger:", createError);
+                  errorDiv.textContent = getFirebaseErrorMessage(createError);
+              }
+          } else {
+              console.error("❌ Fejl ved login:", error);
+              errorDiv.textContent = getFirebaseErrorMessage(error);
+          }
+      }
 
     } catch (error) {
-        // Moderne Firebase bruger 'auth/invalid-credential' for både user-not-found og wrong-password
-        if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-            try {
-                console.log("🔄 Bruger ikke fundet - forsøger at oprette ny bruger...");
-                // Forsøger at oprette en ny bruger
-                const newUserCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
-                console.log("🎉 Ny bruger oprettet og logget ind:", newUserCredential.user.uid);
-                
-                // Opdater UI til den nye bruger
-                console.log("🔍 Skjuler login view (ny bruger)...");
-                document.getElementById('loginView').style.display = 'none';
-                console.log("🔍 Viser main app (ny bruger)...");
-                document.getElementById('mainApp').style.display = 'block';
-                console.log("🔍 Main app display style (ny bruger):", document.getElementById('mainApp').style.display);
-
-                // Gør header og navigation synlig igen (ny bruger)
-                const header = document.querySelector('header');
-                if (header) {
-                    header.style.display = 'flex';
-                    console.log('✅ Header gjort synlig igen (ny bruger)');
-                }
-                
-                const mainnav = document.querySelector('.mainnav');
-                if (mainnav) {
-                    mainnav.style.display = 'flex';
-                    console.log('✅ Navigation gjort synlig igen (ny bruger)');
-                }
-                
-                const tabs = document.querySelector('.tabs');
-                if (tabs) {
-                    tabs.style.display = 'flex';
-                    console.log('✅ Tabs gjort synlig igen (ny bruger)');
-                }
-
-                // Migrer localStorage data til Firebase for ny bruger
-                migrateUserDataToFirebase(newUserCredential.user.uid);
-                
-                // Naviger til Forside tab efter oprettelse af ny bruger
-                setTimeout(() => {
-                    if (window.show) {
-                        console.log("🎯 Navigerer til Forside tab (ny bruger)...");
-                        window.show('view-forside');
-                    } else {
-                        console.log("⚠️ show funktion ikke tilgængelig endnu (ny bruger)");
-                    }
-                }, 100);
-                
-                // Debug: Tjek alle CSS-egenskaber for mainApp (ny bruger)
-                setTimeout(() => {
-                    const mainApp = document.getElementById('mainApp');
-                    if (mainApp) {
-                        const computedStyle = window.getComputedStyle(mainApp);
-                        console.log("🔍 Main app debug info (ny bruger):");
-                        console.log("  - display:", computedStyle.display);
-                        console.log("  - visibility:", computedStyle.visibility);
-                        console.log("  - opacity:", computedStyle.opacity);
-                        console.log("  - height:", computedStyle.height);
-                        console.log("  - width:", computedStyle.width);
-                        console.log("  - position:", computedStyle.position);
-                        console.log("  - z-index:", computedStyle.zIndex);
-                        console.log("  - Element HTML:", mainApp.outerHTML.substring(0, 200) + "...");
-                    } else {
-                        console.log("❌ Main app element ikke fundet (ny bruger)!");
-                    }
-                }, 100);
-                
-            } catch (createError) {
-                console.error("❌ Kunne ikke oprette bruger:", createError.message);
-                errorDiv.textContent = getFirebaseErrorMessage(createError);
-            }
-        } else {
-            // Håndterer andre login-fejl
-            console.error("❌ Login-fejl:", error.message);
-            errorDiv.textContent = getFirebaseErrorMessage(error);
-        }
+      console.error("❌ Uventet fejl i doLogin:", error);
+      const errorDiv = document.getElementById('loginError');
+      if (errorDiv) {
+        errorDiv.textContent = 'Der opstod en uventet fejl. Prøv igen.';
+      }
     } finally {
-        // Reset button state
+      // Gendan knap tilstand
+      const loginButton = document.querySelector('.login-button');
+      if (loginButton) {
         loginButton.disabled = false;
         loginButton.textContent = 'Log ind';
+      }
     }
   }
 
-  // Konverter Firebase fejlkoder til brugervenlige beskeder
+  // Hjælpefunktion til at oversætte Firebase fejlmeddelelser
   function getFirebaseErrorMessage(error) {
     switch (error.code) {
         case 'auth/user-not-found':
-            return 'Bruger ikke fundet - opretter automatisk ny konto...';
+            return 'Bruger ikke fundet. Prøv at oprette en ny konto.';
         case 'auth/wrong-password':
             return 'Forkert adgangskode. Prøv igen.';
+        case 'auth/invalid-credential':
+            return 'Forkert email eller adgangskode. Prøv igen.';
         case 'auth/invalid-email':
             return 'Ugyldig email adresse.';
         case 'auth/user-disabled':
@@ -13279,6 +13361,22 @@ html {
     }
   }
 
+  // Initialiser Firebase når DOM er klar
+  let firebaseInitialized = false;
+  function initializeFirebase() {
+    if (!firebaseInitialized && typeof firebase !== 'undefined') {
+      try {
+        firebase.initializeApp(firebaseConfig);
+        firebaseInitialized = true;
+        console.log('✅ Firebase initialiseret korrekt');
+      } catch (error) {
+        console.error('❌ Fejl ved Firebase initialisering:', error);
+      }
+    }
+  }
+
+
+
   // Logout funktion
   async function doLogout() {
       try {
@@ -13296,7 +13394,7 @@ html {
           console.log("✅ UI opdateret efter logout");
       } catch (error) {
           console.error("❌ Fejl ved logout:", error);
-      }
+    }
   }
 
   // Migrer localStorage data til Firebase (kun hvis tilladelser er korrekte)
@@ -13345,10 +13443,7 @@ html {
   // Gør logout tilgængelig globalt (til senere brug)
   window.doLogout = doLogout;
 
-  // Tjek om vi kører lokalt (file:// eller localhost)
-  const isLocalEnvironment = window.location.protocol === 'file:' || 
-                           window.location.hostname === 'localhost' || 
-                           window.location.hostname === '127.0.0.1';
+  // isLocalEnvironment er allerede defineret i head
 
   // Tjek om Firebase er tilgængelig og fungerer
   let isFirebaseAvailable = false;
@@ -13768,8 +13863,7 @@ html {
       }
 
       console.log('🚀 Initialiserer Firebase Firestore...');
-      firebase.initializeApp(firebaseConfig);
-      console.log('✅ Firebase app initialiseret');
+      console.log('✅ Firebase app allerede initialiseret');
       
       const db = firebase.firestore();
       console.log('✅ Firestore database klar til progress tracking');
@@ -13812,36 +13906,7 @@ html {
   });
 
   // === localStorage Management ===
-  function showClearStorageButton() {
-    const clearButton = document.getElementById('clearStorageBtn');
-    if (clearButton) {
-      clearButton.style.display = 'block';
-      clearButton.onclick = clearLocalStorage;
-    }
-  }
   
-  function clearLocalStorage() {
-    if (confirm('⚠️ Er du sikker på at du vil slette ALLE brugere fra localStorage?\n\nDette kan ikke fortrydes!')) {
-      // Slet alle bruger-relaterede data
-              localStorage.removeItem('smarthome_simulator_users');
-      localStorage.removeItem('simUser');
-      localStorage.removeItem('simPass');
-      localStorage.removeItem('pending_sync');
-      localStorage.removeItem('studentNames');
-      
-      console.log('🗑️ localStorage ryddet for alle brugerdata');
-      alert('✅ Alle brugere er slettet fra localStorage!\n\nDu kan nu oprette nye brugere lokalt.');
-      
-      // Skjul knappen igen
-      const clearButton = document.getElementById('clearStorageBtn');
-      if (clearButton) {
-        clearButton.style.display = 'none';
-      }
-      
-      // Genindlæs siden for at nulstille alt
-      location.reload();
-    }
-  }
 
   // === Cloud Database funktionalitet ===
            async function saveUserProgress(userId, taskId, taskName, completedAt, currentUser) {
@@ -14086,60 +14151,6 @@ html {
     document.getElementById('registerError').innerText = '';
   }
 
-  function createUser() {
-    const firstName = document.getElementById('regFirstName').value.trim();
-    const lastName = document.getElementById('regLastName').value.trim();
-    const email = document.getElementById('regEmail').value.trim();
-    const username = document.getElementById('regUsername').value.trim();
-    const password = document.getElementById('regPassword').value.trim();
-    
-    // Validering
-    if (!firstName || !lastName || !email || !username || !password) {
-      document.getElementById('registerError').innerText = 'Alle felter skal udfyldes!';
-      return;
-    }
-    
-    if (password.length < 4) {
-      document.getElementById('registerError').innerText = 'Adgangskode skal være mindst 4 tegn!';
-      return;
-    }
-    
-    // Tjek om brugernavn allerede eksisterer
-    const existingUsers = JSON.parse(localStorage.getItem('smarthome_simulator_users') || '[]');
-    if (existingUsers.some(user => user.username === username)) {
-      document.getElementById('registerError').innerText = 'Brugernavn findes allerede!';
-      return;
-    }
-    
-    // Opret ny bruger
-    const newUser = {
-      id: Date.now().toString(),
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      username: username,
-      password: password, // I produktion skulle dette hashes
-      createdAt: new Date().toISOString(),
-      completedTasks: [],
-      lastLogin: null
-    };
-    
-    // Gem bruger
-    existingUsers.push(newUser);
-    localStorage.setItem('smarthome_simulator_users', JSON.stringify(existingUsers));
-    
-    // Log ind automatisk
-    localStorage.setItem('simUser', username);
-    localStorage.setItem('simPass', password);
-    
-    // Luk modal og log ind
-    closeRegisterModal();
-    document.getElementById('loginUser').value = username;
-    document.getElementById('loginPass').value = password;
-    doLogin();
-    
-    console.log('Ny bruger oprettet:', newUser);
-  }
 
 
   
@@ -14149,81 +14160,7 @@ html {
 
 
 
-    function getCurrentUser() {
-    const username = localStorage.getItem('simUser');
-    console.log('🔍 getCurrentUser - localStorage simUser:', username);
-    
-    if (!username) {
-      console.log('❌ getCurrentUser - ingen username i localStorage');
-      return null;
-    }
 
-    console.log('🔍 getCurrentUser kaldt med username:', username);
-
-    // Først tjek registrerede brugere
-    const users = JSON.parse(localStorage.getItem('smarthome_simulator_users') || '[]');
-    const registeredUser = users.find(user => user.username === username);
-    if (registeredUser) {
-      console.log('🔍 Registreret bruger fundet:', registeredUser);
-      return registeredUser;
-    }
-
-    // Hvis ikke registreret, returner standard bruger info
-    if (username === 'admin') {
-      // Tjek om der er gemt et elevnavn
-      const studentName = JSON.parse(localStorage.getItem('student_name') || '{}');
-      
-      const adminUser = {
-        id: 'admin',
-        firstName: studentName.firstName || 'Admin',
-        lastName: studentName.lastName || 'Bruger',
-        email: studentName.email || 'admin@smarthomesimulator.dk',
-        username: 'admin'
-      };
-      console.log('🔍 Admin bruger returneret:', adminUser);
-      return adminUser;
-    }
-
-    // For alle andre brugere (fx Test1), returner standard bruger info
-    const studentName = JSON.parse(localStorage.getItem('student_name') || '{}');
-    
-    const defaultUser = {
-      id: username,
-      firstName: studentName.firstName || username,
-      lastName: studentName.lastName || 'Bruger',
-      email: studentName.email || `${username}@smarthomesimulator.dk`,
-      username: username
-    };
-    
-    console.log('🔍 Standard bruger returneret for:', username, defaultUser);
-    return defaultUser;
-  }
-
-  function updateUserTaskCompletion(taskId, taskName) {
-    const currentUser = getCurrentUser();
-    if (!currentUser) return;
-    
-    const completedAt = new Date().toISOString();
-    
-    // Tilføj til brugerens completedTasks hvis ikke allerede der
-    if (!currentUser.completedTasks.some(task => task.id === taskId)) {
-      currentUser.completedTasks.push({
-        id: taskId,
-        name: taskName,
-        completedAt: completedAt
-      });
-      
-      // Opdater brugerdata
-      const users = JSON.parse(localStorage.getItem('smarthome_simulator_users') || '[]');
-      const userIndex = users.findIndex(user => user.username === currentUser.username);
-      if (userIndex !== -1) {
-        users[userIndex] = currentUser;
-        localStorage.setItem('smarthome_simulator_users', JSON.stringify(users));
-      }
-      
-      console.log('Opgave fuldført:', taskName, 'for bruger:', currentUser.firstName, currentUser.lastName);
-    }
-  }
 
   // === Settings event setup ===
   function setupSettingsEvents() {
@@ -14714,19 +14651,19 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Start med login siden som standard
   console.log('🔑 Starter med login siden som standard');
-  document.getElementById('loginView').style.display = 'flex';
+    document.getElementById('loginView').style.display = 'flex';
   document.getElementById('mainApp').style.display = 'none';
   
   // Skjul alle views og navigation som standard
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-  });
-  
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    
   // Skjul navigation og header som standard
   const mainnav = document.querySelector('.mainnav');
   const tabs = document.querySelector('.tabs');
-  const header = document.querySelector('header');
+    const header = document.querySelector('header');
   
   if (mainnav) mainnav.style.display = 'none';
   if (tabs) tabs.style.display = 'none';
