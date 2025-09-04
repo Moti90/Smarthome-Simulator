@@ -4345,11 +4345,15 @@ input:focus, select:focus, textarea:focus{
   border: 2px solid #2ab0ff;
   border-radius: 16px;
   padding: 40px;
-  max-width: 500px;
+  max-width: 600px;
+  width: 90%;
   text-align: center;
   color: #e5e9f0;
   z-index: 10002;
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .onboarding-welcome h2 {
@@ -4372,6 +4376,7 @@ input:focus, select:focus, textarea:focus{
   gap: 16px;
   margin: 24px 0;
   text-align: left;
+  width: 100%;
 }
 
 .onboarding-welcome .feature {
@@ -4398,6 +4403,7 @@ input:focus, select:focus, textarea:focus{
   gap: 12px;
   justify-content: center;
   margin-top: 24px;
+  width: 100%;
 }
 
 .onboarding-welcome .buttons button {
@@ -4408,6 +4414,7 @@ input:focus, select:focus, textarea:focus{
   font-size: 14px;
   font-weight: 600;
   min-width: 120px;
+  transition: all 0.2s ease;
 }
 
 .onboarding-welcome .buttons .skip {
@@ -4415,9 +4422,19 @@ input:focus, select:focus, textarea:focus{
   color: #9ca3af;
 }
 
+.onboarding-welcome .buttons .skip:hover {
+  background: #4b5563;
+  color: #d1d5db;
+}
+
 .onboarding-welcome .buttons .start {
   background: #2ab0ff;
   color: white;
+}
+
+.onboarding-welcome .buttons .start:hover {
+  background: #1e90ff;
+  transform: translateY(-1px);
 }
 
 /* Quick start tasks */
@@ -5866,7 +5883,7 @@ html {
     
     <div class="buttons">
       <button class="skip" onclick="skipOnboarding()">Spring over</button>
-      <button class="start" onclick="startOnboarding()">Start rundvisning</button>
+      <button class="start" onclick="startOnboarding()">Start guiden</button>
     </div>
   </div>
 
@@ -6236,7 +6253,14 @@ html {
             
             <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #2a3442;">
               <h3>📚 Kom godt i gang</h3>
-              <p>Nye brugere kan starte med <strong>Opgaver</strong> fanen for guidede øvelser.</p>
+              <p>Nye brugere kan starte med <strong>Opgaver</strong> fanen for guidede øvelser eller tage en rundvisning af platformen.</p>
+              
+              <div style="margin-top: 16px; text-align: center;">
+                <button onclick="startManualOnboarding()" class="btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+                  <span>🎯</span>
+                  <span>Start rundvisning</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -9904,6 +9928,9 @@ html {
     }
 
     function skipOnboarding() {
+      // Hide welcome screen
+      document.getElementById('onboardingWelcome').style.display = 'none';
+      // Finish onboarding
       finishOnboarding();
     }
 
@@ -10523,9 +10550,18 @@ html {
       }
     }
 
+    // Manual onboarding function for front page button
+    function startManualOnboarding() {
+      console.log('🎯 Manual onboarding started from front page');
+      
+      // Show welcome screen first
+      document.getElementById('onboardingWelcome').style.display = 'flex';
+    }
+
     // Make functions globally available
     window.skipOnboarding = skipOnboarding;
     window.startOnboarding = startOnboarding;
+    window.startManualOnboarding = startManualOnboarding;
     window.nextOnboardingStep = nextOnboardingStep;
     window.pauseOnboarding = pauseOnboarding;
     
