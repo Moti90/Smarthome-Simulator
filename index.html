@@ -1977,6 +1977,7 @@
       background: #374151;
       outline: none;
       -webkit-appearance: none;
+      appearance: none;
       margin: 5px 0;
     }
 
@@ -13057,13 +13058,29 @@ html {
     
     try {
       console.log('🧪 Tester Firebase forbindelse...');
+      
+      // Test med en mere sikker tilgang - prøv at læse en eksisterende collection
       const testSnapshot = await window.db.collection('classes').limit(1).get();
       console.log('✅ Firebase forbindelse virker - kan læse klasser');
       return true;
+      
     } catch (error) {
       console.error('❌ Firebase forbindelse fejler:', error);
       console.error('🔍 Fejl kode:', error.code);
       console.error('🔍 Fejl besked:', error.message);
+      
+      // Hvis det er en permission fejl, deaktiver Firebase og kør lokalt
+      if (error.code === 'permission-denied' || error.message.includes('permissions')) {
+        console.log('🔒 Permission fejl - deaktiverer Firebase og kører lokalt');
+        window.db = null;
+        isFirebaseAvailable = false;
+        
+        // Vis brugeren en informativ besked
+        if (typeof showNotification === 'function') {
+          showNotification('🔒 Firebase permissions ikke konfigureret - kører i lokal tilstand', 'info');
+        }
+      }
+      
       return false;
     }
   }
@@ -13866,6 +13883,17 @@ html {
       console.log('✅ Firebase app allerede initialiseret');
       
       const db = firebase.firestore();
+      
+      // Konfigurer Firestore for bedre online kompatibilitet
+      if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        // Online deployment - deaktiver offline persistence for at undgå permission fejl
+        console.log('🌐 Online deployment - konfigurerer Firestore for bedre kompatibilitet');
+        db.settings({
+          cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
+          ignoreUndefinedProperties: true
+        });
+      }
+      
       console.log('✅ Firestore database klar til progress tracking');
       
       // Gør Firestore tilgængeligt globalt
@@ -13884,6 +13912,14 @@ html {
       return true;
     } catch (error) {
       console.error('❌ Firebase initialisering fejlede:', error);
+      
+      // Hvis Firebase fejler online, deaktiver det og kør lokalt
+      if (!isLocalEnvironment) {
+        console.log('🔄 Firebase fejler online - skifter til lokal tilstand');
+        window.db = null;
+        isFirebaseAvailable = false;
+      }
+      
       return false;
     }
   }
@@ -13907,6 +13943,43 @@ html {
 
   // === localStorage Management ===
   
+  // clearLocalStorage funktion - defineret tidligt så den er tilgængelig
+  window.clearLocalStorage = function clearLocalStorage() {
+    try {
+      console.log('🗑️ Rydder localStorage...');
+      
+      // Gem kun essensielle data
+      const essentialKeys = ['smarthome_user', 'smarthome_classes', 'smarthome_schools'];
+      const essentialData = {};
+      
+      essentialKeys.forEach(key => {
+        const data = localStorage.getItem(key);
+        if (data) {
+          essentialData[key] = data;
+        }
+      });
+      
+      // Ryd alt localStorage
+      localStorage.clear();
+      
+      // Gendan essensielle data
+      Object.keys(essentialData).forEach(key => {
+        localStorage.setItem(key, essentialData[key]);
+      });
+      
+      console.log('✅ localStorage ryddet - essensielle data bevarede');
+      alert('✅ localStorage er ryddet!\n\nEssensielle data (brugere, klasser, skoler) er bevarede.');
+      
+      // Genindlæs siden for at sikre ren tilstand
+      if (confirm('Vil du genindlæse siden for at sikre ren tilstand?')) {
+        window.location.reload();
+      }
+      
+    } catch (error) {
+      console.error('❌ Fejl ved rydning af localStorage:', error);
+      alert('❌ Fejl ved rydning af localStorage: ' + error.message);
+    }
+  };
 
   // === Cloud Database funktionalitet ===
            async function saveUserProgress(userId, taskId, taskName, completedAt, currentUser) {
