@@ -56,7 +56,7 @@
     }
 
     header{padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-color);display:flex;align-items:center;gap:12px;position:relative;justify-content:flex-start}
-    .brand{ display:flex; align-items:center; justify-content:flex-start; text-align:left; margin-left: -25%; }
+    .brand{ display:flex; align-items:center; justify-content:flex-start; text-align:left; margin-left: 0; }
     .brand .goldtext{ color:#D4AF37; font-weight:700; text-shadow:0 1px 0 #000, 0 0 6px rgba(212,175,55,.5); letter-spacing:0.5px; }
     .top-right{margin-left:auto;display:flex;gap:8px;align-items:center}
     
@@ -198,7 +198,7 @@
     }
 
     /* Faner (SPA) */
-    .tabs{display:flex;gap:8px;margin:16px 16px 0 16px}
+    .tabs{display:flex;gap:8px;margin:32px 16px 0 16px}
     .tabs button{background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:8px;padding:6px 10px;cursor:pointer}
     .tabs button.active{background:var(--accent-color);color:var(--text-primary)}
     .views{padding:8px 16px 16px 16px;background:var(--bg-primary)}
@@ -349,7 +349,7 @@
 
     /* Compact mode for tabs */
     .compact-mode .tabs {
-      margin: 12px 16px 0 16px;
+      margin: 28px 16px 0 16px;
     }
 
     .compact-mode .tabs button {
@@ -3850,8 +3850,7 @@ input:focus, select:focus, textarea:focus{
 
 /* Appbar is now controlled by mainApp visibility */
 
-/* Remove the yellow 'Simulator' title block in main area */
-#mainApp > header .brand { display: none !important; }
+/* Brand is now visible in header */
 
 /* New LUA bar (scoped classes) */
 .lua-bar{ display:flex; align-items:center; gap:10px; }
@@ -3886,13 +3885,11 @@ input:focus, select:focus, textarea:focus{
 .appbar .brand svg{ height: 52px !important; width: auto !important; }
 .appbar .brand .name{ font-size: 1.25rem !important; letter-spacing: .08em !important; font-weight: 900 !important; }
 
-/* Keep nav snug to the right */
-.appbar .mainnav{
-  position: absolute !important;
-  right: 40px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  margin: 0 !important;
+/* Main navigation in simulator header */
+.mainnav{
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
 }
 
 @media (max-width: 900px){
@@ -5178,7 +5175,7 @@ html,body{margin:0;background:var(--bg-primary);color:var(--text-primary);font-f
   display:flex; align-items:center; gap:12px;
   background:var(--bg-secondary);
 }
-.brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.06em; justify-content:flex-start; margin-left: -25%;background:var(--bg-secondary);}
+.brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.06em; justify-content:flex-start; margin-left: 0;background:var(--bg-secondary);}
     .brand .name{color:var(--text-primary);}
 .mainnav{margin-left:auto; display:flex; gap:8px;background:var(--bg-secondary);}
 .mainnav button{
@@ -5522,21 +5519,6 @@ html {
 
   <div id="mainApp" style="display:none;">
 
-    <!-- Main Navigation Header -->
-    <header class="appbar" style="display: flex;">
-      <div class="brand">
-        <img src="LOGO.png" alt="SMARTHOME SIMULATOR logo" height="50">
-        <span style="color: white; font-size: 24px; margin-left: 10px; font-weight: 500;">Smarthome Simulator</span>
-      </div>
-      <nav class="mainnav">
-        <button type="button" data-target="view-forside">🏡 Forside</button>
-        <button type="button" data-target="view-sim">📊 Sensorer & Regler</button>
-        <button type="button" data-target="view-home">🏠 Smart Home</button>
-        <button type="button" data-target="view-learning">📚 Læring</button>
-        <button type="button" data-target="view-tasks" title="Kom godt i gang">🚀 Opgaver</button>
-        <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
-      </nav>
-    </header>
 
     <!-- Secondary Navigation Tabs -->
     <div class="tabs">
@@ -5896,12 +5878,22 @@ html {
   </div>
 
   <header>
-    <div class="brand"><h1 class="goldtext"> Simulator  </h1></div>
+    <div class="brand">
+    </div>
     <div class="top-left">
       <button id="btnTeacherLogin" class="btn-secondary" style="margin-right: 12px; background: #4a5568 !important; color: white !important; border: 1px solid #2d3748 !important; padding: 6px 12px !important; border-radius: 6px !important; font-weight: 500 !important; font-size: 12px !important; box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important; z-index: 9999 !important; position: relative !important; display: block !important;">👨‍🏫 Lærer</button>
       <button id="btnTeacherTab" class="btn-secondary" style="margin-right: 12px; background: #059669 !important; color: white !important; border: 1px solid #047857 !important; padding: 6px 12px !important; border-radius: 6px !important; font-weight: 500 !important; font-size: 12px !important; box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important; z-index: 9999 !important; position: relative !important; display: none !important;">📊 Dashboard</button>
     </div>
     <div class="top-right">
+      <img src="LOGO.png" alt="SMARTHOME SIMULATOR logo" height="63" style="margin-right: 12px;">
+      <nav class="mainnav">
+        <button type="button" data-target="view-forside">🏡 Forside</button>
+        <button type="button" data-target="view-sim">📊 Sensorer & Regler</button>
+        <button type="button" data-target="view-home">🏠 Smart Home</button>
+        <button type="button" data-target="view-learning">📚 Læring</button>
+        <button type="button" data-target="view-tasks" title="Kom godt i gang">🚀 Opgaver</button>
+        <button type="button" data-target="view-settings">⚙️ Indstillinger</button>
+      </nav>
       <div class="menu">
         <button id="btnMenu" aria-haspopup="true" aria-expanded="false" title="LUA-værktøjer">LUA ▾</button>
         <div class="menu-list" id="menuList" role="menu">
@@ -11519,48 +11511,6 @@ html {
       alert('Udfyld både brugernavn og adgangskode.'); 
     }
   }
-  async function doLogout(){
-    console.log('✅ Logger ud fra localStorage');
-    
-    // Tilføj fade-out effekt til hovedapp
-    const mainApp = document.getElementById('mainApp');
-    mainApp.style.transition = 'opacity 0.5s ease-out';
-    mainApp.style.opacity = '0';
-    
-          // Efter fade-out, skjul hovedapp og vis intro
-      setTimeout(() => {
-        // Skjul navigation, tabs og header
-        document.querySelector('.mainnav').style.display = 'none';
-        document.querySelector('.tabs').style.display = 'none';
-        const header = document.querySelector('header');
-        if (header) {
-          header.style.display = 'none';
-          console.log('✅ Header skjult igen ved logout');
-        }
-        
-        // Vis intro med fade-in effekt
-        const introView = document.getElementById('loginView');
-        introView.style.display = 'flex';
-        introView.style.opacity = '0';
-        introView.style.transition = 'opacity 0.5s ease-in';
-        
-        setTimeout(() => {
-          introView.style.opacity = '1';
-
-        }, 100);
-      }, 500);
-    
-    // Vis lærer login knap igen og skjul dashboard knap
-    const btnTeacherLogin = document.getElementById('btnTeacherLogin');
-    const btnTeacherTab = document.getElementById('btnTeacherTab');
-    
-    if(btnTeacherLogin) btnTeacherLogin.style.display = 'block';
-    if(btnTeacherTab) btnTeacherTab.style.display = 'none';
-    
-    // Ryd lærer login status
-    localStorage.removeItem('teacher_school_id');
-    localStorage.removeItem('teacher_class_id');
-  }
 
 
 
@@ -13329,25 +13279,25 @@ html {
     }
   }
 
-          // Logout funktion
-        async function doLogout() {
-            try {
-                await firebase.auth().signOut();
-                console.log("✅ Logget ud fra Firebase");
-                
-                // Vis login view og skjul main app
-                document.getElementById('loginView').style.display = 'flex';
-                document.getElementById('mainApp').style.display = 'none';
-                
-                // Ryd eventuelle fejl
-                const errorDiv = document.getElementById('loginError');
-                if (errorDiv) errorDiv.textContent = '';
-                
-                console.log("✅ UI opdateret efter logout");
-            } catch (error) {
-                console.error("❌ Fejl ved logout:", error);
-            }
-        }
+  // Logout funktion
+  async function doLogout() {
+      try {
+          await firebase.auth().signOut();
+          console.log("✅ Logget ud fra Firebase");
+          
+          // Vis login view og skjul main app
+          document.getElementById('loginView').style.display = 'flex';
+          document.getElementById('mainApp').style.display = 'none';
+          
+          // Ryd eventuelle fejl
+          const errorDiv = document.getElementById('loginError');
+          if (errorDiv) errorDiv.textContent = '';
+          
+          console.log("✅ UI opdateret efter logout");
+      } catch (error) {
+          console.error("❌ Fejl ved logout:", error);
+      }
+  }
 
   // Migrer localStorage data til Firebase (kun hvis tilladelser er korrekte)
   async function migrateUserDataToFirebase(userId) {
@@ -13389,16 +13339,6 @@ html {
         // Skip Firebase writes for nu
     } catch (error) {
         console.log('ℹ️ Kunne ikke opdatere brugeraktivitet:', error.message);
-    }
-  }
-
-  // Logout funktion (kan tilføjes senere i UI)
-  async function doLogout() {
-    try {
-        await firebase.auth().signOut();
-        console.log('👋 Logget ud succesfuldt');
-    } catch (error) {
-        console.error('❌ Logout fejl:', error);
     }
   }
 
