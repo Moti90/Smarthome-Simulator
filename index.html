@@ -13399,9 +13399,17 @@ html {
   function initializeFirebase() {
     if (!firebaseInitialized && typeof firebase !== 'undefined') {
       try {
-        firebase.initializeApp(firebaseConfig);
-        firebaseInitialized = true;
-        console.log('✅ Firebase initialiseret korrekt');
+        // Brug Firebase config fra firebase-config.js i stedet for at initialisere igen
+        if (window.FirebaseConfig && window.FirebaseConfig.initializeFirebase) {
+          window.FirebaseConfig.initializeFirebase();
+          firebaseInitialized = true;
+          console.log('✅ Firebase initialiseret via firebase-config.js');
+        } else {
+          // Fallback hvis firebase-config.js ikke er tilgængelig
+          firebase.initializeApp(firebaseConfig);
+          firebaseInitialized = true;
+          console.log('✅ Firebase initialiseret korrekt (fallback)');
+        }
       } catch (error) {
         console.error('❌ Fejl ved Firebase initialisering:', error);
       }
@@ -13902,16 +13910,6 @@ html {
       console.log('✅ Firebase app allerede initialiseret');
       
       const db = firebase.firestore();
-      
-      // Konfigurer Firestore for bedre online kompatibilitet
-      if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-        // Online deployment - konfigurer Firestore med merge for at undgå warnings
-        console.log('🌐 Online deployment - konfigurerer Firestore for bedre kompatibilitet');
-        db.settings({
-          cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
-          ignoreUndefinedProperties: true
-        }, { merge: true });
-      }
       
       console.log('✅ Firestore database klar til progress tracking');
       

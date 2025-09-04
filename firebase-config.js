@@ -38,6 +38,16 @@ function initializeFirebase() {
     storage = firebase.storage(app);
     functions = firebase.functions(app);
 
+    // Configure Firestore settings for better online compatibility
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      // Online deployment - configure Firestore with merge to avoid warnings
+      console.log('🌐 Online deployment - configuring Firestore for better compatibility');
+      db.settings({
+        cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
+        ignoreUndefinedProperties: true
+      }, { merge: true });
+    }
+
     // Enable Firestore offline persistence
     db.enablePersistence()
       .catch((err) => {
