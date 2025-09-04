@@ -6729,23 +6729,6 @@ html {
         <div class="card">
           <h2>🔐 Konto</h2>
           <div class="body">
-            <div class="settings-section">
-              <h3>🔑 Login oplysninger</h3>
-              <div class="setting-item">
-                <label for="setUser">Brugernavn</label>
-                <input id="setUser" type="text" placeholder="Indtast nyt brugernavn" class="styled-input">
-              </div>
-              <div class="setting-item">
-                <label for="setPass">Adgangskode</label>
-                <input id="setPass" type="password" placeholder="Indtast ny adgangskode" class="styled-input">
-              </div>
-              <div class="setting-item">
-                <button id="btnSaveCreds" class="btn-primary">💾 Gem login oplysninger</button>
-                <span class="setting-description">Opdater dine login oplysninger</span>
-              </div>
-            </div>
-
-            <div class="divider"></div>
 
             <div class="settings-section">
               <h3>📊 Data & Fremskridt</h3>
@@ -11624,7 +11607,34 @@ html {
     const btnLogout = document.getElementById('btnLogout');
     if(btnLogout) btnLogout.onclick = doLogout;
     
+    // === Settings knapper ===
     
+    // Ryd alle data knap
+    const clearStorageBtn = document.getElementById('clearStorageBtn');
+    if(clearStorageBtn) {
+      console.log('✅ Clear storage button found, adding click handler');
+      clearStorageBtn.onclick = function() {
+        if (confirm('⚠️ Er du sikker på at du vil slette ALLE data?\n\nDette inkluderer:\n• Alle brugere\n• Alle klasser\n• Alle skoler\n• Simulator data\n• Progress data\n\nDette kan IKKE fortrydes!')) {
+          if (confirm('🚨 SIDSTE ADVARSEL!\n\nEr du 100% sikker på at du vil slette ALT?\n\nSkriv "SLET ALT" i næste dialog for at bekræfte.')) {
+            const confirmation = prompt('Skriv "SLET ALT" for at bekræfte sletning:');
+            if (confirmation === 'SLET ALT') {
+              try {
+                // Ryd alt localStorage
+                localStorage.clear();
+                console.log('✅ Alle data slettet fra localStorage');
+                alert('✅ Alle data er slettet!\n\nSiden vil genindlæses nu.');
+                window.location.reload();
+              } catch (error) {
+                console.error('❌ Fejl ved sletning af data:', error);
+                alert('❌ Fejl ved sletning af data: ' + error.message);
+              }
+            } else {
+              alert('❌ Sletning annulleret - bekræftelse matchede ikke.');
+            }
+          }
+        }
+      };
+    }
     
     
     // Gem elev navn knap
