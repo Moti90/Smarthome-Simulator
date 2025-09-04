@@ -6543,6 +6543,7 @@ html {
                 <option value="contact">Dør-/vindueskontakt</option>
                 <option value="humidity">Fugtighedssensor</option>
                 <option value="lux">Lysmåler (Lux)</option>
+                <option value="outdoor-temp">Udendørs temperatur</option>
                 <option value="wind">Vindmåler</option>
                 <option value="smoke">Røgalarm</option>
                 <option value="leak">Vandlækage</option>
@@ -7593,29 +7594,34 @@ html {
             <div class="control-section">
               <h4>🌡️ Klima</h4>
               
-              <div class="device-control climate-control">
-                <div class="device-info">
-                  <div class="device-icon">🌡️</div>
-                  <div class="device-name">Temperatur</div>
-                  <div class="temperature-display">
-                    <span id="currentTemp">21</span>°C
-                  </div>
-                </div>
-                <div class="temperature-slider-container">
-                  <input type="range" class="temperature-slider" id="tempSlider" min="0" max="40" value="21" step="0.5">
-                  <div class="temp-labels">
-                    <span>0°</span>
-                    <span>40°</span>
-                  </div>
-                </div>
-              </div>
-              
               <div class="device-control">
                 <div class="device-info">
                   <div class="device-icon">🌪️</div>
                   <div class="device-name">Ventilation</div>
                 </div>
                 <button class="device-toggle" data-device="ventilation"></button>
+              </div>
+            </div>
+            
+            <div class="control-section">
+              <h4>🔥 Varme & Opvarmning</h4>
+              
+              <div class="device-control">
+                <div class="device-info">
+                  <div class="device-icon">🔥</div>
+                  <div class="device-name">Varme</div>
+                </div>
+                <button class="device-toggle" data-device="heating"></button>
+              </div>
+              
+              <div class="device-control climate-control">
+                <div class="device-info">
+                  <div class="device-icon">🌡️</div>
+                  <div class="device-name">Indendørs Temperatur</div>
+                  <div class="temperature-display">
+                    <span id="currentTemp">21</span>°C
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -8197,6 +8203,10 @@ html {
       case 'humidityBelow': return state.humidity <= parseFloat(value || 0);
       case 'luxAbove': return state.lux >= parseFloat(value || 0);
       case 'luxBelow': return state.lux <= parseFloat(value || 0);
+      // Udendørs temperatur triggers
+      case 'outdoorTempCold': return deviceStates['outdoor-temp'] < 5;
+      case 'outdoorTempWarm': return deviceStates['outdoor-temp'] > 25;
+      case 'outdoorTempHot': return deviceStates['outdoor-temp'] > 30;
       default: return false;
     }
   }
@@ -8211,6 +8221,16 @@ html {
       case 'weekdayIn': return (value || '').split(',').map(s => s.trim()).includes(state.weekday);
       case 'alarmArmed': return state.alarmArmed === true;
       case 'alarmHome': return state.alarmHome === true;
+      // Udendørs temperatur conditions
+      case 'outdoorTempBelow': return deviceStates['outdoor-temp'] < parseFloat(value || 0);
+      case 'outdoorTempAbove': return deviceStates['outdoor-temp'] > parseFloat(value || 0);
+      case 'outdoorTempBetween':
+        var parts = (value || '').split('-');
+        if (parts.length !== 2) return false;
+        var min = parseFloat(parts[0] || 0);
+        var max = parseFloat(parts[1] || 0);
+        var temp = deviceStates['outdoor-temp'];
+        return temp >= min && temp <= max;
       default: return false;
     }
   }
@@ -8247,6 +8267,42 @@ html {
         break;
       case 'push':
         log('📝 Regel log: ' + (rule.action1Value || 'Handling udført'), 'activate');
+        break;
+      // Varme/Opvarmning actions
+      case 'heatingOn':
+        deviceStates['heating'] = true;
+        temperatureSimulation.targetTemp = 30;
+        startTemperatureSimulation();
+        log('🔥 Varme tændt via regel', 'activate');
+        showNotification('🔥 Varme aktiveret - temperatur stiger til 30°C', 'success');
+        break;
+      case 'heatingOff':
+        deviceStates['heating'] = false;
+        temperatureSimulation.targetTemp = 15;
+        startTemperatureSimulation();
+        log('🔥 Varme slukket via regel', 'activate');
+        showNotification('🔥 Varme deaktiveret - temperatur falder til 15°C', 'info');
+        break;
+      case 'thermostatUp':
+        var currentTemp = deviceStates['thermostat'] || 21;
+        var newTemp = Math.min(30, currentTemp + 2);
+        deviceStates['thermostat'] = newTemp;
+        log('🌡️ Termostat øget til ' + newTemp + '°C', 'activate');
+        showNotification('🌡️ Termostat øget til ' + newTemp + '°C', 'info');
+        break;
+      case 'thermostatDown':
+        var currentTemp = deviceStates['thermostat'] || 21;
+        var newTemp = Math.max(15, currentTemp - 2);
+        deviceStates['thermostat'] = newTemp;
+        log('🌡️ Termostat sænket til ' + newTemp + '°C', 'activate');
+        showNotification('🌡️ Termostat sænket til ' + newTemp + '°C', 'info');
+        break;
+      case 'thermostatSet':
+        var targetTemp = parseFloat(rule.action1Value || 21);
+        targetTemp = Math.max(15, Math.min(30, targetTemp));
+        deviceStates['thermostat'] = targetTemp;
+        log('🌡️ Termostat sat til ' + targetTemp + '°C', 'activate');
+        showNotification('🌡️ Termostat sat til ' + targetTemp + '°C', 'info');
         break;
       default:
         log('❓ Ukendt handling: ' + rule.action1, 'error');
@@ -10626,6 +10682,10 @@ html {
       ['frontDoorClosed','🔐 Hoveddør lukket'],
       ['bedroomWindowOpened','🪟 Soveværelse vindue åbnet'],
       ['balconyDoorOpened','🪟 Balkondør åbnet'],
+      // Temperatur triggers
+      ['outdoorTempCold','🌡️ Udendørs temp < 5°C'],
+      ['outdoorTempWarm','🌡️ Udendørs temp > 25°C'],
+      ['outdoorTempHot','🌡️ Udendørs temp > 30°C'],
       // Sensorer
       ['humidityAbove','💧 Fugtighed over'],
       ['humidityBelow','💧 Fugtighed under'],
@@ -10658,7 +10718,11 @@ html {
       ['humAbove','Fugt ≥'],['humBelow','Fugt ≤'],
       ['windBelow','Vind <'],['weekdayIn','Ugedag i'],
       ['alarmArmed','Alarm = Armed'],['alarmHome','Home Mode'],
-              ['globalEq','Global name=value'],
+      ['globalEq','Global name=value'],
+      // Udendørs temperatur conditions
+      ['outdoorTempBelow','🌡️ Udendørs temp <'],
+      ['outdoorTempAbove','🌡️ Udendørs temp >'],
+      ['outdoorTempBetween','🌡️ Udendørs temp mellem'],
       ['sensorEq','Sensor =='],['sensorNe','Sensor ≠'],
       ['sensorGt','Sensor >'],['sensorLt','Sensor <'],
       ['sensorGe','Sensor ≥'],['sensorLe','Sensor ≤'],
@@ -10687,6 +10751,12 @@ html {
       // Ventilation
       ['ventilationOn','🌪️ Ventilation → Tænd'],
       ['ventilationOff','🌪️ Ventilation → Sluk'],
+      // Varme/Opvarmning
+      ['heatingOn','🔥 Varme → Tænd'],
+      ['heatingOff','🔥 Varme → Sluk'],
+      ['thermostatUp','🌡️ Termostat → Højere'],
+      ['thermostatDown','🌡️ Termostat → Lavere'],
+      ['thermostatSet','🌡️ Termostat → Sæt til'],
       // Dørlås
       ['frontDoorLock','🔐 Hoveddør → Lås'],
       ['frontDoorUnlock','🔐 Hoveddør → Lås op'],
@@ -10729,6 +10799,7 @@ html {
     function phTrigger(k){
       return {'always':'','timeEquals':'hh:mm (07:30)','humidityAbove':'tal (65)','humidityBelow':'tal (40)',
         'tempAbove':'grader (25)','tempBelow':'grader (18)',
+        'outdoorTempCold':'','outdoorTempWarm':'','outdoorTempHot':'',
         'globalEqTrig':'navn=værdi','sensorEqTrig':'sensor.xx=val',
         'sensorGtTrig':'sensor.xx=21','sensorLtTrig':'sensor.xx=21','sensorGeTrig':'sensor.xx=21','sensorLeTrig':'sensor.xx=21'}[k]||'';
     }
@@ -10736,10 +10807,12 @@ html {
       return {'luxBelow':'tal','luxAbove':'tal','humAbove':'procent','humBelow':'procent','windBelow':'tal',
         'weekdayIn':'Mon,Fri','globalEq':'name=value','sensorEq':'name=value','sensorNe':'name=value',
         'sensorGt':'name=tal','sensorLt':'name=tal','sensorGe':'name=tal','sensorLe':'name=tal',
-        'sensorContains':'name=del','timeBetween':'HH:MM-HH:MM'}[k]||'';
+        'sensorContains':'name=del','timeBetween':'HH:MM-HH:MM',
+        'outdoorTempBelow':'grader (5)','outdoorTempAbove':'grader (25)','outdoorTempBetween':'min-max (15-25)'}[k]||'';
     }
     function phAct(k){
-      return {'push':'besked','setGlobal':'name=value','delayLightOff':'sekunder'}[k]||'';
+      return {'push':'besked','setGlobal':'name=value','delayLightOff':'sekunder',
+        'heatingOn':'','heatingOff':'','thermostatUp':'','thermostatDown':'','thermostatSet':'grader (22)'}[k]||'';
     }
 
     // --- Rendering
@@ -11369,7 +11442,11 @@ html {
         'allLightsOff': 'living-room-light',
         'timeBetween': 'time-scheduler',
         'alarmActivated': 'alarm-system',
-        'alarmDeactivated': 'alarm-system'
+        'alarmDeactivated': 'alarm-system',
+        // Udendørs temperatur triggers
+        'outdoorTempCold': 'outdoor-temp',
+        'outdoorTempWarm': 'outdoor-temp',
+        'outdoorTempHot': 'outdoor-temp'
       };
       
       var actionMapping = {
@@ -11402,6 +11479,12 @@ html {
         // Alarm system
         'alarmOn': { device: 'alarm-system', state: true },
         'alarmOff': { device: 'alarm-system', state: false },
+        // Varme/Opvarmning
+        'heatingOn': { device: 'heating', state: true },
+        'heatingOff': { device: 'heating', state: false },
+        'thermostatUp': { type: 'thermostat', action: 'up' },
+        'thermostatDown': { type: 'thermostat', action: 'down' },
+        'thermostatSet': { type: 'thermostat', action: 'set' },
         // Temperatur (special handling)
         'tempUp': { type: 'temperature', value: 23 },
         'tempDown': { type: 'temperature', value: 19 },
@@ -11497,6 +11580,13 @@ html {
             state: actionConfig.state,
             delay: index * 100
           });
+        } else if (actionConfig.type === 'thermostat') {
+          homeRule.actions.push({
+            type: 'thermostat',
+            action: actionConfig.action,
+            value: wiresheetRule.action1Value || wiresheetRule.action2Value,
+            delay: index * 100
+          });
         } else {
           homeRule.actions.push({
             type: 'device',
@@ -11539,6 +11629,27 @@ html {
           device: deviceId,
           operator: 'less',
           threshold: parseFloat(triggerValue || 18)
+        };
+      } else if (triggerType === 'outdoorTempCold') {
+        return {
+          type: 'numeric',
+          device: deviceId,
+          operator: 'less',
+          threshold: 5
+        };
+      } else if (triggerType === 'outdoorTempWarm') {
+        return {
+          type: 'numeric',
+          device: deviceId,
+          operator: 'greater',
+          threshold: 25
+        };
+      } else if (triggerType === 'outdoorTempHot') {
+        return {
+          type: 'numeric',
+          device: deviceId,
+          operator: 'greater',
+          threshold: 30
         };
       } else {
         // Boolean triggers for switches, motion sensors etc.
@@ -15076,6 +15187,22 @@ function setupSmartDeviceDragAndDrop() {
         'Overvåg både morgen og aften for bedste resultater'
       ]
     },
+    'outdoor-temp': {
+      title: 'Udendørs temperatur',
+      description: 'Måler den udendørs temperatur og kan bruges til automatisk klimastyring og energibesparelse.',
+      uses: [
+        'Automatisk varme når det er koldt udenfor',
+        'Energibesparelse ved at slukke varme når det er mildt',
+        'Ventilationsstyring baseret på temperaturforskel',
+        'Intelligent termostat der justerer efter vejrforhold'
+      ],
+      tips: [
+        'Placer sensor i skygge for præcise målinger',
+        'Undgå direkte sollys eller varmekilder',
+        'Kombiner med indendørs temperatur for bedre kontrol',
+        'Kalibrer sensoren regelmæssigt mod vejrdata'
+      ]
+    },
     wind: {
       title: 'Vindmåler',
       description: 'Måler vindhastighed og kan bruges til at styre udendørs systemer og sikkerhed.',
@@ -15949,6 +16076,10 @@ let deviceStates = {
   'outdoor-temp': 15,
   'humidity-sensor': 45,
   
+  // Heating
+  'heating': false,
+  'thermostat': 21,
+  
   // Security
   'alarm-system': false,
   'auto-lock': false,
@@ -15960,6 +16091,15 @@ let deviceStates = {
 // Smart home automation rules
 let automationRules = [];
 let activeScenario = null;
+
+// Temperature simulation
+let temperatureSimulation = {
+  targetTemp: 21,
+  currentTemp: 21,
+  isHeating: false,
+  isCooling: false,
+  intervalId: null
+};
 
 function setupLightControls() {
   console.log('🏠 Setting up smart home controls...');
@@ -15979,21 +16119,10 @@ function setupLightControls() {
     }
   });
   
-  // Setup temperature slider
-  const tempSlider = document.getElementById('tempSlider');
+  // Initialize temperature display
   const currentTempDisplay = document.getElementById('currentTemp');
-  
-  if (tempSlider && currentTempDisplay) {
-    tempSlider.addEventListener('input', function() {
-      const newTemp = parseFloat(this.value);
-      deviceStates.temperature = newTemp;
-      currentTempDisplay.textContent = newTemp;
-      
-      // Update thermostat icon on floor plan
-      updateThermostatIcon(newTemp);
-      
-      console.log('🌡️ Temperature set to:', newTemp + '°C');
-    });
+  if (currentTempDisplay) {
+    currentTempDisplay.textContent = temperatureSimulation.currentTemp.toFixed(1);
   }
   
   // Setup scenario buttons
@@ -16004,6 +16133,14 @@ function setupLightControls() {
       executeScenario(scenario);
     });
   });
+  
+  // Initialize displays
+  updateOutdoorTempDisplay();
+  updateIndoorTempDisplay();
+  
+  // Initialize temperature simulation
+  temperatureSimulation.currentTemp = deviceStates['temperature'] || 21;
+  temperatureSimulation.targetTemp = deviceStates['heating'] ? 30 : 15;
   
   console.log('🏠 Smart home controls ready!', Object.keys(deviceStates).length, 'devices configured');
 }
@@ -16188,6 +16325,22 @@ function toggleDevice(deviceId) {
 
 function handleSpecialDeviceLogic(deviceId, isOn) {
   switch(deviceId) {
+    case 'heating':
+      // Handle heating simulation
+      if (isOn) {
+        // Heating turned on - target 30°C
+        temperatureSimulation.targetTemp = 30;
+        console.log('🔥 Heating ON - targeting 30°C');
+        showNotification('🔥 Varme tændt - temperatur stiger til 30°C', 'success');
+      } else {
+        // Heating turned off - target 15°C
+        temperatureSimulation.targetTemp = 15;
+        console.log('❄️ Heating OFF - targeting 15°C');
+        showNotification('❄️ Varme slukket - temperatur falder til 15°C', 'info');
+      }
+      startTemperatureSimulation();
+      break;
+      
     case 'alarm-system':
       const alarmStatus = document.getElementById('alarmStatus');
       if (alarmStatus) {
@@ -16258,6 +16411,95 @@ function updateDeviceUI(deviceId, isOn) {
     console.log('🎛️ Device UI updated:', deviceId, isOn ? 'ON' : 'OFF');
   } else {
     console.warn('⚠️ Device toggle not found:', deviceId);
+  }
+  
+  // Update thermostat display if thermostat changed
+  if (deviceId === 'thermostat') {
+    // Termostat display er fjernet - ingen opdatering nødvendig
+  }
+  
+  // Update outdoor temperature display if outdoor temp changed
+  if (deviceId === 'outdoor-temp') {
+    updateOutdoorTempDisplay();
+  }
+}
+
+function updateThermostatDisplay() {
+  // Termostat display er fjernet - denne funktion er nu tom
+  // Men vi beholder den for kompatibilitet med andre funktioner
+}
+
+function updateThermostatIcon(temperature) {
+  // Update the thermostat setting in deviceStates
+  deviceStates['thermostat'] = temperature;
+  
+  // Update the indoor temperature display
+  updateIndoorTempDisplay();
+  
+  console.log('🌡️ Thermostat setting updated to:', temperature + '°C');
+}
+
+function updateOutdoorTempDisplay() {
+  const outdoorTempDisplay = document.getElementById('outdoor-temp-display');
+  if (outdoorTempDisplay && deviceStates['outdoor-temp']) {
+    outdoorTempDisplay.textContent = deviceStates['outdoor-temp'] + '°C';
+  }
+}
+
+function updateOutdoorTemperature(temperature) {
+  // Update the temperature in deviceStates
+  deviceStates['outdoor-temp'] = temperature;
+  
+  // Update the display
+  updateOutdoorTempDisplay();
+  
+  console.log('🌡️ Outdoor temperature updated to:', temperature + '°C');
+}
+
+function startTemperatureSimulation() {
+  // Stop any existing simulation
+  if (temperatureSimulation.intervalId) {
+    clearInterval(temperatureSimulation.intervalId);
+  }
+  
+  // Start new simulation - 30 seconds per degree
+  temperatureSimulation.intervalId = setInterval(() => {
+    const currentTemp = temperatureSimulation.currentTemp;
+    const targetTemp = temperatureSimulation.targetTemp;
+    
+    if (Math.abs(currentTemp - targetTemp) < 0.1) {
+      // Reached target temperature
+      clearInterval(temperatureSimulation.intervalId);
+      temperatureSimulation.intervalId = null;
+      temperatureSimulation.isHeating = false;
+      temperatureSimulation.isCooling = false;
+      console.log('🌡️ Temperature reached target:', targetTemp + '°C');
+      return;
+    }
+    
+    // Move temperature towards target (0.1 degree per 3 seconds = 1 degree per 30 seconds)
+    if (currentTemp < targetTemp) {
+      temperatureSimulation.currentTemp += 0.1;
+      temperatureSimulation.isHeating = true;
+      temperatureSimulation.isCooling = false;
+    } else {
+      temperatureSimulation.currentTemp -= 0.1;
+      temperatureSimulation.isHeating = false;
+      temperatureSimulation.isCooling = true;
+    }
+    
+    // Update device state and display
+    deviceStates['temperature'] = Math.round(temperatureSimulation.currentTemp * 10) / 10;
+    updateIndoorTempDisplay();
+    
+    console.log('🌡️ Temperature simulation:', temperatureSimulation.currentTemp.toFixed(1) + '°C → ' + targetTemp + '°C');
+  }, 3000); // Every 3 seconds
+}
+
+function updateIndoorTempDisplay() {
+  const currentTempDisplay = document.getElementById('currentTemp');
+  if (currentTempDisplay) {
+    currentTempDisplay.textContent = temperatureSimulation.currentTemp.toFixed(1);
   }
 }
 
