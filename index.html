@@ -16448,40 +16448,94 @@ function pulseSecurityDevices() {
   });
 }
 
-// Notification system
+// Notification system with queue
+let notificationQueue = [];
+let activeNotifications = [];
+
 function showNotification(message, type = 'info') {
+  // Add to queue
+  notificationQueue.push({ message, type });
+  
+  // Process queue
+  processNotificationQueue();
+}
+
+function processNotificationQueue() {
+  // Don't process if we already have max notifications showing
+  if (activeNotifications.length >= 3) {
+    return;
+  }
+  
+  // Don't process if queue is empty
+  if (notificationQueue.length === 0) {
+    return;
+  }
+  
+  // Get next notification from queue
+  const notificationData = notificationQueue.shift();
+  
   // Create notification element
   const notification = document.createElement('div');
-  notification.className = `notification notification-${type}`;
+  notification.className = `notification notification-${notificationData.type}`;
   notification.innerHTML = `
     <div class="notification-content">
-      <span class="notification-message">${message}</span>
+      <span class="notification-message">${notificationData.message}</span>
       <button class="notification-close">×</button>
     </div>
   `;
   
+  // Calculate position based on active notifications
+  const topOffset = 80 + (activeNotifications.length * 70);
+  notification.style.top = `${topOffset}px`;
+  
   // Add to page
   document.body.appendChild(notification);
   
+  // Add to active notifications
+  activeNotifications.push(notification);
+  
   // Auto remove after 4 seconds
   setTimeout(() => {
-    notification.classList.add('fade-out');
-    setTimeout(() => {
-      if (notification.parentNode) {
-        notification.parentNode.removeChild(notification);
-      }
-    }, 300);
+    removeNotification(notification);
   }, 4000);
   
   // Close button functionality
   const closeBtn = notification.querySelector('.notification-close');
   closeBtn.addEventListener('click', () => {
-    notification.classList.add('fade-out');
-    setTimeout(() => {
-      if (notification.parentNode) {
-        notification.parentNode.removeChild(notification);
-      }
-    }, 300);
+    removeNotification(notification);
+  });
+  
+  // Process next notification in queue after a short delay
+  setTimeout(() => {
+    processNotificationQueue();
+  }, 100);
+}
+
+function removeNotification(notification) {
+  notification.classList.add('fade-out');
+  setTimeout(() => {
+    if (notification.parentNode) {
+      notification.parentNode.removeChild(notification);
+    }
+    
+    // Remove from active notifications
+    const index = activeNotifications.indexOf(notification);
+    if (index > -1) {
+      activeNotifications.splice(index, 1);
+    }
+    
+    // Reposition remaining notifications
+    repositionNotifications();
+    
+    // Process next notification in queue
+    processNotificationQueue();
+  }, 300);
+}
+
+function repositionNotifications() {
+  activeNotifications.forEach((notification, index) => {
+    const topOffset = 80 + (index * 70);
+    notification.style.top = `${topOffset}px`;
   });
 }
 

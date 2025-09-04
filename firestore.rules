@@ -49,10 +49,9 @@ service cloud.firestore {
       allow write: if request.auth != null;
     }
     
-    // Classes - public read access, write for authenticated users
+    // Classes - public read and write access for teachers
     match /classes/{classId} {
-      allow read: if true; // Allow public read access
-      allow write: if request.auth != null;
+      allow read, write: if true; // Allow public access for teachers
     }
     
     // Default deny all
