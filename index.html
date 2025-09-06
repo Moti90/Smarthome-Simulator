@@ -695,6 +695,36 @@
       transition: none !important;
     }
 
+    /* Performance Mode - Reducer CSS effekter for bærbare pc'er */
+    .performance-mode * {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      filter: none !important;
+      animation-duration: 0.1s !important;
+      transition-duration: 0.1s !important;
+    }
+    
+    .performance-mode .logo {
+      animation: none !important;
+    }
+    
+    .performance-mode button:hover {
+      transform: none !important;
+      filter: none !important;
+    }
+    
+    .performance-mode .time-icon,
+    .performance-mode .notification-icon {
+      filter: none !important;
+    }
+    
+    .performance-mode .overlay,
+    .performance-mode .notification,
+    .performance-mode .popup {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
     /* Preserve essential transforms for layout */
     .no-animations .card[style*="transform: translate(-50%, -50%)"] {
       transform: translate(-50%, -50%) !important;
@@ -6740,6 +6770,15 @@ html {
                 </label>
                 <span class="setting-description">Reducer mellemrum og gør interface mere kompakt</span>
               </div>
+              
+              <div class="setting-item">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="performanceMode">
+                  <span class="checkmark"></span>
+                  Performance Mode
+                </label>
+                <span class="setting-description">Optimerer for bærbare pc'er - reducerer animationer og effekter</span>
+              </div>
               <div class="setting-item">
                 <label class="checkbox-label">
                   <input type="checkbox" id="animationsEnabled">
@@ -7538,6 +7577,9 @@ html {
             <div class="smart-device fan" style="top: 32.9%; left: 75.6%;" data-device="bathroom-fan" title="Ventilator">🌪️</div>
             <div class="smart-device sensor" style="top: 14.6%; left: 75.5%;" data-device="humidity-sensor" title="Fugtighedssensor">💧</div>
             
+            <!-- Varme system -->
+            <div class="smart-device heating" style="top: 45.2%; left: 35.8%;" data-device="heating" title="Varme system">🔥</div>
+            
             <!-- Entré -->
             <div class="smart-device lock" style="top: 42.7%; left: 87%;" data-device="front-door" title="Smart dørlås">🔐</div>
             <div class="smart-device sensor" style="top: 29.9%; left: 87.7%;" data-device="entrance-motion" title="Entré bevægelse">👁️</div>
@@ -7600,6 +7642,50 @@ html {
                   <div class="device-name">Ventilation</div>
                 </div>
                 <button class="device-toggle" data-device="ventilation"></button>
+              </div>
+            </div>
+            
+            <div class="control-section">
+              <h4>👁️ Bevægelsessensorer</h4>
+              
+              <div class="device-control">
+                <div class="device-info">
+                  <div class="device-icon">👁️</div>
+                  <div class="device-name">Stue bevægelse</div>
+                </div>
+                <button class="device-toggle" data-device="living-motion"></button>
+              </div>
+              
+              <div class="device-control">
+                <div class="device-info">
+                  <div class="device-icon">👁️</div>
+                  <div class="device-name">Køkken bevægelse</div>
+                </div>
+                <button class="device-toggle" data-device="motion-kitchen"></button>
+              </div>
+            </div>
+            
+            <div class="control-section">
+              <h4>📹 Sikkerhedskameraer</h4>
+              
+              <div class="device-control">
+                <div class="device-info">
+                  <div class="device-icon">📹</div>
+                  <div class="device-name">Balkon kamera</div>
+                </div>
+                <button class="device-toggle" data-device="balcony-camera"></button>
+              </div>
+            </div>
+            
+            <div class="control-section">
+              <h4>🪟 Døre & Vinduer</h4>
+              
+              <div class="device-control">
+                <div class="device-info">
+                  <div class="device-icon">🪟</div>
+                  <div class="device-name">Balkondør</div>
+                </div>
+                <button class="device-toggle" data-device="balcony-door"></button>
               </div>
             </div>
             
@@ -7935,10 +8021,24 @@ html {
     window.simulation.realisticPatterns = realisticEl ? realisticEl.checked : true;
     window.simulation.dayNightCycle = dayNightEl ? dayNightEl.checked : true;
     
-    // Start simulation loop
-    window.simulation.interval = setInterval(function() {
-      updateSimulation();
-    }, 1000 / window.simulation.speed); // Opdater hver sekund divideret med hastighed
+  // Performance mode detection - automatisk optimering for bærbare pc'er
+  const isLowPerformanceMode = navigator.hardwareConcurrency <= 4 || 
+                               navigator.deviceMemory <= 4 || 
+                               /Mobile|Android|iPhone|iPad/.test(navigator.userAgent);
+  
+  // Start simulation loop med performance optimering
+  const updateInterval = isLowPerformanceMode ? 
+    Math.max(2000, 2000 / window.simulation.speed) : // 2 sekunder minimum på bærbare pc'er
+    (1000 / window.simulation.speed); // Normal hastighed på desktop
+  
+  window.simulation.interval = setInterval(function() {
+    updateSimulation();
+  }, updateInterval);
+  
+  // Log performance mode
+  if (isLowPerformanceMode) {
+    console.log('🔧 Performance mode: Optimeret for baerbare pcer (update interval: ' + updateInterval + 'ms)');
+  }
     
     // Opdater UI
     const enabledEl = document.getElementById('simulationEnabled');
@@ -7972,6 +8072,9 @@ html {
       });
       window.simulation.autoResetTimers = {};
     }
+    
+    // Performance: Ryd DOM update throttling cache
+    lastDOMUpdate = 0;
     
     // Opdater UI
     const enabledEl = document.getElementById('simulationEnabled');
@@ -8080,6 +8183,10 @@ html {
     }
   }
   
+  // Performance throttling for DOM updates
+  let lastDOMUpdate = 0;
+  const DOM_UPDATE_THROTTLE = 500; // Max 2 DOM updates per sekund
+  
   window.updateSimulation = function() {
     if (!window.simulation.enabled) return;
     
@@ -8142,8 +8249,12 @@ html {
     // Opdater live sensor værdier i simulation fane
     updateSimulationDisplay();
     
-    // Opdater alle displays
-    updateAllDisplays();
+    // Throttle DOM updates for performance
+    const now = Date.now();
+    if (now - lastDOMUpdate > DOM_UPDATE_THROTTLE) {
+      updateAllDisplays();
+      lastDOMUpdate = now;
+    }
     
     // Kør regler
     runRules();
@@ -14160,6 +14271,29 @@ html {
     }
   }
 
+  // Performance: Cleanup funktion når siden lukkes
+  window.addEventListener('beforeunload', function() {
+    // Ryd alle timers og intervals
+    if (window.simulation && window.simulation.interval) {
+      clearInterval(window.simulation.interval);
+    }
+    if (window.autoSaveInterval) {
+      clearInterval(window.autoSaveInterval);
+    }
+    if (window.taskValidationInterval) {
+      clearInterval(window.taskValidationInterval);
+    }
+    
+    // Ryd auto-reset timers
+    if (window.simulation && window.simulation.autoResetTimers) {
+      Object.values(window.simulation.autoResetTimers).forEach(timer => {
+        clearTimeout(timer);
+      });
+    }
+    
+    console.log('🧹 Performance cleanup completed');
+  });
+
   // Vent på at DOM og Firebase SDK er klar
   document.addEventListener('DOMContentLoaded', function() {
     // Hvis vi kører lokalt, skip Firebase initialisering
@@ -14526,6 +14660,18 @@ html {
       });
     }
     
+    // Performance Mode handler
+    const performanceMode = document.getElementById('performanceMode');
+    if(performanceMode) {
+      performanceMode.checked = localStorage.getItem('smarthome_simulator.performanceMode') === 'true';
+      // Apply performance mode on load if it was previously enabled
+      applyPerformanceMode(performanceMode.checked);
+      performanceMode.addEventListener('change', (e) => {
+        localStorage.setItem('smarthome_simulator.performanceMode', e.target.checked);
+        applyPerformanceMode(e.target.checked);
+      });
+    }
+    
     const animationsEnabled = document.getElementById('animationsEnabled');
     if(animationsEnabled) {
       animationsEnabled.checked = localStorage.getItem('smarthome_simulator.animationsEnabled') !== 'false';
@@ -14596,6 +14742,7 @@ html {
           settings: {
             theme: localStorage.getItem('smarthome_simulator.theme'),
             compactMode: localStorage.getItem('smarthome_simulator.compactMode'),
+            performanceMode: localStorage.getItem('smarthome_simulator.performanceMode'),
             animationsEnabled: localStorage.getItem('smarthome_simulator.animationsEnabled'),
             debugMode: localStorage.getItem('smarthome_simulator.debugMode'),
             autoSave: localStorage.getItem('smarthome_simulator.autoSave')
@@ -14642,6 +14789,7 @@ html {
                 if(data.settings) {
                   if(data.settings.theme) localStorage.setItem('smarthome_simulator.theme', data.settings.theme);
                   if(data.settings.compactMode) localStorage.setItem('smarthome_simulator.compactMode', data.settings.compactMode);
+                  if(data.settings.performanceMode) localStorage.setItem('smarthome_simulator.performanceMode', data.settings.performanceMode);
                   if(data.settings.animationsEnabled) localStorage.setItem('smarthome_simulator.animationsEnabled', data.settings.animationsEnabled);
                   if(data.settings.debugMode) localStorage.setItem('smarthome_simulator.debugMode', data.settings.debugMode);
                   if(data.settings.autoSave) localStorage.setItem('smarthome_simulator.autoSave', data.settings.autoSave);
@@ -14702,6 +14850,40 @@ html {
     }
   }
   
+  function applyPerformanceMode(enabled) {
+    if(enabled) {
+      document.body.classList.add('performance-mode');
+      // Disable heavy CSS effects
+      const style = document.createElement('style');
+      style.id = 'performance-mode-styles';
+      style.textContent = `
+        .performance-mode * {
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
+          filter: none !important;
+          animation-duration: 0.1s !important;
+          transition-duration: 0.1s !important;
+        }
+        .performance-mode .logo {
+          animation: none !important;
+        }
+        .performance-mode button:hover {
+          transform: none !important;
+          filter: none !important;
+        }
+      `;
+      document.head.appendChild(style);
+      console.log('🔧 Performance mode aktiveret - CSS effekter reduceret');
+    } else {
+      document.body.classList.remove('performance-mode');
+      const style = document.getElementById('performance-mode-styles');
+      if (style) {
+        style.remove();
+      }
+      console.log('🔧 Performance mode deaktiveret - CSS effekter genaktiveret');
+    }
+  }
+  
   function applyAnimations(enabled) {
     if(enabled) {
       document.body.classList.remove('no-animations');
@@ -14736,12 +14918,20 @@ html {
     }
   }
   
+  // Performance-optimized auto-save with throttling
+  let autoSaveCache = {};
+  let lastAutoSave = 0;
+  const AUTO_SAVE_THROTTLE = 30000; // 30 sekunder minimum mellem saves
+  
   function applyAutoSave(enabled) {
     if(enabled) {
-      console.log('💾 Auto-save enabled');
+      console.log('💾 Auto-save enabled (performance optimized)');
       // Start auto-save interval
       if(window.autoSaveInterval) clearInterval(window.autoSaveInterval);
       window.autoSaveInterval = setInterval(() => {
+        const now = Date.now();
+        if (now - lastAutoSave < AUTO_SAVE_THROTTLE) return; // Throttle saves
+        
         // Auto-save user progress and settings
         const autoSaveData = {
           timestamp: new Date().toISOString(),
@@ -14753,14 +14943,26 @@ html {
           settings: {
             theme: localStorage.getItem('smarthome_simulator.theme'),
             compactMode: localStorage.getItem('smarthome_simulator.compactMode'),
+            performanceMode: localStorage.getItem('smarthome_simulator.performanceMode'),
             animationsEnabled: localStorage.getItem('smarthome_simulator.animationsEnabled'),
             debugMode: localStorage.getItem('smarthome_simulator.debugMode')
           }
         };
         
-        localStorage.setItem('smarthome_simulator.autoSave', JSON.stringify(autoSaveData));
-        console.log('💾 Auto-saved at:', new Date().toLocaleTimeString());
-      }, 30000); // Every 30 seconds
+        // Check if data has changed before saving
+        const dataString = JSON.stringify(autoSaveData);
+        if (autoSaveCache.lastData === dataString) return; // No changes
+        
+        // Save to localStorage with error handling
+        try {
+          localStorage.setItem('smarthome_simulator.autoSave', dataString);
+          autoSaveCache.lastData = dataString;
+          lastAutoSave = now;
+          console.log('💾 Auto-saved at:', new Date().toLocaleTimeString());
+        } catch (error) {
+          console.warn('Auto-save fejlede:', error);
+        }
+      }, 10000); // Check hver 10 sekunder, men save kun hvis nødvendigt
     } else {
       console.log('💾 Auto-save disabled');
       if(window.autoSaveInterval) {
